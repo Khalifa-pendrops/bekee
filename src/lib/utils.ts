@@ -105,20 +105,26 @@ export function buildWhatsAppProductUrl(
  * Example: Clothing dress in Black UK 12 -> "ARU-CLO-DRS-BLK-12"
  */
 export function generateSuggestedSku(
-  categorySlug: string,
-  productName: string,
-  color: string,
-  size: string
+  categorySlug?: string,
+  productName?: string,
+  color?: string,
+  size?: string
 ): string {
-  const catCode = categorySlug.slice(0, 3).toUpperCase();
-  const prodCode = productName
-    .split(' ')
+  const catCode = (categorySlug || 'CLO').replace(/[^A-Za-z]/g, '').slice(0, 3).toUpperCase() || 'CLO';
+  const prodCode = (productName || 'ITM')
+    .split(/\s+/)
     .map(w => w.charAt(0))
     .join('')
+    .replace(/[^A-Za-z0-9]/g, '')
     .slice(0, 3)
     .toUpperCase() || 'ITM';
-  const colorCode = color.replace(/[^A-Za-z]/g, '').slice(0, 3).toUpperCase() || 'STD';
-  const sizeCode = size.replace(/[^0-9A-Za-z]/g, '').toUpperCase() || 'OS';
+
+  if (!color && !size) {
+    return `ARU-${catCode}-${prodCode}`;
+  }
+
+  const colorCode = (color || 'STD').replace(/[^A-Za-z]/g, '').slice(0, 3).toUpperCase() || 'STD';
+  const sizeCode = (size || 'OS').replace(/[^0-9A-Za-z]/g, '').toUpperCase() || 'OS';
   const rand = Math.floor(100 + Math.random() * 900);
 
   return `ARU-${catCode}-${prodCode}-${colorCode}-${sizeCode}-${rand}`;

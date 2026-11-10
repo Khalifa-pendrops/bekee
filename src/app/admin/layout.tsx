@@ -39,7 +39,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-stone-100 flex flex-col md:flex-row text-stone-900 font-sans">
+    <div className="min-h-screen bg-stone-100 flex flex-col md:flex-row text-stone-900 font-sans w-full max-w-full overflow-x-hidden min-w-0">
       
       {/* DESKTOP SIDEBAR */}
       <aside className="hidden md:flex flex-col w-64 bg-stone-900 text-stone-300 border-r border-stone-800 shrink-0 select-none">
@@ -51,7 +51,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               ARUBEKEE
             </span>
             <span className="text-[10px] tracking-wider uppercase text-sand-400 font-medium block">
-              Aba Boutique Owner Portal
+              Collection Owner Portal
             </span>
           </Link>
           <div className="mt-3 flex items-center gap-2">
@@ -129,7 +129,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             ARUBEKEE
           </Link>
           <span className="text-[9px] tracking-wider uppercase text-sand-400 font-medium block">
-            Aba Merchant Portal
+            Collection Owner Portal
           </span>
         </div>
 
@@ -211,7 +211,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       )}
 
       {/* MAIN CONTENT AREA */}
-      <main className="flex-1 flex flex-col min-w-0 pb-20 md:pb-8">
+      <main className="flex-1 flex flex-col min-w-0 w-full max-w-full overflow-x-hidden pb-20 md:pb-8">
         <div className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
           {children}
         </div>

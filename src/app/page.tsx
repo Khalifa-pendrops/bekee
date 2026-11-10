@@ -35,15 +35,15 @@ export default function HomePage() {
 
               <div className="flex flex-wrap gap-4 pt-2">
                 <Link href="/collections/new-arrivals">
-                  <Button variant="primary" size="lg" className="gap-2">
-                    <span>Explore New In</span>
+                  <Button variant="primary" size="lg" className="gap-2 bg-oxblood hover:bg-oxblood-hover shadow-sm rounded-lg">
+                    <span>Explore New Drops</span>
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
 
-                <Link href="/collections/workwear">
-                  <Button variant="outline" size="lg">
-                    <span>Workwear Edit</span>
+                <Link href="/collections/occasion-wear">
+                  <Button variant="outline" size="lg" className="border-oxblood/30 text-oxblood hover:bg-oxblood/5 rounded-lg">
+                    <span>Occasion & Weekend Wear</span>
                   </Button>
                 </Link>
               </div>
@@ -69,7 +69,7 @@ export default function HomePage() {
             <div className="lg:col-span-5 relative">
               <div className="relative mx-auto max-w-md lg:max-w-none">
                 {/* Main Portrait */}
-                <div className="aspect-[3/4] overflow-hidden border border-stone-line shadow-card bg-stone-subtle">
+                <div className="aspect-[3/4] overflow-hidden rounded-2xl border-2 border-[#EADDCF] shadow-card bg-stone-subtle">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=1000&q=80"
@@ -79,12 +79,12 @@ export default function HomePage() {
                 </div>
 
                 {/* Overlaid Editorial Plaque */}
-                <div className="absolute -bottom-6 -left-6 bg-ivory p-4 border border-stone-line shadow-floating max-w-[240px] hidden sm:block">
-                  <span className="text-[10px] tracking-widest uppercase font-semibold text-oxblood block">
-                    Harmattan / Pre-Festive 2026
+                <div className="absolute -bottom-6 -left-6 bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-[#EADDCF] shadow-floating max-w-[250px] hidden sm:block animate-float">
+                  <span className="text-[10px] tracking-widest uppercase font-bold text-oxblood block">
+                    Harmattan / Festive 2026
                   </span>
                   <p className="font-serif text-sm text-obsidian mt-1 leading-snug">
-                    Architectural pleats & hand-burnished leather mules.
+                    Bespoke draped crepe & hand-burnished leather mules.
                   </p>
                 </div>
               </div>
@@ -118,7 +118,7 @@ export default function HomePage() {
             <Link
               key={cat.id}
               href={`/categories/${cat.slug}`}
-              className="group flex flex-col bg-ivory border border-stone-line hover:border-oxblood transition-all duration-300 overflow-hidden"
+              className="group flex flex-col bg-white rounded-xl border border-[#EADDCF]/70 hover:border-oxblood shadow-sm hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300 overflow-hidden"
             >
               <div className="aspect-[4/5] bg-stone-subtle overflow-hidden relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -203,7 +203,7 @@ export default function HomePage() {
             {mockCollections.filter(c => c.slug !== 'new-arrivals' && c.slug !== 'sale').map((collection) => (
               <div
                 key={collection.id}
-                className="bg-ivory border border-stone-line p-6 sm:p-8 flex flex-col justify-between hover:border-oxblood transition-colors shadow-subtle group"
+                className="bg-white rounded-xl border border-[#EADDCF]/70 p-6 sm:p-8 flex flex-col justify-between hover:border-oxblood hover:shadow-md transition-all shadow-subtle group"
               >
                 <div className="space-y-3">
                   <span className="text-[10px] uppercase font-bold tracking-widest text-oxblood">

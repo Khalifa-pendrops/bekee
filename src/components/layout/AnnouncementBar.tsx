@@ -18,10 +18,10 @@ export function AnnouncementBar({
   if (!isVisible) return null;
 
   return (
-    <div className="bg-oxblood text-ivory-light text-[11px] font-medium tracking-widest uppercase py-2 px-4 relative flex items-center justify-center transition-all select-none border-b border-oxblood-hover">
-      <div className="flex items-center gap-2 text-center truncate">
+    <div className="bg-oxblood text-ivory-light text-[11px] font-medium tracking-widest uppercase py-2 px-4 relative flex items-center justify-center transition-all select-none border-b border-oxblood-hover w-full max-w-full overflow-hidden">
+      <div className="flex items-center justify-center gap-2 text-center min-w-0 max-w-[calc(100%-48px)] truncate">
         <Sparkles className="w-3.5 h-3.5 text-gold shrink-0 animate-pulse" />
-        <Link href={link} className="hover:underline truncate">
+        <Link href={link} className="hover:underline truncate text-ellipsis overflow-hidden">
           {message}
         </Link>
       </div>

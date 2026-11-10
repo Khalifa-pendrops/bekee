@@ -4,28 +4,46 @@
 
 @layer base {
   :root {
-    --background: 40 33% 97%; /* #FAF8F5 Warm Ivory */
-    --foreground: 24 9% 7%;   /* #141312 Obsidian */
-    --oxblood: 352 65% 21%;   /* #54121B Imperial Oxblood */
+    --background: 38 38% 96%; /* #FAF6F0 Warm Cashmere Champagne */
+    --foreground: 20 12% 9%;  /* #181514 Soft Velvet Charcoal */
+    --oxblood: 349 65% 25%;   /* #6B1724 Rich Wine Bordeaux */
   }
 
   html {
-    background-color: #FAF8F5;
-    color: #141312;
+    width: 100%;
+    max-width: 100%;
+    background-color: #FAF6F0;
+    color: #181514;
     font-family: var(--font-sans), system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     scroll-behavior: smooth;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   body {
+    width: 100%;
+    max-width: 100%;
     min-height: 100vh;
-    background-color: #FAF8F5;
-    color: #141312;
-    overflow-x: hidden;
+    background-color: #FAF6F0;
+    color: #181514;
+    overflow-x: clip;
     position: relative;
+    touch-action: pan-y; /* Prevents horizontal drag/wobble on mobile touch */
+  }
+
+  @supports not (overflow-x: clip) {
+    html, body {
+      overflow-x: hidden;
+    }
+  }
+
+  /* Inner carousels & tables maintain touch scrolling when intentional */
+  .overflow-x-auto,
+  .no-scrollbar,
+  [data-horizontal-scroll] {
+    touch-action: pan-x pan-y !important;
   }
 
   /* Editorial selection highlight */

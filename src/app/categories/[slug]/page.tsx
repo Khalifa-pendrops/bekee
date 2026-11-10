@@ -6,6 +6,9 @@ import { ProductCard } from "@/components/product/ProductCard";
 import { Sparkles, ChevronRight, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 interface CategoryPageProps {
   params: {
     slug: string;

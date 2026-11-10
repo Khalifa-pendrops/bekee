@@ -143,8 +143,8 @@ export function CartDrawer() {
 
               <Button
                 variant="outline"
-                size="md"
-                className="w-full text-xs uppercase tracking-wider"
+                size="lg"
+                className="w-full border-stone-line hover:border-obsidian text-obsidian"
                 onClick={closeCart}
               >
                 Continue Shopping

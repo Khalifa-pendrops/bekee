@@ -23,8 +23,42 @@ import {
 } from '@/data/mockData';
 import { isSupabaseConfigured, supabaseAdmin } from './supabase';
 
+// Persistent Local Disk Storage Helpers for Custom / Admin Products (Server-Safe)
+function getCustomProducts(): Product[] {
+  if (typeof window !== 'undefined') {
+    return [];
+  }
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const filePath = path.join(process.cwd(), 'src', 'data', 'customProducts.json');
+    if (fs.existsSync(filePath)) {
+      const content = fs.readFileSync(filePath, 'utf-8');
+      const parsed = JSON.parse(content);
+      if (Array.isArray(parsed)) return parsed as Product[];
+    }
+  } catch (err) {
+    // Ignore read errors
+  }
+  return [];
+}
+
+function saveCustomProducts(products: Product[]): void {
+  if (typeof window !== 'undefined') {
+    return;
+  }
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const filePath = path.join(process.cwd(), 'src', 'data', 'customProducts.json');
+    fs.writeFileSync(filePath, JSON.stringify(products, null, 2), 'utf-8');
+  } catch (err) {
+    console.error('Failed to save custom products to disk:', err);
+  }
+}
+
 // In-memory runtime state for development mode
-let inMemoryProducts: Product[] = [...mockProducts];
+let inMemoryProducts: Product[] = [...getCustomProducts(), ...mockProducts];
 let inMemoryOrders: Order[] = [];
 let inMemoryReservations: StockReservation[] = [];
 let inMemoryMovements: InventoryMovement[] = [];
@@ -46,25 +80,54 @@ export const db = {
     maxPriceKobo?: number;
     sort?: 'newest' | 'price-asc' | 'price-desc' | 'featured';
   }): Promise<Product[]> {
-    if (isSupabaseConfigured && supabaseAdmin) {
-      let query = supabaseAdmin
-        .from('products')
-        .select(`
-          *,
-          images:product_images(*),
-          variants:product_variants(*)
-        `)
-        .eq('is_published', true)
-        .eq('is_archived', false);
+    const customList = getCustomProducts();
+    const customSlugs = new Set(customList.map(p => p.slug));
+    const mergedBase = [...customList, ...mockProducts.filter(p => !customSlugs.has(p.slug))];
 
-      const { data, error } = await query;
-      if (!error && data && data.length > 0) {
-        return data as Product[];
+    let results = mergedBase.filter((p) => p.isPublished && !p.isArchived);
+
+    if (isSupabaseConfigured && supabaseAdmin) {
+      try {
+        let query = supabaseAdmin
+          .from('products')
+          .select(`
+            *,
+            images:product_images(*),
+            variants:product_variants(*)
+          `)
+          .eq('is_published', true)
+          .eq('is_archived', false);
+
+        const { data, error } = await query;
+        if (!error && data && data.length > 0) {
+          const sbMapped = (data as any[]).map((sb) => ({
+            id: sb.id,
+            name: sb.name,
+            slug: sb.slug,
+            tagline: sb.tagline,
+            description: sb.description,
+            categorySlug: sb.category_slug || 'clothing',
+            subCategorySlug: sb.sub_category_slug || 'dresses',
+            collectionSlugs: sb.collection_slugs || ['new-arrivals'],
+            fabricAndCare: sb.fabric_and_care || [],
+            images: sb.images || [],
+            variants: sb.variants || [],
+            hasVariants: (sb.variants || []).length > 1,
+            isPublished: sb.is_published,
+            isFeatured: sb.is_featured,
+            isArchived: sb.is_archived,
+            tags: sb.tags || [],
+            createdAt: sb.created_at,
+            updatedAt: sb.updated_at,
+          })) as Product[];
+
+          // Merge custom products with Supabase so custom products are NEVER lost
+          results = [...customList, ...sbMapped.filter(s => !customSlugs.has(s.slug))];
+        }
+      } catch (err) {
+        // Fall back cleanly to disk/memory mergedBase
       }
     }
-
-    // Local in-memory repository fallback
-    let results = inMemoryProducts.filter((p) => p.isPublished && !p.isArchived);
 
     if (params?.categorySlug) {
       results = results.filter((p) => p.categorySlug === params.categorySlug);
@@ -79,14 +142,50 @@ export const db = {
     }
 
     if (params?.search) {
-      const q = params.search.toLowerCase();
-      results = results.filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.description.toLowerCase().includes(q) ||
-          p.tags.some((t) => t.toLowerCase().includes(q)) ||
-          p.categorySlug.toLowerCase().includes(q)
-      );
+      const rawQuery = params.search.toLowerCase().trim();
+      
+      // Common Nigerian fashion synonyms
+      const synonymMap: Record<string, string[]> = {
+        gown: ['dress', 'midi', 'jumpsuit'],
+        gowns: ['dress', 'dresses'],
+        shoe: ['heels', 'sandals', 'mules', 'slippers'],
+        shoes: ['heels', 'sandals', 'mules', 'slippers'],
+        purse: ['bag', 'handbag', 'clutch', 'tote'],
+        purses: ['bag', 'bags', 'handbag', 'tote'],
+        shades: ['sunglasses'],
+        jewelries: ['jewellery', 'jewelry', 'earrings', 'gold'],
+        'co-ord': ['matching-sets', 'set', 'two-piece'],
+        cord: ['matching-sets', 'set', 'two-piece'],
+        suit: ['workwear', 'jumpsuit'],
+      };
+
+      const tokens = rawQuery.split(/\s+/).filter(Boolean);
+
+      results = results.filter((p) => {
+        // Build a searchable corpus string for this product
+        const colorNames = p.variants.map((v) => v.colorName.toLowerCase()).join(' ');
+        const sizes = p.variants.map((v) => v.size.toLowerCase()).join(' ');
+        const skus = p.variants.map((v) => v.sku.toLowerCase()).join(' ');
+        const fabrics = (p.fabricAndCare || []).join(' ').toLowerCase();
+        const tags = p.tags.join(' ').toLowerCase();
+
+        const corpus = `${p.name} ${p.tagline || ''} ${p.description} ${p.categorySlug} ${p.subCategorySlug} ${tags} ${colorNames} ${sizes} ${skus} ${fabrics}`.toLowerCase();
+
+        // Exact match
+        if (corpus.includes(rawQuery)) return true;
+
+        // Check if every token matches the product corpus (or a synonym matches)
+        return tokens.every((token) => {
+          if (corpus.includes(token)) return true;
+
+          const synonyms = synonymMap[token];
+          if (synonyms && synonyms.some((syn) => corpus.includes(syn))) {
+            return true;
+          }
+
+          return false;
+        });
+      });
     }
 
     if (params?.inStockOnly) {
@@ -120,13 +219,24 @@ export const db = {
   },
 
   async getProductBySlug(slug: string): Promise<Product | null> {
+    // 1. Check local persistent disk storage first for instant match
+    const customList = getCustomProducts();
+    const foundCustom = customList.find((p) => p.slug === slug || p.id === slug);
+    if (foundCustom) return foundCustom;
+
+    // 2. Check full product list
     const list = await this.getProducts();
-    const found = list.find((p) => p.slug === slug);
-    return found || null;
+    const found = list.find((p) => p.slug === slug || p.id === slug);
+    if (found) return found;
+
+    // 3. Check inMemory fallback
+    return inMemoryProducts.find((p) => p.slug === slug || p.id === slug) || null;
   },
 
   async getAllProductsForAdmin(): Promise<Product[]> {
-    return inMemoryProducts;
+    const customList = getCustomProducts();
+    const customSlugs = new Set(customList.map(p => p.slug));
+    return [...customList, ...inMemoryProducts.filter(p => !customSlugs.has(p.slug))];
   },
 
   async createProduct(newProduct: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>): Promise<Product> {
@@ -137,25 +247,117 @@ export const db = {
       updatedAt: new Date().toISOString(),
     };
 
-    inMemoryProducts.unshift(created);
+    // 1. Write to persistent JSON storage on disk
+    const customList = getCustomProducts();
+    const updated = [created, ...customList.filter(p => p.slug !== created.slug)];
+    saveCustomProducts(updated);
+
+    // 2. Update runtime memory cache
+    inMemoryProducts = [created, ...inMemoryProducts.filter(p => p.slug !== created.slug)];
+
+    // 3. Mirror to Supabase if credentials are active
+    if (isSupabaseConfigured && supabaseAdmin) {
+      try {
+        const { data: catData } = await supabaseAdmin
+          .from('categories')
+          .select('id')
+          .eq('slug', created.categorySlug)
+          .maybeSingle();
+
+        if (catData?.id) {
+          const { data: prodData, error: prodErr } = await supabaseAdmin
+            .from('products')
+            .insert({
+              name: created.name,
+              slug: created.slug,
+              tagline: created.tagline,
+              description: created.description,
+              category_id: catData.id,
+              fabric_and_care: created.fabricAndCare,
+              is_published: created.isPublished,
+              is_featured: created.isFeatured,
+              tags: created.tags,
+            })
+            .select()
+            .single();
+
+          if (!prodErr && prodData?.id) {
+            if (created.variants && created.variants.length > 0) {
+              const variantRows = created.variants.map((v) => ({
+                product_id: prodData.id,
+                sku: v.sku,
+                color_name: v.colorName,
+                color_hex: v.colorHex || '#54121B',
+                size: v.size,
+                price_kobo: v.priceKobo,
+                sale_price_kobo: v.salePriceKobo || null,
+                stock_quantity: v.stockQuantity,
+                low_stock_threshold: v.lowStockThreshold || 2,
+                is_active: true,
+              }));
+              await supabaseAdmin.from('product_variants').insert(variantRows);
+            }
+
+            if (created.images && created.images.length > 0) {
+              const imageRows = created.images.map((img, idx) => ({
+                product_id: prodData.id,
+                url: img.url,
+                alt_text: img.altText || created.name,
+                is_primary: img.isPrimary,
+                sort_order: idx,
+              }));
+              await supabaseAdmin.from('product_images').insert(imageRows);
+            }
+          }
+        }
+      } catch (sbErr) {
+        // Silently continue with guaranteed disk persistence
+      }
+    }
+
     return created;
   },
 
   async updateProduct(id: string, updates: Partial<Product>): Promise<Product | null> {
-    const index = inMemoryProducts.findIndex((p) => p.id === id);
-    if (index === -1) return null;
+    const customList = getCustomProducts();
+    const foundIndex = customList.findIndex(p => p.id === id || p.slug === id);
+    let targetProduct: Product | null = null;
 
-    inMemoryProducts[index] = {
-      ...inMemoryProducts[index],
-      ...updates,
-      updatedAt: new Date().toISOString(),
-    };
+    if (foundIndex > -1) {
+      customList[foundIndex] = {
+        ...customList[foundIndex],
+        ...updates,
+        updatedAt: new Date().toISOString(),
+      };
+      targetProduct = customList[foundIndex];
+      saveCustomProducts(customList);
+    } else {
+      const mockFound = mockProducts.find(p => p.id === id || p.slug === id);
+      if (mockFound) {
+        targetProduct = {
+          ...mockFound,
+          ...updates,
+          updatedAt: new Date().toISOString(),
+        };
+        customList.unshift(targetProduct);
+        saveCustomProducts(customList);
+      }
+    }
 
-    return inMemoryProducts[index];
+    const memIndex = inMemoryProducts.findIndex((p) => p.id === id || p.slug === id);
+    if (memIndex > -1 && targetProduct) {
+      inMemoryProducts[memIndex] = targetProduct;
+    } else if (targetProduct) {
+      inMemoryProducts.unshift(targetProduct);
+    }
+
+    return targetProduct;
   },
 
   async duplicateProduct(id: string): Promise<Product | null> {
-    const source = inMemoryProducts.find((p) => p.id === id);
+    const customList = getCustomProducts();
+    const all = [...customList, ...inMemoryProducts];
+    const source = all.find((p) => p.id === id || p.slug === id);
     if (!source) return null;
 
     const copy: Product = {
@@ -173,6 +375,8 @@ export const db = {
       })),
     };
 
+    customList.unshift(copy);
+    saveCustomProducts(customList);
     inMemoryProducts.unshift(copy);
     return copy;
   },

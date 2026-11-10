@@ -1,11 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
-import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
-import { CartDrawer } from "@/components/cart/CartDrawer";
+import { StorefrontShell } from "@/components/layout/StorefrontShell";
 import { CartProvider } from "@/context/CartContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 
@@ -64,15 +60,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${serifFont.variable} ${sansFont.variable}`}>
-      <body className="bg-ivory text-obsidian flex flex-col min-h-screen">
+      <body className="bg-ivory text-obsidian flex flex-col min-h-screen w-full max-w-full overflow-x-hidden min-w-0 relative">
         <CartProvider>
           <WishlistProvider>
-            <AnnouncementBar />
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-            <CartDrawer />
-            <MobileBottomNav />
+            <StorefrontShell>{children}</StorefrontShell>
           </WishlistProvider>
         </CartProvider>
       </body>

@@ -1,0 +1,83 @@
+[
+  {
+    "id": "prod_1794318094044_6gaq8",
+    "name": "Test Product",
+    "slug": "test-product",
+    "tagline": "Artisanal Ready-to-Wear Silhouette",
+    "description": "Test Product handcrafted with refined tailoring in our boutique collection. Designed for flattering drape and effortless modern elegance.",
+    "categorySlug": "clothing",
+    "subCategorySlug": "dresses",
+    "collectionSlugs": [
+      "new-arrivals"
+    ],
+    "fabricAndCare": [
+      "Premium breathable crepe blend",
+      "Hand wash cold or dry clean",
+      "Warm iron on reverse side"
+    ],
+    "images": [
+      {
+        "id": "img_1794318024782_0",
+        "url": "/uploads/whatsapp-image-2026-11-04-at-1-1794318023355-748.jpeg",
+        "altText": "Test Product photo",
+        "isPrimary": true
+      },
+      {
+        "id": "img_1794318054660_0",
+        "url": "/uploads/vehicle-back-1794318039013-386.jpeg",
+        "altText": "Test Product photo",
+        "isPrimary": false
+      }
+    ],
+    "variants": [
+      {
+        "id": "var_test_1",
+        "productId": "prod_test_product",
+        "sku": "ARU-CLO-DRS-OXB-10",
+        "colorName": "Imperial Oxblood",
+        "colorHex": "#54121B",
+        "size": "UK 10",
+        "priceKobo": 550000,
+        "stockQuantity": 5,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_test_2",
+        "productId": "prod_test_product",
+        "sku": "ARU-CLO-DRS-OXB-12",
+        "colorName": "Imperial Oxblood",
+        "colorHex": "#54121B",
+        "size": "UK 12",
+        "priceKobo": 550000,
+        "stockQuantity": 5,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_test_3",
+        "productId": "prod_test_product",
+        "sku": "ARU-CLO-DRS-OXB-14",
+        "colorName": "Imperial Oxblood",
+        "colorHex": "#54121B",
+        "size": "UK 14",
+        "priceKobo": 550000,
+        "stockQuantity": 5,
+        "lowStockThreshold": 2,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": [
+      "clothing",
+      "dresses",
+      "new-arrival",
+      "nigerian-fashion"
+    ],
+    "createdAt": "2026-11-10T13:41:34.044Z",
+    "updatedAt": "2026-11-10T13:41:34.044Z"
+  }
+]

@@ -147,7 +147,7 @@ export default function RecordOfflineSalePage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-2xl mx-auto space-y-6 w-full min-w-0">
       
       {/* Header */}
       <div className="flex items-center justify-between pb-4 border-b border-stone-200">

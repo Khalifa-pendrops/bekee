@@ -41,9 +41,20 @@ function ShopContent() {
 
   useEffect(() => {
     async function loadData() {
-      const prods = await db.getProducts();
+      try {
+        const res = await fetch('/api/products');
+        if (res.ok) {
+          const prods = await res.json();
+          setProducts(prods);
+        } else {
+          const prods = await db.getProducts();
+          setProducts(prods);
+        }
+      } catch {
+        const prods = await db.getProducts();
+        setProducts(prods);
+      }
       const cats = await db.getCategories();
-      setProducts(prods);
       setCategories(cats);
     }
     loadData();

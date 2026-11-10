@@ -15,6 +15,7 @@ import {
   ChevronRight 
 } from "lucide-react";
 import { Drawer } from "@/components/ui/Drawer";
+import { ModernSearchBar } from "@/components/layout/ModernSearchBar";
 
 export function Header() {
   const { totalQuantity, openCart } = useCart();
@@ -48,8 +49,9 @@ export function Header() {
       <header className="sticky top-0 z-40 bg-ivory/95 backdrop-blur-md border-b border-stone-line transition-all">
         {/* Main Navbar */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 sm:h-20">
-            {/* Left: Mobile Menu Trigger & Desktop Search */}
+          <div className="flex items-center justify-between h-16 sm:h-20 gap-4">
+            
+            {/* Left: Mobile Menu & Brand Identity */}
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
@@ -59,47 +61,41 @@ export function Header() {
                 <Menu className="w-6 h-6 stroke-1.5" />
               </button>
 
-              <button
-                onClick={() => setIsSearchOpen(true)}
-                className="hidden lg:flex items-center gap-2 text-xs uppercase tracking-wider text-obsidian-muted hover:text-obsidian px-3 py-1.5 rounded-none border border-transparent hover:border-stone-line transition-all"
-              >
-                <Search className="w-4 h-4 text-obsidian-subtle" />
-                <span>Search</span>
-              </button>
-            </div>
-
-            {/* Center: Brand Identity */}
-            <div className="flex flex-col items-center text-center">
-              <Link href="/" className="group flex flex-col items-center">
+              <Link href="/" className="group flex flex-col">
                 <span className="font-serif text-2xl sm:text-3xl font-normal tracking-[0.22em] text-obsidian group-hover:text-oxblood transition-colors uppercase">
                   ARUBEKEE
                 </span>
-                <span className="text-[9px] sm:text-[10px] tracking-[0.35em] text-obsidian-muted uppercase font-sans -mt-1">
-                  Collection • Aba
+                <span className="text-[9px] sm:text-[10px] tracking-[0.35em] text-oxblood uppercase font-sans font-semibold -mt-1">
+                  Collection
                 </span>
               </Link>
             </div>
 
-            {/* Right: Actions (Wishlist, Admin, Bag) */}
-            <div className="flex items-center gap-2 sm:gap-4">
-              {/* Mobile Search Icon */}
+            {/* Center: Modern Search Bar (Prominent on Desktop) */}
+            <div className="hidden lg:flex flex-1 max-w-lg mx-6">
+              <ModernSearchBar variant="header" />
+            </div>
+
+            {/* Right: Actions (Mobile Search, Wishlist, Bag) */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              {/* Mobile Search Button */}
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className="lg:hidden p-2 text-obsidian hover:text-oxblood transition-colors"
+                className="lg:hidden p-2 text-obsidian hover:text-oxblood transition-colors flex items-center justify-center rounded-full border border-[#D8B4A6]/60 bg-white shadow-xs"
                 aria-label="Search store"
               >
-                <Search className="w-5 h-5 stroke-1.5" />
+                <Search className="w-4 h-4 text-oxblood" />
               </button>
 
               {/* Wishlist */}
               <Link
                 href="/wishlist"
-                className="relative p-2 text-obsidian hover:text-oxblood transition-colors"
+                className="relative p-2.5 text-obsidian hover:text-oxblood transition-colors rounded-full hover:bg-sand-100"
                 aria-label="Wishlist"
               >
                 <Heart className="w-5 h-5 stroke-1.5" />
                 {totalWishlistCount > 0 && (
-                  <span className="absolute top-1 right-1 bg-oxblood text-ivory-light text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-fade-in">
+                  <span className="absolute top-1 right-1 bg-oxblood text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-fade-in shadow-xs">
                     {totalWishlistCount}
                   </span>
                 )}
@@ -108,12 +104,12 @@ export function Header() {
               {/* Shopping Bag */}
               <button
                 onClick={openCart}
-                className="relative p-2 text-obsidian hover:text-oxblood transition-colors"
+                className="relative p-2.5 text-obsidian hover:text-oxblood transition-colors rounded-full hover:bg-sand-100"
                 aria-label="Shopping Bag"
               >
                 <ShoppingBag className="w-5 h-5 stroke-1.5" />
                 {totalQuantity > 0 && (
-                  <span className="absolute top-1 right-1 bg-oxblood text-ivory-light text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-fade-in">
+                  <span className="absolute top-1 right-1 bg-oxblood text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-fade-in shadow-xs">
                     {totalQuantity}
                   </span>
                 )}
@@ -144,50 +140,58 @@ export function Header() {
 
       {/* Search Overlay Modal */}
       {isSearchOpen && (
-        <div className="fixed inset-0 z-50 bg-obsidian/70 backdrop-blur-sm p-4 flex items-start justify-center pt-20 animate-fade-in">
-          <div className="bg-ivory w-full max-w-2xl border border-stone-line shadow-floating p-6 relative">
+        <div className="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-md p-4 flex items-start justify-center pt-16 sm:pt-24 animate-fade-in">
+          <div className="bg-white rounded-2xl border-2 border-[#E5C7BC] shadow-floating p-6 sm:p-8 w-full max-w-2xl relative">
             <button
               onClick={() => setIsSearchOpen(false)}
-              className="absolute top-4 right-4 p-2 text-obsidian-subtle hover:text-obsidian"
+              className="absolute top-4 right-4 p-2 text-stone-400 hover:text-stone-900 rounded-full hover:bg-sand-100 transition-colors"
               aria-label="Close search"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <form onSubmit={handleSearchSubmit} className="space-y-4">
-              <label className="block text-xs uppercase font-semibold tracking-wider text-obsidian-muted">
-                Search Arubekee Collection
-              </label>
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-obsidian-subtle" />
-                <input
-                  type="text"
-                  autoFocus
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Dresses, heels, handbags, matching sets, workwear..."
-                  className="w-full bg-ivory-light border border-stone-line pl-12 pr-4 py-3 text-base text-obsidian focus:outline-none focus:border-oxblood focus:ring-1 focus:ring-oxblood"
-                />
+            <div className="space-y-5">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-oxblood">
+                  Curated Catalog Search
+                </span>
+                <h3 className="font-serif text-xl sm:text-2xl text-stone-900 font-normal mt-0.5">
+                  What are you looking to wear?
+                </h3>
               </div>
 
-              <div className="flex flex-wrap gap-2 pt-2 items-center text-xs text-obsidian-muted">
-                <span className="font-semibold uppercase tracking-wider text-obsidian-soft text-[10px]">Popular:</span>
-                {["Aba Made Dresses", "Two Piece Sets", "Low Block Heels", "Tote Bags", "Office Wear"].map((tag) => (
+              {/* Modern Search Bar */}
+              <ModernSearchBar
+                variant="modal"
+                autoFocus
+                onSearchExecuted={() => setIsSearchOpen(false)}
+              />
+
+              {/* Trending Suggestion Chips */}
+              <div className="flex flex-wrap gap-2 pt-2 items-center text-xs">
+                <span className="font-bold uppercase tracking-wider text-stone-400 text-[10px]">Trending:</span>
+                {[
+                  "Aba Made Crepe",
+                  "Two Piece Sets",
+                  "Handcrafted Mules",
+                  "Evening Jumpsuits",
+                  "Tote Bags",
+                  "Wedding Guest"
+                ].map((tag) => (
                   <button
                     key={tag}
                     type="button"
                     onClick={() => {
-                      setSearchQuery(tag);
                       window.location.href = `/search?q=${encodeURIComponent(tag)}`;
                       setIsSearchOpen(false);
                     }}
-                    className="px-2.5 py-1 bg-ivory-muted hover:bg-stone-line/70 text-obsidian transition-colors text-xs"
+                    className="px-3 py-1.5 rounded-full bg-sand-100 hover:bg-oxblood hover:text-white text-stone-800 border border-[#E8DFD3] transition-all text-xs font-medium active:scale-95 shadow-xs"
                   >
                     {tag}
                   </button>
                 ))}
               </div>
-            </form>
+            </div>
           </div>
         </div>
       )}
@@ -196,8 +200,8 @@ export function Header() {
       <Drawer
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
-        title="ARUBEKEE"
-        description="Women's Fashion • Aba, Abia State"
+        title="ARUBEKEE COLLECTION"
+        description="Contemporary Ready-to-Wear Fashion"
         position="left"
       >
         <div className="space-y-6">

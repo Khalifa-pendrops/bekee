@@ -4,6 +4,9 @@ import { db } from "@/lib/db";
 import { ProductDetailView } from "@/components/product/ProductDetailView";
 import type { Metadata } from "next";
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 interface ProductPageProps {
   params: {
     slug: string;

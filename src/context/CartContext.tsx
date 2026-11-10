@@ -5,6 +5,11 @@ import { CartItem } from "@/types";
 
 interface CartContextType {
   items: CartItem[];
+  cart: {
+    items: CartItem[];
+    subtotalKobo: number;
+    totalQuantity: number;
+  };
   addItem: (item: Omit<CartItem, 'id'>, quantity?: number) => void;
   removeItem: (variantId: string) => void;
   updateQuantity: (variantId: string, quantity: number) => void;
@@ -117,6 +122,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     <CartContext.Provider
       value={{
         items,
+        cart: {
+          items,
+          subtotalKobo,
+          totalQuantity,
+        },
         addItem,
         removeItem,
         updateQuantity,

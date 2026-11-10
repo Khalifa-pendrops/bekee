@@ -8,6 +8,7 @@ import { Product } from "@/types";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { ModernSearchBar } from "@/components/layout/ModernSearchBar";
 
 function SearchContent() {
   const searchParams = useSearchParams();
@@ -51,32 +52,17 @@ function SearchContent() {
           {query ? `Search results for "${query}"` : "Search Arubekee Collection"}
         </h1>
 
-        <form onSubmit={handleSearchSubmit} className="max-w-2xl relative pt-2">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-obsidian-subtle" />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search dresses, block mules, tote bags, matching sets..."
-            className="w-full bg-ivory-light border border-stone-line pl-12 pr-28 py-3 text-sm text-obsidian focus:outline-none focus:border-oxblood focus:ring-1 focus:ring-oxblood"
-          />
-          <Button
-            type="submit"
-            variant="primary"
-            size="sm"
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-xs uppercase tracking-wider"
-          >
-            Search
-          </Button>
-        </form>
+        <div className="max-w-2xl pt-2">
+          <ModernSearchBar variant="hero" />
+        </div>
 
-        <div className="flex flex-wrap items-center gap-2 pt-2 text-xs text-obsidian-muted">
-          <span className="font-semibold uppercase tracking-wider text-[10px] text-obsidian-soft">Suggested:</span>
+        <div className="flex flex-wrap items-center gap-2 pt-2 text-xs">
+          <span className="font-bold uppercase tracking-wider text-[10px] text-stone-400">Trending Styles:</span>
           {["Pleated Crepe", "Block Mule", "Leather Tote", "Two Piece", "Emerald", "Oxblood"].map((term) => (
             <Link
               key={term}
               href={`/search?q=${encodeURIComponent(term)}`}
-              className="px-2.5 py-1 bg-ivory-muted hover:bg-stone-line/70 text-obsidian border border-stone-line transition-colors text-xs"
+              className="px-3 py-1 bg-white hover:bg-oxblood hover:text-white text-stone-800 rounded-full border border-[#E5C7BC] transition-all text-xs font-medium active:scale-95 shadow-xs"
             >
               {term}
             </Link>

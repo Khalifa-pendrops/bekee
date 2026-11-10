@@ -54,7 +54,7 @@ export function Footer() {
                 ARUBEKEE
               </h3>
               <p className="text-[10px] tracking-[0.3em] uppercase text-oxblood font-semibold">
-                Collection • Aba
+                Collection
               </p>
             </div>
             <p className="text-xs text-obsidian-muted leading-relaxed max-w-sm">

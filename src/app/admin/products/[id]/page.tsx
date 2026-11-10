@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
@@ -12,7 +12,11 @@ import {
   AlertCircle, 
   Check, 
   Layers,
-  Sparkles
+  Sparkles,
+  Camera,
+  UploadCloud,
+  Loader2,
+  Plus
 } from 'lucide-react';
 import { formatKoboToNaira, parseNairaToKobo } from '@/lib/utils';
 import { Product, ProductVariant } from '@/types';
@@ -34,6 +38,10 @@ export default function EditProductPage() {
   const [isPublished, setIsPublished] = useState(true);
   const [variants, setVariants] = useState<ProductVariant[]>([]);
 
+  const [images, setImages] = useState<{ id: string; url: string; altText: string; isPrimary: boolean }[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploadingFiles, setIsUploadingFiles] = useState(false);
+
   // Status
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -50,6 +58,7 @@ export default function EditProductPage() {
           setDescription(found.description);
           setIsPublished(found.isPublished);
           setVariants(found.variants);
+          setImages(found.images || []);
 
           if (found.variants[0]) {
             setPriceNaira(String(Math.round(found.variants[0].priceKobo / 100)));
@@ -62,6 +71,60 @@ export default function EditProductPage() {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [productId]);
+
+  const handleDeviceFiles = async (files: FileList | File[]) => {
+    if (!files || files.length === 0) return;
+    setIsUploadingFiles(true);
+    setFeedback(null);
+
+    try {
+      const formData = new FormData();
+      Array.from(files).forEach((file) => {
+        formData.append('files', file);
+      });
+
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to upload photo.');
+
+      const newUploaded = (data.files || []).map((f: any, idx: number) => ({
+        id: `img_${Date.now()}_${idx}`,
+        url: f.url,
+        altText: `${name || 'Product'} photo`,
+        isPrimary: images.length === 0 && idx === 0,
+      }));
+
+      setImages((prev) => [...prev, ...newUploaded]);
+      setFeedback('New photo(s) uploaded successfully! Remember to save changes.');
+    } catch (err: any) {
+      const fallbackImages = Array.from(files).map((file, idx) => ({
+        id: `img_local_${Date.now()}_${idx}`,
+        url: URL.createObjectURL(file),
+        altText: `${name || 'Product'} photo`,
+        isPrimary: images.length === 0 && idx === 0,
+      }));
+      setImages((prev) => [...prev, ...fallbackImages]);
+    } finally {
+      setIsUploadingFiles(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const handleSetPrimaryImage = (id: string) => {
+    setImages(images.map((img) => ({ ...img, isPrimary: img.id === id })));
+  };
+
+  const handleRemoveImage = (id: string) => {
+    const filtered = images.filter((img) => img.id !== id);
+    if (filtered.length > 0 && !filtered.some((img) => img.isPrimary)) {
+      filtered[0].isPrimary = true;
+    }
+    setImages(filtered);
+  };
 
   const handleUpdateStock = (variantId: string, newQty: number) => {
     setVariants((prev) =>
@@ -95,6 +158,7 @@ export default function EditProductPage() {
           tagline,
           description,
           isPublished,
+          images,
           variants: updatedVariants,
         }),
       });
@@ -252,6 +316,105 @@ export default function EditProductPage() {
               <span className="font-semibold text-stone-800">Publish item on storefront</span>
             </label>
           </div>
+        </div>
+
+        {/* Product Photography & Lookbook */}
+        <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-6 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 className="font-serif text-base font-bold text-stone-900 flex items-center gap-2">
+                <Camera className="w-4 h-4 text-oxblood-700" />
+                Product Photography ({images.length} photos)
+              </h2>
+              <p className="text-xs text-stone-500 mt-0.5">
+                Upload new photos from your phone gallery or computer. The first image marked Cover will be shown across the store.
+              </p>
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              className="hidden"
+              onChange={(e) => e.target.files && handleDeviceFiles(e.target.files)}
+            />
+
+            <button
+              type="button"
+              disabled={isUploadingFiles}
+              onClick={() => fileInputRef.current?.click()}
+              className="px-4 py-2 bg-white hover:bg-stone-50 text-stone-900 border-2 border-stone-900 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all shrink-0 disabled:opacity-50 shadow-sm hover:shadow"
+            >
+              {isUploadingFiles ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-oxblood-700" />
+                  <span>Uploading...</span>
+                </>
+              ) : (
+                <>
+                  <Camera className="w-3.5 h-3.5 text-oxblood-700" />
+                  <span>Add Device Photos</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {images.length === 0 ? (
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className="p-8 text-center border-2 border-dashed border-stone-200 hover:border-oxblood-700/50 rounded-lg text-stone-400 text-xs cursor-pointer"
+            >
+              No photos currently attached. Tap to pick photos from your phone or PC.
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+              {images.map((img) => (
+                <div
+                  key={img.id}
+                  className={`relative rounded-lg overflow-hidden border-2 transition-all ${
+                    img.isPrimary ? 'border-oxblood-700 ring-2 ring-oxblood-700/30' : 'border-stone-200'
+                  }`}
+                >
+                  <div className="aspect-[3/4] relative bg-stone-100">
+                    <Image
+                      src={img.url}
+                      alt={img.altText || name}
+                      fill
+                      unoptimized={img.url.startsWith('blob:') || img.url.startsWith('data:') || img.url.startsWith('/uploads/')}
+                      className="object-cover"
+                    />
+                  </div>
+
+                  {img.isPrimary && (
+                    <span className="absolute top-2 left-2 bg-oxblood-700 text-white text-[9px] font-bold px-2 py-0.5 rounded shadow">
+                      COVER PHOTO
+                    </span>
+                  )}
+
+                  <div className="p-2 bg-white flex items-center justify-between border-t border-stone-100">
+                    {!img.isPrimary && (
+                      <button
+                        type="button"
+                        onClick={() => handleSetPrimaryImage(img.id)}
+                        className="text-[10px] font-semibold text-oxblood-700 hover:underline"
+                      >
+                        Make Cover
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(img.id)}
+                      className="text-stone-400 hover:text-red-600 p-1 ml-auto"
+                      title="Remove"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Variants Stock Table */}

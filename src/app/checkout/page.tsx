@@ -31,7 +31,7 @@ const NIGERIAN_STATES = [
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cart, clearCart } = useCart();
+  const { items = [], subtotalKobo = 0, totalQuantity = 0, clearCart } = useCart();
 
   // Delivery Mode: 'delivery' | 'pickup' | 'quote'
   const [deliveryMode, setDeliveryMode] = useState<'delivery' | 'pickup' | 'quote'>('delivery');
@@ -136,7 +136,6 @@ export default function CheckoutPage() {
   }, [state, deliveryMode]);
 
   // Financial Computations
-  const subtotalKobo = cart.subtotalKobo;
   const deliveryFeeKobo = deliveryMode === 'quote' ? 0 : (matchedZone?.feeKobo || 0);
   const discountKobo = appliedDiscount ? appliedDiscount.discountKobo : 0;
   const totalKobo = Math.max(0, subtotalKobo + deliveryFeeKobo - discountKobo);
@@ -197,7 +196,7 @@ export default function CheckoutPage() {
     e.preventDefault();
     setCheckoutError(null);
 
-    if (cart.items.length === 0) {
+    if (items.length === 0) {
       setCheckoutError('Your shopping bag is empty.');
       return;
     }
@@ -228,7 +227,7 @@ export default function CheckoutPage() {
             city: city || 'Unspecified City',
             streetAddress: streetAddress || 'Unspecified Address',
             landmark,
-            items: cart.items.map((i) => ({
+            items: items.map((i) => ({
               productName: i.productName,
               variantSummary: `${i.colorName} • ${i.size}`,
               quantity: i.quantity,
@@ -252,7 +251,7 @@ export default function CheckoutPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          items: cart.items.map((i) => ({
+          items: items.map((i) => ({
             productId: i.productId,
             variantId: i.variantId,
             quantity: i.quantity,
@@ -291,7 +290,7 @@ export default function CheckoutPage() {
   };
 
   // If bag is empty
-  if (cart.items.length === 0) {
+  if (items.length === 0) {
     return (
       <div className="bg-sand-50 min-h-screen py-20">
         <div className="max-w-xl mx-auto px-4 text-center">
@@ -357,10 +356,10 @@ export default function CheckoutPage() {
         )}
 
         {/* Main Grid: Form (Left) & Order Summary (Right) */}
-        <form onSubmit={handleCheckoutSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+        <form onSubmit={handleCheckoutSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 w-full max-w-full min-w-0">
           
           {/* LEFT COLUMN: Customer & Delivery Details */}
-          <div className="lg:col-span-7 space-y-8">
+          <div className="lg:col-span-7 space-y-8 min-w-0">
             
             {/* 1. Contact Information */}
             <div className="bg-white p-6 md:p-8 rounded-lg border border-sand-200 shadow-sm">
@@ -621,16 +620,16 @@ export default function CheckoutPage() {
           </div>
 
           {/* RIGHT COLUMN: Order Summary & Payment Button */}
-          <div className="lg:col-span-5 space-y-6">
+          <div className="lg:col-span-5 space-y-6 min-w-0">
             
             <div className="bg-white p-6 md:p-8 rounded-lg border border-sand-200 shadow-sm sticky top-24">
               <h2 className="font-serif text-lg text-stone-900 mb-4 pb-3 border-b border-sand-200">
-                Order Summary ({cart.totalQuantity} items)
+                Order Summary ({totalQuantity} items)
               </h2>
 
               {/* Item List */}
               <div className="divide-y divide-sand-200 max-h-72 overflow-y-auto mb-6 pr-1">
-                {cart.items.map((item) => (
+                {items.map((item) => (
                   <div key={item.id} className="py-3 flex items-center gap-3">
                     <div className="relative w-14 h-16 rounded overflow-hidden bg-sand-100 shrink-0 border border-sand-200">
                       <Image
