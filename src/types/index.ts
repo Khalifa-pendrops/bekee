@@ -189,6 +189,19 @@ export interface DeliveryQuoteRequest {
   checkoutLinkSentAt?: string;
 }
 
+export interface DiscountCode {
+  id: string;
+  code: string;
+  discountType: 'percentage' | 'fixed_kobo';
+  discountValue: number; // e.g., 10 for 10% or 500000 for 5,000 NGN
+  minOrderKobo?: number;
+  maxUses?: number;
+  timesUsed: number;
+  startsAt?: string;
+  expiresAt?: string;
+  isActive: boolean;
+}
+
 // ------------------------------------------
 // ORDERS & FULFILLMENT
 // ------------------------------------------

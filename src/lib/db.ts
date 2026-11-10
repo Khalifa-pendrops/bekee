@@ -10,14 +10,16 @@ import {
   DeliveryQuoteRequest, 
   CartItem,
   PaymentMethod,
-  OrderSource
+  OrderSource,
+  DiscountCode
 } from '@/types';
 import { 
   mockProducts, 
   mockCategories, 
   mockCollections, 
   mockDeliveryZones, 
-  mockStoreSettings 
+  mockStoreSettings,
+  mockDiscountCodes
 } from '@/data/mockData';
 import { isSupabaseConfigured, supabaseAdmin } from './supabase';
 
@@ -27,6 +29,7 @@ let inMemoryOrders: Order[] = [];
 let inMemoryReservations: StockReservation[] = [];
 let inMemoryMovements: InventoryMovement[] = [];
 let inMemoryQuotes: DeliveryQuoteRequest[] = [];
+let inMemoryDiscounts: DiscountCode[] = [...mockDiscountCodes];
 let inMemorySettings: StoreSettings = { ...mockStoreSettings };
 
 export const db = {
@@ -55,7 +58,7 @@ export const db = {
         .eq('is_archived', false);
 
       const { data, error } = await query;
-      if (!error && data) {
+      if (!error && data && data.length > 0) {
         return data as Product[];
       }
     }
@@ -309,6 +312,25 @@ export const db = {
     return { success: true, expiresAt };
   },
 
+  async releaseExpiredReservations(): Promise<{ releasedCount: number }> {
+    if (isSupabaseConfigured && supabaseAdmin) {
+      const { data, error } = await supabaseAdmin.rpc('release_expired_reservations');
+      if (!error && data !== null) {
+        return { releasedCount: Number(data) || 0 };
+      }
+    }
+
+    const now = new Date();
+    let released = 0;
+    for (const r of inMemoryReservations) {
+      if (!r.isCommitted && !r.isReleased && new Date(r.expiresAt) < now) {
+        r.isReleased = true;
+        released++;
+      }
+    }
+    return { releasedCount: released };
+  },
+
   async settleOrderPayment(
     paymentReference: string,
     amountPaidKobo: number,
@@ -512,6 +534,40 @@ export const db = {
     return { success: true, order: newOrder };
   },
 
+  async adjustStock(params: {
+    variantId: string;
+    newQuantity: number;
+    reason: 'restock' | 'damaged_writeoff' | 'customer_return_restock' | 'inventory_audit';
+    staffName: string;
+    notes?: string;
+  }): Promise<{ success: boolean; variant?: any; error?: string }> {
+    for (const p of inMemoryProducts) {
+      const v = p.variants.find((v) => v.id === params.variantId);
+      if (v) {
+        const change = params.newQuantity - v.stockQuantity;
+        v.stockQuantity = Math.max(0, params.newQuantity);
+
+        inMemoryMovements.unshift({
+          id: `mov_${Date.now()}`,
+          variantId: params.variantId,
+          changeQuantity: change,
+          resultingQuantity: v.stockQuantity,
+          reason: params.reason,
+          recordedBy: params.staffName,
+          notes: params.notes || `Stock adjusted by ${params.staffName}`,
+          createdAt: new Date().toISOString(),
+        });
+
+        return { success: true, variant: v };
+      }
+    }
+    return { success: false, error: 'Variant not found' };
+  },
+
+  async getInventoryMovements(): Promise<InventoryMovement[]> {
+    return inMemoryMovements;
+  },
+
   // ----------------------------------------------------
   // ORDERS REPOSITORY
   // ----------------------------------------------------
@@ -579,6 +635,52 @@ export const db = {
 
   async getDeliveryQuoteRequests(): Promise<DeliveryQuoteRequest[]> {
     return inMemoryQuotes;
+  },
+
+  // ----------------------------------------------------
+  // DISCOUNT CODES
+  // ----------------------------------------------------
+  async getDiscountCodes(): Promise<DiscountCode[]> {
+    return inMemoryDiscounts;
+  },
+
+  async validateDiscountCode(
+    code: string,
+    subtotalKobo: number
+  ): Promise<{ valid: boolean; discountKobo: number; message?: string; discount?: DiscountCode }> {
+    const cleanCode = code.trim().toUpperCase();
+    const discount = inMemoryDiscounts.find((d) => d.code.toUpperCase() === cleanCode && d.isActive);
+
+    if (!discount) {
+      return { valid: false, discountKobo: 0, message: 'Invalid or inactive promotional code' };
+    }
+
+    if (discount.minOrderKobo && subtotalKobo < discount.minOrderKobo) {
+      const minNaira = (discount.minOrderKobo / 100).toLocaleString();
+      return {
+        valid: false,
+        discountKobo: 0,
+        message: `Order must be at least ₦${minNaira} to use this code`,
+      };
+    }
+
+    if (discount.maxUses && discount.timesUsed >= discount.maxUses) {
+      return { valid: false, discountKobo: 0, message: 'This promotion has reached its maximum usage limit' };
+    }
+
+    let discountKobo = 0;
+    if (discount.discountType === 'percentage') {
+      discountKobo = Math.round((subtotalKobo * discount.discountValue) / 100);
+    } else {
+      discountKobo = Math.min(discount.discountValue, subtotalKobo);
+    }
+
+    return {
+      valid: true,
+      discountKobo,
+      discount,
+      message: `Discount code ${discount.code} applied!`,
+    };
   },
 
   // ----------------------------------------------------

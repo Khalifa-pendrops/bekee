@@ -1,4 +1,4 @@
-import { Product, Category, Collection, StoreSettings, DeliveryZone } from "@/types";
+import { Product, Category, Collection, StoreSettings, DeliveryZone, DiscountCode } from "@/types";
 
 export const mockStoreSettings: StoreSettings = {
   storeName: "ARUBEKEE COLLECTION",
@@ -420,4 +420,38 @@ export const mockProducts: Product[] = [
     ],
   },
 ];
+
+export const mockDiscountCodes: DiscountCode[] = [
+  {
+    id: "disc_welcome",
+    code: "ARUWELCOME",
+    discountType: "percentage",
+    discountValue: 10, // 10%
+    minOrderKobo: 2000000, // ₦20,000
+    timesUsed: 14,
+    maxUses: 500,
+    isActive: true,
+  },
+  {
+    id: "disc_abagirl",
+    code: "ABAGIRL",
+    discountType: "fixed_kobo",
+    discountValue: 500000, // ₦5,000 off
+    minOrderKobo: 4000000, // ₦40,000
+    timesUsed: 22,
+    maxUses: 200,
+    isActive: true,
+  },
+  {
+    id: "disc_vip",
+    code: "VIP2026",
+    discountType: "percentage",
+    discountValue: 15, // 15%
+    minOrderKobo: 5000000, // ₦50,000
+    timesUsed: 5,
+    maxUses: 100,
+    isActive: true,
+  },
+];
+
 
