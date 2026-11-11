@@ -1,14 +1,18 @@
 import React from "react";
 import Link from "next/link";
-import { mockProducts, mockCategories, mockCollections, mockStoreSettings } from "@/data/mockData";
+import { mockCategories, mockCollections, mockStoreSettings } from "@/data/mockData";
+import { db } from "@/lib/db";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight, Sparkles, MapPin, MessageCircle, ShieldCheck, Truck } from "lucide-react";
 
-export default function HomePage() {
-  const featuredProducts = mockProducts.filter((p) => p.isFeatured && p.isPublished);
-  const newArrivals = mockProducts.filter((p) => p.collectionSlugs.includes("new-arrivals"));
-  const saleProducts = mockProducts.filter((p) => 
+export const dynamic = 'force-dynamic';
+
+export default async function HomePage() {
+  const allProducts = await db.getProducts();
+  const featuredProducts = allProducts.filter((p) => p.isFeatured && p.isPublished);
+  const newArrivals = allProducts.filter((p) => p.collectionSlugs.includes("new-arrivals"));
+  const saleProducts = allProducts.filter((p) => 
     p.variants.some((v) => v.salePriceKobo && v.salePriceKobo < v.priceKobo)
   );
 
@@ -72,8 +76,8 @@ export default function HomePage() {
                 <div className="aspect-[3/4] overflow-hidden rounded-2xl border-2 border-[#EADDCF] shadow-card bg-stone-subtle">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=1000&q=80"
-                    alt="Arubekee Collection Luxury Fashion Aba"
+                    src="/asset/80772648-ba30-4794-a044-2de173b5fc1f.jpg"
+                    alt="Arubekee Collection Tailored Executive Fashion"
                     className="w-full h-full object-cover object-top hover:scale-102 transition-transform duration-700"
                   />
                 </div>
@@ -81,10 +85,10 @@ export default function HomePage() {
                 {/* Overlaid Editorial Plaque */}
                 <div className="absolute -bottom-6 -left-6 bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-[#EADDCF] shadow-floating max-w-[250px] hidden sm:block animate-float">
                   <span className="text-[10px] tracking-widest uppercase font-bold text-oxblood block">
-                    Harmattan / Festive 2026
+                    Signature Atelier Edit
                   </span>
                   <p className="font-serif text-sm text-obsidian mt-1 leading-snug">
-                    Bespoke draped crepe & hand-burnished leather mules.
+                    Bespoke tailored two-tone pencil dress in deep oxblood & blush.
                   </p>
                 </div>
               </div>
@@ -125,11 +129,11 @@ export default function HomePage() {
                 <img
                   src={
                     cat.slug === "clothing"
-                      ? "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=700&q=80"
+                      ? "/asset/3d8975d6-2641-4931-8c6a-06a95c78f70a.jpg"
                       : cat.slug === "shoes"
                       ? "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=700&q=80"
                       : cat.slug === "bags"
-                      ? "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=700&q=80"
+                      ? "/asset/e4d7f17d-8245-4ddc-8fb5-0218603555e3.jpg"
                       : "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=700&q=80"
                   }
                   alt={cat.name}

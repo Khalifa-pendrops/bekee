@@ -1,67 +1,823 @@
 [
   {
-    "id": "prod_1794318094044_6gaq8",
-    "name": "Test Product",
-    "slug": "test-product",
-    "tagline": "Artisanal Ready-to-Wear Silhouette",
-    "description": "Test Product handcrafted with refined tailoring in our boutique collection. Designed for flattering drape and effortless modern elegance.",
+    "id": "prod_chioma_pencil",
+    "name": "Chioma Two-Tone Executive Pencil Dress",
+    "slug": "chioma-two-tone-executive-pencil-dress",
+    "tagline": "Poised Boardroom Tailoring with Contrast Rose Accents",
+    "description": "Handcrafted in Aba with structured crepe, the Chioma pencil dress blends executive authority with refined femininity. Features a contrast soft rose-pink pointed collar, matching covered dome buttons, and delicate flared bell cuffs.",
     "categorySlug": "clothing",
     "subCategorySlug": "dresses",
-    "collectionSlugs": [
-      "new-arrivals"
-    ],
+    "collectionSlugs": ["workwear", "new-arrivals"],
     "fabricAndCare": [
-      "Premium breathable crepe blend",
-      "Hand wash cold or dry clean",
-      "Warm iron on reverse side"
+      "Imported structured crepe weave",
+      "Dry clean only or gentle cold hand wash",
+      "Low steam press on reverse"
     ],
     "images": [
       {
-        "id": "img_1794318024782_0",
-        "url": "/uploads/whatsapp-image-2026-11-04-at-1-1794318023355-748.jpeg",
-        "altText": "Test Product photo",
-        "isPrimary": true
-      },
-      {
-        "id": "img_1794318054660_0",
-        "url": "/uploads/vehicle-back-1794318039013-386.jpeg",
-        "altText": "Test Product photo",
-        "isPrimary": false
+        "id": "img_chioma_1",
+        "url": "/asset/80772648-ba30-4794-a044-2de173b5fc1f.jpg",
+        "altText": "Chioma Two-Tone Executive Pencil Dress in Oxblood",
+        "isPrimary": true,
+        "sortOrder": 0
       }
     ],
     "variants": [
       {
-        "id": "var_test_1",
-        "productId": "prod_test_product",
+        "id": "var_chioma_10",
+        "productId": "prod_chioma_pencil",
         "sku": "ARU-CLO-DRS-OXB-10",
-        "colorName": "Imperial Oxblood",
-        "colorHex": "#54121B",
+        "colorName": "Oxblood & Blush",
+        "colorHex": "#6B1724",
         "size": "UK 10",
-        "priceKobo": 550000,
+        "priceKobo": 4500000,
+        "salePriceKobo": null,
         "stockQuantity": 5,
         "lowStockThreshold": 2,
         "isActive": true
       },
       {
-        "id": "var_test_2",
-        "productId": "prod_test_product",
+        "id": "var_chioma_12",
+        "productId": "prod_chioma_pencil",
         "sku": "ARU-CLO-DRS-OXB-12",
-        "colorName": "Imperial Oxblood",
-        "colorHex": "#54121B",
+        "colorName": "Oxblood & Blush",
+        "colorHex": "#6B1724",
         "size": "UK 12",
-        "priceKobo": 550000,
+        "priceKobo": 4500000,
+        "salePriceKobo": null,
+        "stockQuantity": 6,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_chioma_14",
+        "productId": "prod_chioma_pencil",
+        "sku": "ARU-CLO-DRS-OXB-14",
+        "colorName": "Oxblood & Blush",
+        "colorHex": "#6B1724",
+        "size": "UK 14",
+        "priceKobo": 4500000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_chioma_16",
+        "productId": "prod_chioma_pencil",
+        "sku": "ARU-CLO-DRS-OXB-16",
+        "colorName": "Oxblood & Blush",
+        "colorHex": "#6B1724",
+        "size": "UK 16",
+        "priceKobo": 4500000,
+        "salePriceKobo": null,
+        "stockQuantity": 3,
+        "lowStockThreshold": 2,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": ["clothing", "dresses", "workwear", "corporate", "new-arrivals", "nigerian-fashion"],
+    "createdAt": "2026-11-11T11:00:00.000Z",
+    "updatedAt": "2026-11-11T11:00:00.000Z"
+  },
+  {
+    "id": "prod_adanna_boubou",
+    "name": "Adanna Leopard-Lapel Draped Boubou Gown",
+    "slug": "adanna-leopard-lapel-draped-boubou-gown",
+    "tagline": "Regal Drape with Animal-Print Lapels & Gold Button Detailing",
+    "description": "An architectural masterpiece in bespoke drape tailoring. The Adanna boubou combines fluid silhouette movement with bold leopard print shawl lapels, matching sleeve bands, and asymmetric side ruching finished with ornamental gold buttons.",
+    "categorySlug": "clothing",
+    "subCategorySlug": "dresses",
+    "collectionSlugs": ["occasion-wear", "new-arrivals"],
+    "fabricAndCare": [
+      "Heavy silk crepe & leopard satin trim",
+      "Hand wash cold separately",
+      "Do not tumble dry"
+    ],
+    "images": [
+      {
+        "id": "img_adanna_1",
+        "url": "/asset/3d8975d6-2641-4931-8c6a-06a95c78f70a.jpg",
+        "altText": "Adanna Leopard-Lapel Boubou in Magenta Pink",
+        "isPrimary": true,
+        "sortOrder": 0
+      },
+      {
+        "id": "img_adanna_2",
+        "url": "/asset/99dcd030-81ea-43fc-bde7-4d2375c80bf3.jpg",
+        "altText": "Adanna Leopard-Lapel Boubou in Caramel Brown",
+        "isPrimary": false,
+        "sortOrder": 1
+      }
+    ],
+    "variants": [
+      {
+        "id": "var_adanna_magenta",
+        "productId": "prod_adanna_boubou",
+        "sku": "ARU-CLO-BOU-MAG-FS",
+        "colorName": "Fuchsia Magenta",
+        "colorHex": "#C026D3",
+        "size": "Free Size",
+        "priceKobo": 5800000,
+        "salePriceKobo": null,
         "stockQuantity": 5,
         "lowStockThreshold": 2,
         "isActive": true
       },
       {
-        "id": "var_test_3",
-        "productId": "prod_test_product",
-        "sku": "ARU-CLO-DRS-OXB-14",
-        "colorName": "Imperial Oxblood",
-        "colorHex": "#54121B",
+        "id": "var_adanna_caramel",
+        "productId": "prod_adanna_boubou",
+        "sku": "ARU-CLO-BOU-CAR-FS",
+        "colorName": "Caramel Mocha",
+        "colorHex": "#8C5E3C",
+        "size": "Free Size",
+        "priceKobo": 5800000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": ["clothing", "dresses", "boubou", "occasion-wear", "leopard", "new-arrivals"],
+    "createdAt": "2026-11-11T11:00:00.000Z",
+    "updatedAt": "2026-11-11T11:00:00.000Z"
+  },
+  {
+    "id": "prod_zikora_boubou",
+    "name": "Zikora Royal Neckline Embroidered Boubou",
+    "slug": "zikora-royal-neckline-embroidered-boubou",
+    "tagline": "Regal Wine Crepe with Hand-Embroidered Circular Rings",
+    "description": "Exuding effortless African royalty, the Zikora boubou is tailored from rich imperial wine crepe with vivid circular geometric corded embroidery framing the collar in sunburst yellow, tangerine, emerald, and violet.",
+    "categorySlug": "clothing",
+    "subCategorySlug": "dresses",
+    "collectionSlugs": ["occasion-wear", "new-arrivals"],
+    "fabricAndCare": [
+      "Premium breathable matte crepe",
+      "Dry clean recommended for thread embroidery",
+      "Steam gently"
+    ],
+    "images": [
+      {
+        "id": "img_zikora_1",
+        "url": "/asset/e0fed1d5-a8e8-4885-8107-9691b7d276f1.jpg",
+        "altText": "Zikora Royal Embroidered Boubou in Wine",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "id": "var_zikora_wine",
+        "productId": "prod_zikora_boubou",
+        "sku": "ARU-CLO-BOU-WIN-FS",
+        "colorName": "Imperial Wine",
+        "colorHex": "#6B1724",
+        "size": "Free Size",
+        "priceKobo": 6200000,
+        "salePriceKobo": null,
+        "stockQuantity": 6,
+        "lowStockThreshold": 2,
+        "isActive": true
+      }
+    ],
+    "hasVariants": false,
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": ["clothing", "dresses", "boubou", "occasion-wear", "embroidery", "new-arrivals"],
+    "createdAt": "2026-11-11T11:00:00.000Z",
+    "updatedAt": "2026-11-11T11:00:00.000Z"
+  },
+  {
+    "id": "prod_ezinne_rhinestone",
+    "name": "Ezinne Greek-Key Rhinestone Silk Palazzo Set",
+    "slug": "ezinne-greek-key-rhinestone-silk-palazzo-set",
+    "tagline": "Emerald Silk Crepe Embellished with Gilded Rhinestone Borders",
+    "description": "Turn heads at any event. The Ezinne two-piece features a relaxed collared button-down tunic top and flowing wide-leg palazzo trousers, highlighted with decadent gold rhinestone Greek-key borders along the hem, cuffs, and pockets.",
+    "categorySlug": "clothing",
+    "subCategorySlug": "matching-sets",
+    "collectionSlugs": ["occasion-wear", "weekend-looks", "new-arrivals"],
+    "fabricAndCare": [
+      "Smooth imported silk crepe",
+      "Delicate hand wash inside out",
+      "Do not iron directly over hotfix rhinestones"
+    ],
+    "images": [
+      {
+        "id": "img_ezinne_1",
+        "url": "/asset/e6c184be-8f8e-462c-bcc0-824700c80949.jpg",
+        "altText": "Ezinne Greek-Key Rhinestone Palazzo Set in Emerald",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "id": "var_ezinne_10",
+        "productId": "prod_ezinne_rhinestone",
+        "sku": "ARU-CLO-SET-EME-10",
+        "colorName": "Emerald Green",
+        "colorHex": "#064E3B",
+        "size": "UK 10",
+        "priceKobo": 6500000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_ezinne_12",
+        "productId": "prod_ezinne_rhinestone",
+        "sku": "ARU-CLO-SET-EME-12",
+        "colorName": "Emerald Green",
+        "colorHex": "#064E3B",
+        "size": "UK 12",
+        "priceKobo": 6500000,
+        "salePriceKobo": null,
+        "stockQuantity": 5,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_ezinne_14",
+        "productId": "prod_ezinne_rhinestone",
+        "sku": "ARU-CLO-SET-EME-14",
+        "colorName": "Emerald Green",
+        "colorHex": "#064E3B",
         "size": "UK 14",
-        "priceKobo": 550000,
+        "priceKobo": 6500000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_ezinne_16",
+        "productId": "prod_ezinne_rhinestone",
+        "sku": "ARU-CLO-SET-EME-16",
+        "colorName": "Emerald Green",
+        "colorHex": "#064E3B",
+        "size": "UK 16",
+        "priceKobo": 6500000,
+        "salePriceKobo": null,
+        "stockQuantity": 3,
+        "lowStockThreshold": 2,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": ["clothing", "matching-sets", "palazzo", "silk", "emerald", "new-arrivals"],
+    "createdAt": "2026-11-11T11:00:00.000Z",
+    "updatedAt": "2026-11-11T11:00:00.000Z"
+  },
+  {
+    "id": "prod_somto_palm_set",
+    "name": "Somto Palm Oasis Asymmetric Tunic & Palazzo Set",
+    "slug": "somto-palm-oasis-asymmetric-tunic-set",
+    "tagline": "Resort Botanical Print with High Mock-Neck Asymmetric Hem",
+    "description": "Bask in resort elegance. The Somto co-ord combines an asymmetric high mock-neck tunic top and wide-leg trousers in a crisp white palm tree landscape print with subtle pink floral undertones.",
+    "categorySlug": "clothing",
+    "subCategorySlug": "matching-sets",
+    "collectionSlugs": ["weekend-looks", "new-arrivals"],
+    "fabricAndCare": [
+      "Ultra-soft fluid chiffon silk",
+      "Gentle cold wash",
+      "Line dry in shade"
+    ],
+    "images": [
+      {
+        "id": "img_somto_1",
+        "url": "/asset/3bc9dbd8-9d61-43f9-b9be-a6e74d8ddfdc.jpg",
+        "altText": "Somto Palm Oasis Asymmetric Tunic Set",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "id": "var_somto_10",
+        "productId": "prod_somto_palm_set",
+        "sku": "ARU-CLO-SET-PLM-10",
+        "colorName": "Palm Oasis White",
+        "colorHex": "#FDFBF7",
+        "size": "UK 10",
+        "priceKobo": 5200000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_somto_12",
+        "productId": "prod_somto_palm_set",
+        "sku": "ARU-CLO-SET-PLM-12",
+        "colorName": "Palm Oasis White",
+        "colorHex": "#FDFBF7",
+        "size": "UK 12",
+        "priceKobo": 5200000,
+        "salePriceKobo": null,
+        "stockQuantity": 5,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_somto_14",
+        "productId": "prod_somto_palm_set",
+        "sku": "ARU-CLO-SET-PLM-14",
+        "colorName": "Palm Oasis White",
+        "colorHex": "#FDFBF7",
+        "size": "UK 14",
+        "priceKobo": 5200000,
+        "salePriceKobo": null,
+        "stockQuantity": 3,
+        "lowStockThreshold": 2,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": ["clothing", "matching-sets", "resort", "botanical", "palazzo", "weekend-looks"],
+    "createdAt": "2026-11-11T11:00:00.000Z",
+    "updatedAt": "2026-11-11T11:00:00.000Z"
+  },
+  {
+    "id": "prod_kamsi_hourglass",
+    "name": "Kamsi Hourglass Brooch Draped Maxi Dress",
+    "slug": "kamsi-hourglass-brooch-draped-maxi-dress",
+    "tagline": "Sculpted Ribbed Silhouette with Gilded Curved Waist Brooch",
+    "description": "Engineered to celebrate every curve. The Kamsi dress is tailored from a sculpting rib-knit crepe with a gilded curved brooch accent at the hip, cascading into a sweeping waterfall side sash.",
+    "categorySlug": "clothing",
+    "subCategorySlug": "dresses",
+    "collectionSlugs": ["occasion-wear", "new-arrivals"],
+    "fabricAndCare": [
+      "Stretchy contoured ribbed knit",
+      "Hand wash cold to preserve elasticity",
+      "Flat dry"
+    ],
+    "images": [
+      {
+        "id": "img_kamsi_1",
+        "url": "/asset/IMG_8167.PNG",
+        "altText": "Kamsi Hourglass Brooch Draped Maxi Dress",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "id": "var_kamsi_wine_12",
+        "productId": "prod_kamsi_hourglass",
+        "sku": "ARU-CLO-DRS-WIN-12",
+        "colorName": "Wine Bordeaux",
+        "colorHex": "#6B1724",
+        "size": "UK 12",
+        "priceKobo": 4800000,
+        "salePriceKobo": null,
+        "stockQuantity": 5,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_kamsi_rust_12",
+        "productId": "prod_kamsi_hourglass",
+        "sku": "ARU-CLO-DRS-RST-12",
+        "colorName": "Terracotta Rust",
+        "colorHex": "#B4533C",
+        "size": "UK 12",
+        "priceKobo": 4800000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_kamsi_rose_12",
+        "productId": "prod_kamsi_hourglass",
+        "sku": "ARU-CLO-DRS-ROS-12",
+        "colorName": "Dusty Rose",
+        "colorHex": "#E0A899",
+        "size": "UK 12",
+        "priceKobo": 4800000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_kamsi_white_12",
+        "productId": "prod_kamsi_hourglass",
+        "sku": "ARU-CLO-DRS-WHT-12",
+        "colorName": "Pure White",
+        "colorHex": "#FFFFFF",
+        "size": "UK 12",
+        "priceKobo": 4800000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_kamsi_mint_12",
+        "productId": "prod_kamsi_hourglass",
+        "sku": "ARU-CLO-DRS-MNT-12",
+        "colorName": "Mint Ice",
+        "colorHex": "#8CD3C7",
+        "size": "UK 12",
+        "priceKobo": 4800000,
+        "salePriceKobo": null,
+        "stockQuantity": 3,
+        "lowStockThreshold": 2,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": ["clothing", "dresses", "maxi", "ribbed", "bodycon", "occasion-wear"],
+    "createdAt": "2026-11-11T11:00:00.000Z",
+    "updatedAt": "2026-11-11T11:00:00.000Z"
+  },
+  {
+    "id": "prod_oluchi_grecian",
+    "name": "Oluchi Grecian Plunging Waterfall Evening Gown",
+    "slug": "oluchi-grecian-plunging-waterfall-evening-gown",
+    "tagline": "Shimmering Goddess Drape with Plunging Neckline & Center Sash",
+    "description": "An entrance-making black-tie gown crafted from liquid shimmer jersey. Designed with an ultra-flattering deep plunge neckline, cinched ruched waist, and dramatic center waterfall sash.",
+    "categorySlug": "clothing",
+    "subCategorySlug": "dresses",
+    "collectionSlugs": ["occasion-wear", "new-arrivals"],
+    "fabricAndCare": [
+      "Liquid metallic shimmer jersey",
+      "Specialist dry clean only",
+      "Do not steam directly on metallic threads"
+    ],
+    "images": [
+      {
+        "id": "img_oluchi_1",
+        "url": "/asset/IMG_8168.PNG",
+        "altText": "Oluchi Grecian Plunging Waterfall Evening Gown",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "id": "var_oluchi_white",
+        "productId": "prod_oluchi_grecian",
+        "sku": "ARU-CLO-GWN-WHT-12",
+        "colorName": "Shimmer White",
+        "colorHex": "#F5F5F5",
+        "size": "UK 12",
+        "priceKobo": 7500000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_oluchi_orange",
+        "productId": "prod_oluchi_grecian",
+        "sku": "ARU-CLO-GWN-ORG-12",
+        "colorName": "Sunset Orange",
+        "colorHex": "#EA580C",
+        "size": "UK 12",
+        "priceKobo": 7500000,
+        "salePriceKobo": null,
+        "stockQuantity": 3,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_oluchi_lilac",
+        "productId": "prod_oluchi_grecian",
+        "sku": "ARU-CLO-GWN-LIL-12",
+        "colorName": "Lilac Pink",
+        "colorHex": "#D8B4E2",
+        "size": "UK 12",
+        "priceKobo": 7500000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_oluchi_chocolate",
+        "productId": "prod_oluchi_grecian",
+        "sku": "ARU-CLO-GWN-CHO-12",
+        "colorName": "Dark Chocolate",
+        "colorHex": "#3D2314",
+        "size": "UK 12",
+        "priceKobo": 7500000,
+        "salePriceKobo": null,
+        "stockQuantity": 3,
+        "lowStockThreshold": 2,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": ["clothing", "dresses", "evening-gown", "grecian", "occasion-wear", "new-arrivals"],
+    "createdAt": "2026-11-11T11:00:00.000Z",
+    "updatedAt": "2026-11-11T11:00:00.000Z"
+  },
+  {
+    "id": "prod_amara_lantern",
+    "name": "Amara Botanical Lantern-Sleeve Palazzo Set",
+    "slug": "amara-botanical-lantern-sleeve-palazzo-set",
+    "tagline": "Statement Puff Sleeve Tunic with Fringe Tassel Placket & Side Stripes",
+    "description": "Contemporary flair meets comfortable tailoring. Features bold botanical printed balloon lantern sleeves, coordinating pant side-stripes, and a fringe tassel front placket.",
+    "categorySlug": "clothing",
+    "subCategorySlug": "matching-sets",
+    "collectionSlugs": ["occasion-wear", "new-arrivals"],
+    "fabricAndCare": [
+      "Breathable crepe blend",
+      "Gentle machine wash cold",
+      "Warm iron"
+    ],
+    "images": [
+      {
+        "id": "img_amara_1",
+        "url": "/asset/fa563944-f7ce-4c4e-8096-9c7f29ebfbe3.jpg",
+        "altText": "Amara Botanical Lantern-Sleeve Palazzo Set",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "id": "var_amara_red_12",
+        "productId": "prod_amara_lantern",
+        "sku": "ARU-CLO-SET-RED-12",
+        "colorName": "Crimson Red",
+        "colorHex": "#B91C1C",
+        "size": "UK 12",
+        "priceKobo": 5400000,
+        "salePriceKobo": null,
+        "stockQuantity": 5,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_amara_white_12",
+        "productId": "prod_amara_lantern",
+        "sku": "ARU-CLO-SET-WHT-12",
+        "colorName": "Crisp White",
+        "colorHex": "#FFFFFF",
+        "size": "UK 12",
+        "priceKobo": 5400000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": ["clothing", "matching-sets", "lantern-sleeve", "occasion-wear", "palazzo"],
+    "createdAt": "2026-11-11T11:00:00.000Z",
+    "updatedAt": "2026-11-11T11:00:00.000Z"
+  },
+  {
+    "id": "prod_ify_lace_set",
+    "name": "Ify Lace-Spine Back Relaxed Palazzo Set",
+    "slug": "ify-lace-spine-relaxed-palazzo-set",
+    "tagline": "Breezy Pastel Pink Crepe with Intricate Floral Lace Back Cutout",
+    "description": "Casual luxury from front to back. The Ify relaxed set features a soft blush pink collared button-down shirt revealing an intricate floral lace cut-out down the spine, paired with matching loose palazzo trousers.",
+    "categorySlug": "clothing",
+    "subCategorySlug": "matching-sets",
+    "collectionSlugs": ["weekend-looks"],
+    "fabricAndCare": [
+      "Lightweight rayon crepe & embroidered lace",
+      "Hand wash cold separately",
+      "Line dry"
+    ],
+    "images": [
+      {
+        "id": "img_ify_1",
+        "url": "/asset/64585985-66ca-45a8-b50b-0511c01dd8fa.jpg",
+        "altText": "Ify Lace-Spine Relaxed Palazzo Set in Blush Pink",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "id": "var_ify_12",
+        "productId": "prod_ify_lace_set",
+        "sku": "ARU-CLO-SET-PNK-12",
+        "colorName": "Blush Pink",
+        "colorHex": "#FBCFE8",
+        "size": "UK 12",
+        "priceKobo": 4500000,
+        "salePriceKobo": null,
+        "stockQuantity": 5,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_ify_14",
+        "productId": "prod_ify_lace_set",
+        "sku": "ARU-CLO-SET-PNK-14",
+        "colorName": "Blush Pink",
+        "colorHex": "#FBCFE8",
+        "size": "UK 14",
+        "priceKobo": 4500000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": ["clothing", "matching-sets", "lace", "loungewear", "pink", "weekend-looks"],
+    "createdAt": "2026-11-11T11:00:00.000Z",
+    "updatedAt": "2026-11-11T11:00:00.000Z"
+  },
+  {
+    "id": "prod_nkiru_shorts_set",
+    "name": "Nkiru Floral Motif Oversized Shirt & Shorts Set",
+    "slug": "nkiru-floral-motif-oversized-shirt-shorts-set",
+    "tagline": "Vibrant Fuchsia Linen-Blend Casual Co-ord with White Line Embroidery",
+    "description": "The ultimate chic weekend getaway co-ord. Features a relaxed drop-shoulder oversized button-down shirt adorned with white botanical line embroidery, paired with high-comfort tailored shorts.",
+    "categorySlug": "clothing",
+    "subCategorySlug": "matching-sets",
+    "collectionSlugs": ["weekend-looks"],
+    "fabricAndCare": [
+      "Breathable cotton linen weave",
+      "Machine wash gentle cold",
+      "Medium iron"
+    ],
+    "images": [
+      {
+        "id": "img_nkiru_1",
+        "url": "/asset/e8bbcf85-a7de-4c1b-be66-0163cfddcb7b.jpg",
+        "altText": "Nkiru Floral Motif Shirt & Shorts Set",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "id": "var_nkiru_12",
+        "productId": "prod_nkiru_shorts_set",
+        "sku": "ARU-CLO-SET-FUC-12",
+        "colorName": "Hot Fuchsia",
+        "colorHex": "#BE185D",
+        "size": "UK 12",
+        "priceKobo": 3800000,
+        "salePriceKobo": null,
+        "stockQuantity": 5,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_nkiru_14",
+        "productId": "prod_nkiru_shorts_set",
+        "sku": "ARU-CLO-SET-FUC-14",
+        "colorName": "Hot Fuchsia",
+        "colorHex": "#BE185D",
+        "size": "UK 14",
+        "priceKobo": 3800000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": ["clothing", "matching-sets", "shorts", "fuchsia", "linen", "weekend-looks"],
+    "createdAt": "2026-11-11T11:00:00.000Z",
+    "updatedAt": "2026-11-11T11:00:00.000Z"
+  },
+  {
+    "id": "prod_adaora_geo_set",
+    "name": "Adaora Tie-Waist Blouse & Geometric Palazzo Set",
+    "slug": "adaora-tie-waist-blouse-geometric-palazzo-set",
+    "tagline": "Office-to-Evening Black Cinch Top & Navy Abstract Geometric Pants",
+    "description": "Sophisticated modern tailoring. Features a flattering black cinched front-knot tie blouse paired with high-waisted fluid palazzo pants in a bespoke navy and white geometric grid print.",
+    "categorySlug": "clothing",
+    "subCategorySlug": "matching-sets",
+    "collectionSlugs": ["workwear", "weekend-looks"],
+    "fabricAndCare": [
+      "Stretchy poly-blend top & fluid printed crepe trousers",
+      "Machine wash cold",
+      "Hang to dry"
+    ],
+    "images": [
+      {
+        "id": "img_adaora_1",
+        "url": "/asset/58874f57-e431-4b59-b12e-81eb4642f2b2.jpg",
+        "altText": "Adaora Tie-Waist Blouse & Geometric Palazzo Set",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "id": "var_adaora_12",
+        "productId": "prod_adaora_geo_set",
+        "sku": "ARU-CLO-SET-GEO-12",
+        "colorName": "Black & Navy Geo",
+        "colorHex": "#1E293B",
+        "size": "UK 12",
+        "priceKobo": 4800000,
+        "salePriceKobo": null,
+        "stockQuantity": 5,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_adaora_14",
+        "productId": "prod_adaora_geo_set",
+        "sku": "ARU-CLO-SET-GEO-14",
+        "colorName": "Black & Navy Geo",
+        "colorHex": "#1E293B",
+        "size": "UK 14",
+        "priceKobo": 4800000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": ["clothing", "matching-sets", "corporate", "workwear", "palazzo", "geometric"],
+    "createdAt": "2026-11-11T11:00:00.000Z",
+    "updatedAt": "2026-11-11T11:00:00.000Z"
+  },
+  {
+    "id": "prod_chidinma_leopard_mini",
+    "name": "Chidinma Leopard Scallop-Lace Mini Dress",
+    "slug": "chidinma-leopard-scallop-lace-mini-dress",
+    "tagline": "Seductive Long-Sleeve Animal-Print Bodycon with Scalloped Black Lace V-Neck",
+    "description": "Bold, confident, and unforgettable. Cut from high-stretch contour jersey in a warm leopard print, framed by a deep plunging neckline trimmed in intricate scalloped black floral lace.",
+    "categorySlug": "clothing",
+    "subCategorySlug": "dresses",
+    "collectionSlugs": ["weekend-looks", "occasion-wear"],
+    "fabricAndCare": [
+      "Four-way contour stretch jersey & French lace",
+      "Hand wash cold only",
+      "Do not wring"
+    ],
+    "images": [
+      {
+        "id": "img_chidinma_1",
+        "url": "/asset/5e27a10f-0598-490f-8dbb-b3bcd79d29d7.jpg",
+        "altText": "Chidinma Leopard Scallop-Lace Mini Dress",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "id": "var_chidinma_10",
+        "productId": "prod_chidinma_leopard_mini",
+        "sku": "ARU-CLO-DRS-LEO-10",
+        "colorName": "Classic Leopard",
+        "colorHex": "#854D0E",
+        "size": "UK 10",
+        "priceKobo": 3800000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_chidinma_12",
+        "productId": "prod_chidinma_leopard_mini",
+        "sku": "ARU-CLO-DRS-LEO-12",
+        "colorName": "Classic Leopard",
+        "colorHex": "#854D0E",
+        "size": "UK 12",
+        "priceKobo": 3800000,
+        "salePriceKobo": null,
         "stockQuantity": 5,
         "lowStockThreshold": 2,
         "isActive": true
@@ -71,13 +827,270 @@
     "isPublished": true,
     "isArchived": false,
     "isFeatured": true,
-    "tags": [
-      "clothing",
-      "dresses",
-      "new-arrival",
-      "nigerian-fashion"
+    "tags": ["clothing", "dresses", "mini-dress", "bodycon", "leopard", "lace"],
+    "createdAt": "2026-11-11T11:00:00.000Z",
+    "updatedAt": "2026-11-11T11:00:00.000Z"
+  },
+  {
+    "id": "prod_ugochi_corset_pants",
+    "name": "Ugochi Corset Lace-Up Wide-Leg Trousers",
+    "slug": "ugochi-corset-lace-up-wide-leg-trousers",
+    "tagline": "High-Waisted Street-Luxe Sweatpants with Grommeted Corset Thigh Lacing",
+    "description": "Streetwear comfort meets bespoke corset detailing. Tailored from premium fleece-back cotton knit with silver eyelets and adjustable crisscross corset cords along both thighs.",
+    "categorySlug": "clothing",
+    "subCategorySlug": "trousers-and-jeans",
+    "collectionSlugs": ["weekend-looks"],
+    "fabricAndCare": [
+      "100% heavy fleece-back cotton sweatshirting",
+      "Machine wash cold inside out",
+      "Tumble dry low"
     ],
-    "createdAt": "2026-11-10T13:41:34.044Z",
-    "updatedAt": "2026-11-10T13:41:34.044Z"
+    "images": [
+      {
+        "id": "img_ugochi_1",
+        "url": "/asset/1d633a9f-6ad3-491d-a20d-a6575ebf7db9.jpg",
+        "altText": "Ugochi Corset Lace-Up Trousers (Grey, Blue, Khaki)",
+        "isPrimary": true,
+        "sortOrder": 0
+      },
+      {
+        "id": "img_ugochi_2",
+        "url": "/asset/c957660d-f9ee-484c-822f-22ec3f1592fe.jpg",
+        "altText": "Ugochi Corset Lace-Up Trousers in Lilac Purple",
+        "isPrimary": false,
+        "sortOrder": 1
+      }
+    ],
+    "variants": [
+      {
+        "id": "var_ugochi_grey_m",
+        "productId": "prod_ugochi_corset_pants",
+        "sku": "ARU-CLO-TRS-GRY-M",
+        "colorName": "Heather Grey",
+        "colorHex": "#9CA3AF",
+        "size": "M",
+        "priceKobo": 3200000,
+        "salePriceKobo": null,
+        "stockQuantity": 5,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_ugochi_blue_m",
+        "productId": "prod_ugochi_corset_pants",
+        "sku": "ARU-CLO-TRS-BLU-M",
+        "colorName": "Cobalt Blue",
+        "colorHex": "#1D4ED8",
+        "size": "M",
+        "priceKobo": 3200000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_ugochi_khaki_m",
+        "productId": "prod_ugochi_corset_pants",
+        "sku": "ARU-CLO-TRS-KHK-M",
+        "colorName": "Khaki Tan",
+        "colorHex": "#D4B996",
+        "size": "M",
+        "priceKobo": 3200000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_ugochi_lilac_m",
+        "productId": "prod_ugochi_corset_pants",
+        "sku": "ARU-CLO-TRS-LIL-M",
+        "colorName": "Lilac Purple",
+        "colorHex": "#C084FC",
+        "size": "M",
+        "priceKobo": 3200000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": ["clothing", "trousers-and-jeans", "corset", "sweatpants", "streetwear", "weekend-looks"],
+    "createdAt": "2026-11-11T11:00:00.000Z",
+    "updatedAt": "2026-11-11T11:00:00.000Z"
+  },
+  {
+    "id": "prod_arubekee_vanity_bag",
+    "name": "The Arubekee Leather Vanity Box Crossbody Bag",
+    "slug": "arubekee-leather-vanity-box-crossbody-bag",
+    "tagline": "Artisanal Structured Top-Handle Case with Dual Zip & Removable Shoulder Strap",
+    "description": "A structured statement vanity case handcrafted from smooth full-grain leather. Designed with a sturdy curved top handle, polished silver dual-zip closure, and a detachable leather crossbody strap.",
+    "categorySlug": "bags",
+    "subCategorySlug": "crossbody-bags",
+    "collectionSlugs": ["new-arrivals", "occasion-wear"],
+    "fabricAndCare": [
+      "100% Genuine structured calfskin leather",
+      "Silver-tone alloy hardware & dual zip",
+      "Wipe clean with soft leather conditioner cloth"
+    ],
+    "images": [
+      {
+        "id": "img_vanity_1",
+        "url": "/asset/e4d7f17d-8245-4ddc-8fb5-0218603555e3.jpg",
+        "altText": "The Arubekee Leather Vanity Box Bag Collection",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "id": "var_vanity_blk",
+        "productId": "prod_arubekee_vanity_bag",
+        "sku": "ARU-BAG-VAN-BLK-OS",
+        "colorName": "Obsidian Black",
+        "colorHex": "#181514",
+        "size": "One Size",
+        "priceKobo": 3500000,
+        "salePriceKobo": null,
+        "stockQuantity": 5,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_vanity_blu",
+        "productId": "prod_arubekee_vanity_bag",
+        "sku": "ARU-BAG-VAN-BLU-OS",
+        "colorName": "Powder Blue",
+        "colorHex": "#93C5FD",
+        "size": "One Size",
+        "priceKobo": 3500000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_vanity_yel",
+        "productId": "prod_arubekee_vanity_bag",
+        "sku": "ARU-BAG-VAN-YEL-OS",
+        "colorName": "Sunflower Yellow",
+        "colorHex": "#EAB308",
+        "size": "One Size",
+        "priceKobo": 3500000,
+        "salePriceKobo": null,
+        "stockQuantity": 3,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_vanity_tan",
+        "productId": "prod_arubekee_vanity_bag",
+        "sku": "ARU-BAG-VAN-TAN-OS",
+        "colorName": "Caramel Tan",
+        "colorHex": "#B45309",
+        "size": "One Size",
+        "priceKobo": 3500000,
+        "salePriceKobo": null,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_vanity_oxb",
+        "productId": "prod_arubekee_vanity_bag",
+        "sku": "ARU-BAG-VAN-OXB-OS",
+        "colorName": "Burgundy Oxblood",
+        "colorHex": "#6B1724",
+        "size": "One Size",
+        "priceKobo": 3500000,
+        "salePriceKobo": null,
+        "stockQuantity": 5,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_vanity_cho",
+        "productId": "prod_arubekee_vanity_bag",
+        "sku": "ARU-BAG-VAN-CHO-OS",
+        "colorName": "Dark Chocolate",
+        "colorHex": "#3D2314",
+        "size": "One Size",
+        "priceKobo": 3500000,
+        "salePriceKobo": null,
+        "stockQuantity": 3,
+        "lowStockThreshold": 2,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": ["bags", "crossbody-bags", "handbags", "leather", "vanity-case", "new-arrivals"],
+    "createdAt": "2026-11-11T11:00:00.000Z",
+    "updatedAt": "2026-11-11T11:00:00.000Z"
+  },
+  {
+    "id": "prod_ngozi_kaftan",
+    "name": "Ngozi V-Neck Striped Pocket Kaftan",
+    "slug": "ngozi-v-neck-striped-pocket-kaftan",
+    "tagline": "Relaxed Artisanal Silhouette with Hand-Woven Stripe Accent",
+    "description": "An everyday luxury staple crafted from breathable mid-weight crepe. Features an airy V-neck cut and a prominent woven striped artisanal fabric pocket patch celebrating Nigerian textile heritage.",
+    "categorySlug": "clothing",
+    "subCategorySlug": "dresses",
+    "collectionSlugs": ["weekend-looks", "occasion-wear"],
+    "fabricAndCare": [
+      "Breathable crepe & traditional woven cotton",
+      "Hand wash cold separately",
+      "Hang dry"
+    ],
+    "images": [
+      {
+        "id": "img_ngozi_1",
+        "url": "/asset/019c751e-527c-45de-841b-78967d8824eb.jpg",
+        "altText": "Ngozi V-Neck Striped Pocket Kaftan",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "id": "var_ngozi_blk",
+        "productId": "prod_ngozi_kaftan",
+        "sku": "ARU-CLO-KAF-BLK-FS",
+        "colorName": "Obsidian Black",
+        "colorHex": "#181514",
+        "size": "Free Size",
+        "priceKobo": 4200000,
+        "salePriceKobo": null,
+        "stockQuantity": 5,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "var_ngozi_wht",
+        "productId": "prod_ngozi_kaftan",
+        "sku": "ARU-CLO-KAF-WHT-FS",
+        "colorName": "Pure White",
+        "colorHex": "#FFFFFF",
+        "size": "Free Size",
+        "priceKobo": 4200000,
+        "salePriceKobo": null,
+        "stockQuantity": 5,
+        "lowStockThreshold": 2,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": ["clothing", "dresses", "kaftan", "boubou", "ethnic-pocket", "weekend-looks"],
+    "createdAt": "2026-11-11T11:00:00.000Z",
+    "updatedAt": "2026-11-11T11:00:00.000Z"
   }
 ]
