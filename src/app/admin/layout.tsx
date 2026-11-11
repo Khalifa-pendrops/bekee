@@ -39,7 +39,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-stone-100 flex flex-col md:flex-row text-stone-900 font-sans w-full max-w-full overflow-x-hidden min-w-0">
+    <div className="min-h-screen bg-stone-100 flex flex-col md:flex-row text-stone-900 font-sans w-full max-w-full min-w-0">
       
       {/* DESKTOP SIDEBAR */}
       <aside className="hidden md:flex flex-col w-64 bg-stone-900 text-stone-300 border-r border-stone-800 shrink-0 select-none">

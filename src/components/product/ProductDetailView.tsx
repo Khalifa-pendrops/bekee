@@ -67,8 +67,8 @@ export function ProductDetailView({ product, relatedProducts, settings }: Produc
 
   // Filter available sizes for the currently selected color
   const availableSizesForColor = useMemo(() => {
-    return product.variants
-      .filter((v) => v.colorName.toLowerCase() === selectedColor.toLowerCase())
+    return (product.variants || [])
+      .filter((v) => (v.colorName || '').toLowerCase() === (selectedColor || '').toLowerCase())
       .map((v) => ({
         size: v.size,
         stock: v.stockQuantity,
@@ -78,7 +78,13 @@ export function ProductDetailView({ product, relatedProducts, settings }: Produc
 
   // Unique colors
   const uniqueColors = useMemo(() => {
-    return Array.from(new Set(product.variants.map((v) => v.colorName)));
+    return Array.from(
+      new Set(
+        (product.variants || [])
+          .map((v) => v?.colorName?.trim())
+          .filter((c): c is string => Boolean(c))
+      )
+    );
   }, [product.variants]);
 
   // Update selected variant when color or size changes
@@ -322,7 +328,7 @@ export function ProductDetailView({ product, relatedProducts, settings }: Produc
 
             <div className="flex flex-wrap gap-2">
               {uniqueColors.map((color) => {
-                const isSelected = selectedColor.toLowerCase() === color.toLowerCase();
+                const isSelected = (selectedColor || '').toLowerCase() === (color || '').toLowerCase();
                 return (
                   <button
                     key={color}

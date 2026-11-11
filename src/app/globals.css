@@ -28,15 +28,8 @@
     min-height: 100vh;
     background-color: #FAF6F0;
     color: #181514;
-    overflow-x: clip;
     position: relative;
     touch-action: pan-y; /* Prevents horizontal drag/wobble on mobile touch */
-  }
-
-  @supports not (overflow-x: clip) {
-    html, body {
-      overflow-x: hidden;
-    }
   }
 
   /* Inner carousels & tables maintain touch scrolling when intentional */

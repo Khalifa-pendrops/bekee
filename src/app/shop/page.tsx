@@ -121,7 +121,7 @@ function ShopContent() {
 
     if (currentColor) {
       result = result.filter((p) =>
-        p.variants.some((v) => v.colorName.toLowerCase() === currentColor.toLowerCase())
+        (p.variants || []).some((v) => (v.colorName || '').toLowerCase() === currentColor.toLowerCase())
       );
     }
 

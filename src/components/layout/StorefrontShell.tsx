@@ -18,15 +18,15 @@ export function StorefrontShell({ children }: StorefrontShellProps) {
 
   // If inside the admin area, do not render consumer storefront chrome
   if (isAdmin) {
-    return <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">{children}</main>;
+    return <main className="flex-1 w-full max-w-full overflow-x-clip min-w-0">{children}</main>;
   }
 
   // Consumer storefront: full chrome with announcement bar, header, drawer, footer, and bottom navigation
   return (
-    <div className="flex flex-col min-h-screen w-full max-w-full overflow-x-hidden min-w-0">
+    <div className="flex flex-col min-h-screen w-full max-w-full min-w-0">
       <AnnouncementBar />
       <Header />
-      <main className="flex-1 w-full max-w-full overflow-x-hidden min-w-0">{children}</main>
+      <main className="flex-1 w-full max-w-full overflow-x-clip min-w-0">{children}</main>
       <Footer />
       <CartDrawer />
       <MobileBottomNav />

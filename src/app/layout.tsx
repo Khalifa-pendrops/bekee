@@ -60,7 +60,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${serifFont.variable} ${sansFont.variable}`}>
-      <body className="bg-ivory text-obsidian flex flex-col min-h-screen w-full max-w-full overflow-x-hidden min-w-0 relative">
+      <body className="bg-ivory text-obsidian flex flex-col min-h-screen w-full max-w-full min-w-0 relative">
         <CartProvider>
           <WishlistProvider>
             <StorefrontShell>{children}</StorefrontShell>

@@ -76,11 +76,23 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
   const hasSale = !!salePriceKobo && salePriceKobo < startingPriceKobo;
   const discountPercent = hasSale ? Math.round(((startingPriceKobo - salePriceKobo!) / startingPriceKobo) * 100) : 0;
 
-  // Unique colours
-  const uniqueColors = Array.from(new Set(product.variants.map((v) => v.colorName)));
+  // Unique colours (defensive against undefined/empty color names)
+  const uniqueColors = Array.from(
+    new Set(
+      (product.variants || [])
+        .map((v) => v?.colorName?.trim())
+        .filter((c): c is string => Boolean(c))
+    )
+  );
 
   // Sizes breakdown with their respective availability
-  const uniqueSizes = Array.from(new Set(product.variants.map((v) => v.size)));
+  const uniqueSizes = Array.from(
+    new Set(
+      (product.variants || [])
+        .map((v) => v?.size?.trim())
+        .filter((s): s is string => Boolean(s))
+    )
+  );
 
   const inWishlist = isInWishlist(product.id);
 
@@ -248,8 +260,8 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
               {uniqueColors.length > 0 && (
                 <div className="flex items-center gap-1">
                   {uniqueColors.slice(0, 4).map((col) => {
-                    const clean = col.toLowerCase().trim();
-                    const hex = COLOR_PALETTE_MAP[clean] || '#6B1724';
+                    const clean = (col || '').toLowerCase().trim();
+                    const hex = (clean && COLOR_PALETTE_MAP[clean]) || '#6B1724';
                     return (
                       <span
                         key={col}
@@ -363,7 +375,8 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
               <div className="flex flex-wrap gap-2">
                 {uniqueColors.map((color) => {
                   const isSelected = (selectedVariant?.colorName || activeColor) === color;
-                  const hex = COLOR_PALETTE_MAP[color.toLowerCase()] || '#6B1724';
+                  const cleanColor = (color || '').toLowerCase().trim();
+                  const hex = (cleanColor && COLOR_PALETTE_MAP[cleanColor]) || '#6B1724';
                   return (
                     <button
                       key={color}

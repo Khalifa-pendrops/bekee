@@ -16,11 +16,14 @@ import {
 } from 'lucide-react';
 import { formatKoboToNaira } from '@/lib/utils';
 import { Product, ProductVariant, InventoryMovement } from '@/types';
+import { AdminPagination } from '@/components/admin/AdminPagination';
 
 export default function AdminStockPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 12;
 
   // Adjustment Modal
   const [selectedVariant, setSelectedVariant] = useState<{
@@ -51,6 +54,11 @@ export default function AdminStockPage() {
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  // Reset to page 1 whenever search query changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
 
   const handleOpenAdjustment = (product: Product, variant: ProductVariant) => {
     setSelectedVariant({ variant, productName: product.name });
@@ -105,18 +113,27 @@ export default function AdminStockPage() {
 
   // Flattened list of all variants
   const allVariantRows: { product: Product; variant: ProductVariant }[] = [];
+  const searchLower = search.trim().toLowerCase();
+
   products.forEach((p) => {
-    p.variants.forEach((v) => {
-      if (
-        !search ||
-        p.name.toLowerCase().includes(search.toLowerCase()) ||
-        v.sku.toLowerCase().includes(search.toLowerCase()) ||
-        v.colorName.toLowerCase().includes(search.toLowerCase())
-      ) {
+    (p.variants || []).forEach((v) => {
+      const matchSearch =
+        !searchLower ||
+        p.name.toLowerCase().includes(searchLower) ||
+        (v.sku || '').toLowerCase().includes(searchLower) ||
+        (v.colorName || '').toLowerCase().includes(searchLower);
+
+      if (matchSearch) {
         allVariantRows.push({ product: p, variant: v });
       }
     });
   });
+
+  const totalItems = allVariantRows.length;
+  const totalPages = Math.ceil(totalItems / pageSize) || 1;
+  const validPage = Math.max(1, Math.min(currentPage, totalPages));
+  const startIndex = (validPage - 1) * pageSize;
+  const paginatedRows = allVariantRows.slice(startIndex, startIndex + pageSize);
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
@@ -143,6 +160,15 @@ export default function AdminStockPage() {
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-8 pr-3 py-2 text-xs bg-white border border-stone-300 rounded-lg focus:outline-none focus:border-stone-900"
           />
+          {search && (
+            <button
+              onClick={() => setSearch('')}
+              className="absolute right-2.5 top-2.5 text-stone-400 hover:text-stone-700"
+              title="Clear search"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
       </div>
 
@@ -154,7 +180,7 @@ export default function AdminStockPage() {
 
       {/* Stock Table Card */}
       <div className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
-        <div className="p-4 bg-stone-50 border-b border-stone-200 text-xs font-semibold text-stone-700 flex justify-between">
+        <div className="p-3.5 bg-stone-50 border-b border-stone-200 text-xs font-semibold text-stone-700 flex flex-wrap items-center justify-between gap-2">
           <span>Tracked Variant Units ({allVariantRows.length})</span>
           <span className="text-[11px] text-stone-500 font-normal">Tap "Adjust" to record physical restock or audit</span>
         </div>
@@ -163,13 +189,21 @@ export default function AdminStockPage() {
           <div className="p-12 text-center text-xs text-stone-500 font-medium uppercase tracking-wider">
             Loading Stock Inventory...
           </div>
-        ) : allVariantRows.length === 0 ? (
-          <div className="p-12 text-center text-xs text-stone-500">
-            No variants match your search filter.
+        ) : paginatedRows.length === 0 ? (
+          <div className="p-12 text-center text-xs text-stone-500 space-y-2">
+            <p className="font-semibold text-stone-700">No variants match your search filter.</p>
+            {search && (
+              <button
+                onClick={() => setSearch('')}
+                className="text-xs text-oxblood-700 underline font-medium"
+              >
+                Clear Search Query
+              </button>
+            )}
           </div>
         ) : (
           <div className="divide-y divide-stone-100">
-            {allVariantRows.map(({ product, variant }) => {
+            {paginatedRows.map(({ product, variant }) => {
               const isLow = variant.stockQuantity <= variant.lowStockThreshold;
               return (
                 <div
@@ -210,7 +244,7 @@ export default function AdminStockPage() {
 
                     <button
                       onClick={() => handleOpenAdjustment(product, variant)}
-                      className="px-3 py-1.5 bg-stone-900 hover:bg-oxblood-700 text-white rounded text-xs font-semibold uppercase tracking-wider transition-colors flex items-center gap-1"
+                      className="px-3 py-1.5 bg-stone-900 hover:bg-oxblood-700 text-white rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors flex items-center gap-1"
                     >
                       <Edit2 className="w-3 h-3" />
                       <span>Adjust</span>
@@ -221,6 +255,16 @@ export default function AdminStockPage() {
             })}
           </div>
         )}
+
+        {/* Pagination Controls */}
+        <AdminPagination
+          currentPage={validPage}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          pageSize={pageSize}
+          itemName="variant units"
+          onPageChange={(page) => setCurrentPage(page)}
+        />
       </div>
 
       {/* ADJUSTMENT MODAL */}
@@ -333,4 +377,3 @@ export default function AdminStockPage() {
     </div>
   );
 }
-
