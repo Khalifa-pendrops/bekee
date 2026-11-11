@@ -19,7 +19,8 @@ import {
   Zap,
   ArrowUpRight,
   Store,
-  ChevronRight
+  ChevronRight,
+  LogOut
 } from 'lucide-react';
 
 const ADMIN_NAV_LINKS = [
@@ -37,6 +38,20 @@ const ADMIN_NAV_LINKS = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/logout', { method: 'POST' });
+    } catch (e) {
+      // ignore
+    }
+    window.location.href = '/admin/login';
+  };
+
+  // If viewing the dedicated login screen, do not show admin navigation chrome
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
 
   return (
     <div className="min-h-screen bg-stone-100 flex flex-col md:flex-row text-stone-900 font-sans w-full max-w-full min-w-0">
@@ -106,8 +121,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
 
-        {/* Sidebar Footer Link to Public Store */}
-        <div className="p-4 border-t border-stone-800">
+        {/* Sidebar Footer Link to Public Store & Logout */}
+        <div className="p-4 border-t border-stone-800 space-y-2">
           <Link
             href="/"
             target="_blank"
@@ -119,6 +134,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="w-full flex items-center justify-between px-3 py-2 text-xs text-red-400 hover:text-red-300 hover:bg-red-950/40 rounded transition-colors text-left"
+          >
+            <span className="flex items-center gap-2">
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Sign Out</span>
+            </span>
+          </button>
         </div>
       </aside>
 
@@ -200,11 +226,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 href="/"
                 target="_blank"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="flex-1 py-2.5 text-center text-xs bg-stone-800 text-stone-300 rounded font-medium flex items-center justify-center gap-1.5"
+                className="flex-1 py-2.5 text-center text-xs bg-stone-800 text-stone-300 hover:text-white rounded font-medium flex items-center justify-center gap-1.5"
               >
                 <Store className="w-3.5 h-3.5" />
-                <span>Customer Storefront</span>
+                <span>Storefront</span>
               </Link>
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="px-4 py-2.5 text-center text-xs bg-red-950/60 text-red-300 border border-red-800/60 rounded font-medium flex items-center justify-center gap-1.5"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Sign Out</span>
+              </button>
             </div>
           </div>
         </div>
