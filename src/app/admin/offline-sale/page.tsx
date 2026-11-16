@@ -150,16 +150,16 @@ export default function RecordOfflineSalePage() {
     <div className="max-w-2xl mx-auto space-y-6 w-full min-w-0">
       
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-stone-200">
+      <div className="flex items-center justify-between pb-4 border-b border-white/10">
         <div>
           <Link
             href="/admin"
-            className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-stone-500 hover:text-stone-900 transition-colors mb-1"
+            className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-stone-400 hover:text-white transition-colors mb-1"
           >
             <ArrowLeft className="w-3.5 h-3.5 mr-1" /> Back to Dashboard
           </Link>
-          <h1 className="font-serif text-2xl font-bold text-stone-900 flex items-center gap-2">
-            <Zap className="w-5 h-5 text-amber-500" />
+          <h1 className="font-serif text-2xl font-bold text-white flex items-center gap-2">
+            <Zap className="w-5 h-5 text-amber-400" />
             Fast Offline POS (Aba Store & WhatsApp)
           </h1>
         </div>

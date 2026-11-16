@@ -1,6 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const orderId = params.id;
+    const order = (await db.getOrderById(orderId)) || (await db.getOrderByNumber(orderId));
+    if (!order) {
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    }
+    return NextResponse.json({ success: true, order });
+  } catch (err: any) {
+    console.error('[API /api/admin/orders/[id] GET] Error:', err);
+    return NextResponse.json({ error: 'Failed to fetch order', message: err.message }, { status: 500 });
+  }
+}
+
 export async function PATCH(
   req: NextRequest,
   { params }: { params: { id: string } }

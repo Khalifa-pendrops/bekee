@@ -139,13 +139,13 @@ export default function AdminStockPage() {
     <div className="space-y-6 max-w-5xl mx-auto">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-stone-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
         <div>
-          <h1 className="font-serif text-2xl md:text-3xl font-bold text-stone-900 flex items-center gap-2">
-            <Layers className="w-6 h-6 text-oxblood-700" />
+          <h1 className="font-serif text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
+            <Layers className="w-6 h-6 text-oxblood-500" />
             Stock & Inventory Audits
           </h1>
-          <p className="text-xs text-stone-500 mt-0.5">
+          <p className="text-xs text-stone-400 mt-0.5">
             Real-time stock balance across Aba workshop, boutique showroom, and online reservations.
           </p>
         </div>

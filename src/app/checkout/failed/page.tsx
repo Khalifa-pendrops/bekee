@@ -9,10 +9,11 @@ function FailedContent() {
   const searchParams = useSearchParams();
   const reason = searchParams.get('reason') || 'Transaction was cancelled or declined by your banking institution.';
 
+  const storePhone = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '2348030001234').replace(/[^0-9]/g, '');
   const whatsappMessage = encodeURIComponent(
     `Hello ARUBEKEE COLLECTION, I tried paying on your website but encountered an error: "${reason}". Can I pay via direct bank transfer?`
   );
-  const whatsappUrl = `https://wa.me/2348030001234?text=${whatsappMessage}`;
+  const whatsappUrl = `https://wa.me/${storePhone}?text=${whatsappMessage}`;
 
   return (
     <div className="bg-sand-50 min-h-screen py-16 md:py-24">

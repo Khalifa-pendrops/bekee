@@ -21,6 +21,15 @@ import {
 import { formatKoboToNaira } from '@/lib/utils';
 import { Order } from '@/types';
 
+const PRESET_COURIERS = [
+  'GIG Logistics',
+  'DHL Express',
+  'Peace Mass Waybill',
+  'Aba Local Dispatch Rider',
+  'God is Good Motors (GIGM)',
+  'Direct Boutique Handover',
+];
+
 export default function AdminOrderDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -30,26 +39,48 @@ export default function AdminOrderDetailPage() {
   const [loading, setLoading] = useState(true);
 
   // Dispatch Form
-  const [carrierName, setCarrierName] = useState('GIG Logistics');
+  const [selectedCourier, setSelectedCourier] = useState('GIG Logistics');
+  const [customCourier, setCustomCourier] = useState('');
   const [trackingNumber, setTrackingNumber] = useState('');
   const [trackingUrl, setTrackingUrl] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
   const [copiedSlip, setCopiedSlip] = useState(false);
 
   useEffect(() => {
-    fetch('/api/admin/orders')
+    fetch(`/api/admin/orders/${orderId}`)
       .then((r) => r.json())
-      .then((orders) => {
-        const found = orders.find((o: Order) => o.id === orderId || o.orderNumber === orderId);
+      .then((data) => {
+        const found: Order | null = data.order || (data.id ? data : null);
         if (found) {
           setOrder(found);
-          if (found.carrierName) setCarrierName(found.carrierName);
+          if (found.carrierName) {
+            if (PRESET_COURIERS.includes(found.carrierName)) {
+              setSelectedCourier(found.carrierName);
+              setCustomCourier('');
+            } else {
+              setSelectedCourier('Other');
+              setCustomCourier(found.carrierName);
+            }
+          }
           if (found.trackingNumber) setTrackingNumber(found.trackingNumber);
           if (found.trackingUrl) setTrackingUrl(found.trackingUrl);
+          setLoading(false);
+        } else {
+          // Fallback to searching orders list
+          return fetch('/api/admin/orders')
+            .then((r) => r.json())
+            .then((orders) => {
+              if (Array.isArray(orders)) {
+                const f = orders.find((o: Order) => o.id === orderId || o.orderNumber === orderId);
+                if (f) setOrder(f);
+              }
+            })
+            .finally(() => setLoading(false));
         }
       })
-      .catch(() => {})
-      .finally(() => setLoading(false));
+      .catch(() => {
+        setLoading(false);
+      });
   }, [orderId]);
 
   if (loading) {
@@ -83,13 +114,17 @@ export default function AdminOrderDetailPage() {
   // Handle Dispatch
   const handleMarkDispatched = async () => {
     setIsUpdating(true);
+    const finalCarrierName = selectedCourier === 'Other'
+      ? (customCourier.trim() || 'Custom Courier')
+      : selectedCourier;
+
     try {
       const res = await fetch(`/api/admin/orders/${order.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'dispatch',
-          carrierName,
+          carrierName: finalCarrierName,
           trackingNumber,
           trackingUrl,
           staffName: 'Store Manager',
@@ -131,13 +166,23 @@ export default function AdminOrderDetailPage() {
 
   // Copy Packing Slip Text
   const handleCopyPackingSlip = () => {
+    const itemsList =
+      order.items && order.items.length > 0
+        ? order.items
+            .map(
+              (i) =>
+                `- ${i.productName} | ${i.colorName || 'Default'} | Size: ${i.size} | Qty: ${i.quantity} (${formatKoboToNaira(i.totalKobo)})`
+            )
+            .join('\n')
+        : 'No garments recorded in order snapshot';
+
     const text = `ARUBEKEE COLLECTION PACKING SLIP
 Order: ${order.orderNumber}
 Customer: ${order.customerName} (${order.customerPhone})
 Destination: ${order.shippingAddress?.streetAddress || ''}, ${order.shippingAddress?.city || ''}, ${order.shippingAddress?.state || ''}
 Landmark: ${order.shippingAddress?.landmark || 'None'}
 Items:
-${order.items.map((i) => `- ${i.productName} | ${i.colorName} | ${i.size} | Qty: ${i.quantity}`).join('\n')}
+${itemsList}
 Total: ${formatKoboToNaira(order.totalKobo)}`;
 
     navigator.clipboard.writeText(text);
@@ -149,22 +194,22 @@ Total: ${formatKoboToNaira(order.totalKobo)}`;
     <div className="space-y-6 max-w-4xl mx-auto">
       
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-stone-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
         <div>
           <Link
             href="/admin/orders"
-            className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-stone-500 hover:text-stone-900 transition-colors mb-1.5"
+            className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-stone-400 hover:text-white transition-colors mb-1.5"
           >
             <ArrowLeft className="w-3.5 h-3.5 mr-1" /> Back to Orders
           </Link>
           <div className="flex items-center gap-3">
-            <h1 className="font-serif text-2xl font-bold text-stone-900">
+            <h1 className="font-serif text-2xl font-bold text-white">
               Order {order.orderNumber}
             </h1>
             <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase ${
               order.paymentStatus === 'paid'
-                ? 'bg-emerald-100 text-emerald-800'
-                : 'bg-amber-100 text-amber-800'
+                ? 'bg-emerald-400/20 text-emerald-300 border border-emerald-400/30'
+                : 'bg-amber-400/20 text-amber-300 border border-amber-400/30'
             }`}>
               {order.paymentStatus}
             </span>
@@ -175,9 +220,9 @@ Total: ${formatKoboToNaira(order.totalKobo)}`;
         <div className="flex items-center gap-2">
           <button
             onClick={handleCopyPackingSlip}
-            className="px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5"
+            className="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-stone-200 border border-white/15 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5"
           >
-            {copiedSlip ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+            {copiedSlip ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
             <span>{copiedSlip ? 'Slip Copied!' : 'Copy Packing Slip'}</span>
           </button>
         </div>
@@ -262,9 +307,9 @@ Total: ${formatKoboToNaira(order.totalKobo)}`;
                     Courier / Carrier:
                   </label>
                   <select
-                    value={carrierName}
-                    onChange={(e) => setCarrierName(e.target.value)}
-                    className="w-full px-3 py-2 text-xs bg-sand-50 border border-stone-300 rounded font-medium text-stone-900"
+                    value={selectedCourier}
+                    onChange={(e) => setSelectedCourier(e.target.value)}
+                    className="w-full px-3 py-2 text-xs bg-sand-50 border border-stone-300 rounded font-medium text-stone-900 focus:outline-none focus:border-oxblood-700"
                   >
                     <option value="GIG Logistics">GIG Logistics</option>
                     <option value="DHL Express">DHL Express</option>
@@ -272,7 +317,24 @@ Total: ${formatKoboToNaira(order.totalKobo)}`;
                     <option value="Aba Local Dispatch Rider">Aba Local Dispatch Rider</option>
                     <option value="God is Good Motors (GIGM)">God is Good Motors (GIGM)</option>
                     <option value="Direct Boutique Handover">Direct Boutique Handover</option>
+                    <option value="Other">Other (Manual / Custom Courier)</option>
                   </select>
+
+                  {selectedCourier === 'Other' && (
+                    <div className="mt-2.5">
+                      <label className="block text-[11px] font-semibold uppercase tracking-wider text-stone-700 mb-1">
+                        Specify Courier / Driver Name:
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Young Shall Grow Motors, GUO Transport, ABC Transport, Bolt..."
+                        value={customCourier}
+                        onChange={(e) => setCustomCourier(e.target.value)}
+                        className="w-full px-3 py-2 text-xs bg-white border border-stone-300 rounded font-medium text-stone-900 focus:outline-none focus:border-oxblood-700"
+                        required={selectedCourier === 'Other'}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <div>

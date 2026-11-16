@@ -1,0 +1,61 @@
+[
+  {
+    "id": "30b20709-8f1d-4305-aadf-d9e5447bd791",
+    "orderNumber": "ARU-2611-5548",
+    "orderSource": "storefront",
+    "customerName": "tester 2",
+    "customerEmail": "dikee5200@gmail.com",
+    "customerPhone": "+2349087987645",
+    "deliveryType": "dispatch_delivery",
+    "shippingAddress": {
+      "city": "enugu",
+      "email": "dikee5200@gmail.com",
+      "phone": "+2349087987645",
+      "state": "Enugu",
+      "fullName": "tester 2",
+      "landmark": "mayor bus stop",
+      "streetAddress": "achara street",
+      "deliveryInstructions": "call me"
+    },
+    "items": [
+      {
+        "id": "item_1794825908925_zhc2",
+        "productId": "prod_chioma_pencil",
+        "variantId": "var_chioma_12",
+        "sku": "ARU-CLO-DRS-OXB-12",
+        "productName": "Chioma Two-Tone Executive Pencil Dress",
+        "colorName": "Oxblood & Blush",
+        "size": "UK 12",
+        "unitPriceKobo": 4500000,
+        "quantity": 1,
+        "totalKobo": 4500000,
+        "imageUrl": "/asset/80772648-ba30-4794-a044-2de173b5fc1f.jpg"
+      }
+    ],
+    "subtotalKobo": 4500000,
+    "deliveryFeeKobo": 400000,
+    "discountKobo": 0,
+    "totalKobo": 4900000,
+    "paymentStatus": "paid",
+    "paymentMethod": "paystack",
+    "paymentReference": "ARU_PAY_ARU-2611-5548_1794825908925",
+    "paidAt": "2026-11-16T10:46:33.96+00:00",
+    "fulfillmentStatus": "delivered",
+    "carrierName": "ignore motors",
+    "dispatchedAt": "2026-11-16T11:03:17.555+00:00",
+    "deliveredAt": "2026-11-16T11:03:25.541Z",
+    "internalNotes": "Delivery Zone: South-East Regional Transit. Reservation expires: 2026-11-16T11:00:09.263Z",
+    "timeline": [
+      {
+        "id": "tl_1794827005541",
+        "orderId": "30b20709-8f1d-4305-aadf-d9e5447bd791",
+        "title": "Order Delivered",
+        "description": "Customer confirmed parcel receipt.",
+        "actor": "Store Manager",
+        "createdAt": "2026-11-16T11:03:25.541Z"
+      }
+    ],
+    "createdAt": "2026-11-16T10:45:09.463639+00:00",
+    "updatedAt": "2026-11-16T11:03:25.541Z"
+  }
+]

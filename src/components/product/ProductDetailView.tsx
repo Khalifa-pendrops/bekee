@@ -87,6 +87,21 @@ export function ProductDetailView({ product, relatedProducts, settings }: Produc
     );
   }, [product.variants]);
 
+  // Unique sizes
+  const uniqueSizes = useMemo(() => {
+    return Array.from(
+      new Set(
+        (product.variants || [])
+          .map((v) => v?.size?.trim())
+          .filter((s): s is string => Boolean(s))
+      )
+    );
+  }, [product.variants]);
+
+  // Bags and items without apparel sizing do not have size selectors
+  const isBag = product.categorySlug === 'bags';
+  const hasRealSizes = !isBag && uniqueSizes.length > 0 && !(uniqueSizes.length === 1 && (uniqueSizes[0] === 'One Size' || uniqueSizes[0] === 'Free Size' || uniqueSizes[0] === 'OS'));
+
   // Update selected variant when color or size changes
   const handleColorChange = (color: string) => {
     setSelectedColor(color);
@@ -346,51 +361,55 @@ export function ProductDetailView({ product, relatedProducts, settings }: Produc
             </div>
           </div>
 
-          {/* Size Selection */}
-          <div className="space-y-3">
-            <div className="flex justify-between items-center text-xs">
-              <span className="uppercase tracking-wider font-semibold text-obsidian-soft">
-                Select Size ({product.categorySlug === 'shoes' ? 'EU' : 'UK'})
-              </span>
-              <button
-                type="button"
-                onClick={() => setIsSizeGuideOpen(true)}
-                className="text-oxblood underline uppercase tracking-wider text-[11px] font-semibold flex items-center gap-1 hover:text-oxblood-hover"
-              >
-                <Ruler className="w-3.5 h-3.5" />
-                <span>Size Guide</span>
-              </button>
+          {/* Size Selection - Only for products with wearable sizes (omitted for bags) */}
+          {hasRealSizes && (
+            <div className="space-y-3">
+              <div className="flex justify-between items-center text-xs">
+                <span className="uppercase tracking-wider font-semibold text-obsidian-soft">
+                  Select Size ({product.categorySlug === 'shoes' ? 'EU' : 'UK'})
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setIsSizeGuideOpen(true)}
+                  className="text-oxblood underline uppercase tracking-wider text-[11px] font-semibold flex items-center gap-1 hover:text-oxblood-hover"
+                >
+                  <Ruler className="w-3.5 h-3.5" />
+                  <span>Size Guide</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                {availableSizesForColor.map(({ size, stock, variant }) => {
+                  const isSelected = selectedSize === size;
+                  const outOfStock = stock <= 0;
+
+                  return (
+                    <button
+                      key={size}
+                      type="button"
+                      disabled={outOfStock}
+                      onClick={() => handleSizeChange(size)}
+                      className={`py-2.5 px-2 text-xs font-semibold text-center border transition-all ${
+                        isSelected
+                          ? "bg-oxblood text-ivory-light border-oxblood shadow-xs"
+                          : outOfStock
+                          ? "bg-stone-subtle text-obsidian-subtle/50 border-stone-line cursor-not-allowed line-through"
+                          : "bg-ivory border-stone-line text-obsidian hover:border-obsidian"
+                      }`}
+                    >
+                      <div>{size}</div>
+                      <div className="text-[10px] font-normal mt-0.5">
+                        {outOfStock ? "Sold Out" : `${stock} left`}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
+          )}
 
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-              {availableSizesForColor.map(({ size, stock, variant }) => {
-                const isSelected = selectedSize === size;
-                const outOfStock = stock <= 0;
-
-                return (
-                  <button
-                    key={size}
-                    type="button"
-                    disabled={outOfStock}
-                    onClick={() => handleSizeChange(size)}
-                    className={`py-2.5 px-2 text-xs font-semibold text-center border transition-all ${
-                      isSelected
-                        ? "bg-oxblood text-ivory-light border-oxblood shadow-xs"
-                        : outOfStock
-                        ? "bg-stone-subtle text-obsidian-subtle/50 border-stone-line cursor-not-allowed line-through"
-                        : "bg-ivory border-stone-line text-obsidian hover:border-obsidian"
-                    }`}
-                  >
-                    <div>{size}</div>
-                    <div className="text-[10px] font-normal mt-0.5">
-                      {outOfStock ? "Sold Out" : `${stock} left`}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Live Stock Alert */}
+          {/* Live Stock Alert */}
+          <div className="space-y-2">
             {isLowStock && (
               <p className="text-xs font-semibold text-status-warning flex items-center gap-1.5 animate-pulse">
                 <span>⚠️ Limited availability: Only {selectedVariant.stockQuantity} remaining in our Aba store.</span>
@@ -398,7 +417,9 @@ export function ProductDetailView({ product, relatedProducts, settings }: Produc
             )}
             {isSoldOut && (
               <p className="text-xs font-semibold text-status-danger">
-                This size is currently sold out. Enquire on WhatsApp for backorder availability.
+                {hasRealSizes
+                  ? "This size is currently sold out. Enquire on WhatsApp for backorder availability."
+                  : "This item is currently sold out. Enquire on WhatsApp for backorder availability."}
               </p>
             )}
           </div>
@@ -566,7 +587,9 @@ export function ProductDetailView({ product, relatedProducts, settings }: Produc
               </p>
               <div className="flex items-center gap-1.5 text-xs text-oxblood font-semibold">
                 <span>{formatKoboToNaira(currentPriceKobo)}</span>
-                <span className="text-obsidian-muted text-[10px]">({selectedVariant.size})</span>
+                {hasRealSizes && (
+                  <span className="text-obsidian-muted text-[10px]">({selectedVariant.size})</span>
+                )}
               </div>
             </div>
 

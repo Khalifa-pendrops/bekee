@@ -32,8 +32,20 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Missing payment reference' }, { status: 400 });
       }
 
-      // Authoritative idempotent settlement in database
-      const settlement = await db.settleOrderPayment(reference, amountKobo, transactionId);
+      // Authoritative idempotent settlement in database with metadata recovery
+      const settlement = await db.settleOrderPayment(
+        reference,
+        amountKobo,
+        transactionId,
+        {
+          orderId: data.metadata?.orderId,
+          orderNumber: data.metadata?.orderNumber,
+          customerName: data.metadata?.customerName,
+          customerEmail: data.customer?.email,
+          customerPhone: data.metadata?.customerPhone,
+          deliveryZone: data.metadata?.deliveryZone,
+        }
+      );
 
       console.log(`[Paystack Webhook] Settlement status for ${reference}: ${settlement.status}`);
 

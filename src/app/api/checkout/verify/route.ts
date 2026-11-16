@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { status: gatewayStatus, amount: amountKobo, id: transactionId } = verifyRes.data;
+    const { status: gatewayStatus, amount: amountKobo, id: transactionId, customer, metadata } = verifyRes.data;
 
     if (gatewayStatus !== 'success') {
       return NextResponse.json({
@@ -32,11 +32,19 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // 2. Idempotent Settlement in DB
+    // 2. Idempotent Settlement in DB with fallback metadata recovery
     const settlement = await db.settleOrderPayment(
       reference,
       amountKobo,
-      transactionId ? String(transactionId) : undefined
+      transactionId ? String(transactionId) : undefined,
+      {
+        orderId: metadata?.orderId,
+        orderNumber: metadata?.orderNumber,
+        customerName: metadata?.customerName,
+        customerEmail: customer?.email,
+        customerPhone: metadata?.customerPhone,
+        deliveryZone: metadata?.deliveryZone,
+      }
     );
 
     if (!settlement.success && settlement.status === 'NOT_FOUND') {

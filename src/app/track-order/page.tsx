@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from "react";
-import { db } from "@/lib/db";
 import { Order } from "@/types";
 import { formatKoboToNaira } from "@/lib/utils";
 import { Input } from "@/components/ui/Input";
@@ -33,33 +32,30 @@ export default function TrackOrderPage() {
     setHasSearched(true);
 
     if (!orderNumber.trim()) {
-      setErrorMessage("Please enter your Order Reference (e.g. ARU-...)");
+      setErrorMessage("Please enter your Order Reference (e.g. ARUBEKEE-...)");
       return;
     }
 
     setIsLoading(true);
     try {
-      const foundOrder = await db.getOrderByNumber(orderNumber.trim().toUpperCase());
+      const res = await fetch("/api/orders/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: orderNumber.trim(),
+          phone: phoneNumber.trim(),
+        }),
+      });
 
-      if (!foundOrder) {
-        setErrorMessage("No order found with that reference. Please check your SMS or email confirmation.");
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setErrorMessage(data.error || "No order found with that reference. Please check your SMS or email confirmation.");
         setIsLoading(false);
         return;
       }
 
-      // Security check: verify phone number matches if phone was provided
-      if (phoneNumber.trim()) {
-        const cleanInputPhone = phoneNumber.replace(/[^0-9]/g, '');
-        const cleanOrderPhone = foundOrder.customerPhone.replace(/[^0-9]/g, '');
-
-        if (!cleanOrderPhone.includes(cleanInputPhone) && !cleanInputPhone.includes(cleanOrderPhone)) {
-          setErrorMessage("The phone number does not match this order reference for security verification.");
-          setIsLoading(false);
-          return;
-        }
-      }
-
-      setOrder(foundOrder);
+      setOrder(data.order);
     } catch (err) {
       setErrorMessage("Unable to retrieve order details right now. Please try again or chat with us on WhatsApp.");
     } finally {
@@ -87,7 +83,7 @@ export default function TrackOrderPage() {
         <form onSubmit={handleTrackSubmit} className="space-y-4">
           <Input
             label="Order Reference"
-            placeholder="e.g. ARU-2611-9481 or ARU-OFF-..."
+            placeholder="e.g. ARUBEKEE-2611-9481 or ARUBEKEE-OFF-..."
             value={orderNumber}
             onChange={(e) => setOrderNumber(e.target.value)}
             required

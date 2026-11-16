@@ -5,6 +5,7 @@ import {
   DeliveryZone, 
   StoreSettings, 
   Order, 
+  ImmutableOrderItem,
   StockReservation, 
   InventoryMovement, 
   DeliveryQuoteRequest, 
@@ -57,9 +58,121 @@ function saveCustomProducts(products: Product[]): void {
   }
 }
 
+// Persistent Local Disk Storage Helpers for Orders (Survives Dev Restarts & Worker Boundary Reloads)
+function getCustomOrders(): Order[] {
+  if (typeof window !== 'undefined') {
+    return [];
+  }
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const filePath = path.join(process.cwd(), 'src', 'data', 'orders.json');
+    if (fs.existsSync(filePath)) {
+      const content = fs.readFileSync(filePath, 'utf-8');
+      const parsed = JSON.parse(content);
+      if (Array.isArray(parsed)) return parsed as Order[];
+    }
+  } catch (err) {
+    // Ignore read errors
+  }
+  return [];
+}
+
+function saveCustomOrders(orders: Order[]): void {
+  if (typeof window !== 'undefined') {
+    return;
+  }
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const filePath = path.join(process.cwd(), 'src', 'data', 'orders.json');
+    fs.writeFileSync(filePath, JSON.stringify(orders, null, 2), 'utf-8');
+  } catch (err) {
+    console.error('Failed to save orders to disk:', err);
+  }
+}
+
+// Helper to transform Supabase relational order row to application Order type
+function mapSupabaseOrder(row: any): Order {
+  // 1. Map relation items if present
+  let mappedItems: ImmutableOrderItem[] = (row.order_items || []).map((i: any) => ({
+    id: i.id,
+    productId: i.product_id,
+    variantId: i.variant_id,
+    sku: i.sku,
+    productName: i.product_name,
+    colorName: i.color_name,
+    size: i.size,
+    unitPriceKobo: Number(i.unit_price_kobo),
+    quantity: Number(i.quantity),
+    totalKobo: Number(i.total_kobo),
+    imageUrl: i.image_url || '',
+  }));
+
+  // 2. Fallback: If relational child table had no rows, recover items snapshot from disk or JSON payload
+  if (mappedItems.length === 0) {
+    const diskOrders = getCustomOrders();
+    const diskMatch = diskOrders.find(
+      (o) => o.orderNumber === row.order_number || o.id === row.id || o.paymentReference === row.payment_reference
+    );
+    if (diskMatch && diskMatch.items && diskMatch.items.length > 0) {
+      mappedItems = diskMatch.items;
+    } else if (row.shipping_address?._itemsSnapshot && Array.isArray(row.shipping_address._itemsSnapshot)) {
+      mappedItems = row.shipping_address._itemsSnapshot;
+    }
+  }
+
+  // Clean shippingAddress so internal snapshot isn't exposed
+  const rawShipping = row.shipping_address;
+  let cleanShipping = rawShipping;
+  if (rawShipping && rawShipping._itemsSnapshot) {
+    const { _itemsSnapshot, ...rest } = rawShipping;
+    cleanShipping = rest;
+  }
+
+  return {
+    id: row.id,
+    orderNumber: row.order_number,
+    orderSource: row.order_source || 'storefront',
+    customerName: row.customer_name,
+    customerEmail: row.customer_email,
+    customerPhone: row.customer_phone,
+    deliveryType: row.delivery_type || 'dispatch_delivery',
+    shippingAddress: cleanShipping || undefined,
+    items: mappedItems,
+    subtotalKobo: Number(row.subtotal_kobo || 0),
+    deliveryFeeKobo: Number(row.delivery_fee_kobo || 0),
+    discountKobo: Number(row.discount_kobo || 0),
+    discountCode: row.discount_code || undefined,
+    totalKobo: Number(row.total_kobo || 0),
+    paymentStatus: row.payment_status || 'pending',
+    paymentMethod: row.payment_method || 'paystack',
+    paymentReference: row.payment_reference || undefined,
+    paidAt: row.paid_at || undefined,
+    fulfillmentStatus: row.fulfillment_status || 'unfulfilled',
+    carrierName: row.carrier_name || undefined,
+    trackingNumber: row.tracking_number || undefined,
+    trackingUrl: row.tracking_url || undefined,
+    dispatchedAt: row.dispatched_at || undefined,
+    deliveredAt: row.delivered_at || undefined,
+    internalNotes: row.internal_notes || undefined,
+    recordedByStaffName: row.recorded_by_staff_name || undefined,
+    timeline: (row.order_timeline || []).map((t: any) => ({
+      id: t.id,
+      orderId: t.order_id,
+      title: t.title,
+      description: t.description || '',
+      actor: t.actor || 'System',
+      createdAt: t.created_at,
+    })),
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
 // In-memory runtime state for development mode
 let inMemoryProducts: Product[] = [...getCustomProducts(), ...mockProducts];
-let inMemoryOrders: Order[] = [];
+let inMemoryOrders: Order[] = [...getCustomOrders()];
 let inMemoryReservations: StockReservation[] = [];
 let inMemoryMovements: InventoryMovement[] = [];
 let inMemoryQuotes: DeliveryQuoteRequest[] = [];
@@ -538,14 +651,92 @@ export const db = {
   async settleOrderPayment(
     paymentReference: string,
     amountPaidKobo: number,
-    paystackTransactionId?: string
+    paystackTransactionId?: string,
+    fallbackMetadata?: {
+      orderId?: string;
+      orderNumber?: string;
+      customerName?: string;
+      customerEmail?: string;
+      customerPhone?: string;
+      deliveryZone?: string;
+    }
   ): Promise<{ success: boolean; status: string; order?: Order; error?: string }> {
-    const order = inMemoryOrders.find((o) => o.paymentReference === paymentReference);
-    if (!order) {
-      return { success: false, status: 'NOT_FOUND', error: 'Order not found' };
+    // 1. Locate order across in-memory and disk persistence
+    let diskOrders = getCustomOrders();
+    let order = inMemoryOrders.find((o) => o.paymentReference === paymentReference) ||
+                diskOrders.find((o) => o.paymentReference === paymentReference);
+
+    // 2. Secondary lookup by metadata orderId or orderNumber if reference differed
+    if (!order && fallbackMetadata) {
+      if (fallbackMetadata.orderId) {
+        order = inMemoryOrders.find((o) => o.id === fallbackMetadata.orderId) ||
+                diskOrders.find((o) => o.id === fallbackMetadata.orderId);
+      }
+      if (!order && fallbackMetadata.orderNumber) {
+        order = inMemoryOrders.find((o) => o.orderNumber === fallbackMetadata.orderNumber) ||
+                diskOrders.find((o) => o.orderNumber === fallbackMetadata.orderNumber);
+      }
     }
 
-    // Idempotency: if already paid, return early
+    // 3. Fallback: Reconstruct and rescue order from verified Paystack gateway response
+    if (!order && fallbackMetadata) {
+      console.warn(`[db.settleOrderPayment] Rescuing order from Paystack metadata for ref: ${paymentReference}`);
+      const derivedOrderNum = fallbackMetadata.orderNumber || 
+        (paymentReference.includes('ARUBEKEE-') ? paymentReference.split('_')[2] : 
+        (paymentReference.includes('ARU-') ? paymentReference.split('_')[2] : 
+        `ARUBEKEE-${Date.now().toString().slice(-6)}`));
+      const derivedOrderId = fallbackMetadata.orderId || `ord_${Date.now()}_rec`;
+
+      order = {
+        id: derivedOrderId,
+        orderNumber: derivedOrderNum,
+        orderSource: 'storefront',
+        customerName: fallbackMetadata.customerName || 'Online Shopper',
+        customerEmail: fallbackMetadata.customerEmail || 'customer@arubekee.internal',
+        customerPhone: fallbackMetadata.customerPhone || 'N/A',
+        deliveryType: 'dispatch_delivery',
+        shippingAddress: {
+          fullName: fallbackMetadata.customerName || 'Online Shopper',
+          email: fallbackMetadata.customerEmail || 'customer@arubekee.internal',
+          phone: fallbackMetadata.customerPhone || 'N/A',
+          state: fallbackMetadata.deliveryZone || 'Nigeria',
+          city: 'Standard Delivery Route',
+          streetAddress: 'Online Order Delivery',
+        },
+        items: [],
+        subtotalKobo: amountPaidKobo,
+        deliveryFeeKobo: 0,
+        discountKobo: 0,
+        totalKobo: amountPaidKobo,
+        paymentStatus: 'pending',
+        paymentMethod: 'paystack',
+        paymentReference,
+        fulfillmentStatus: 'unfulfilled',
+        internalNotes: `Delivery Zone: ${fallbackMetadata.deliveryZone || 'Standard'}. [Auto-recovered & reconciled via Paystack gateway ${paystackTransactionId || ''}]`,
+        timeline: [
+          {
+            id: `tl_${Date.now()}_init`,
+            orderId: derivedOrderId,
+            title: 'Order Recovered & Verified',
+            description: `Payment of ₦${(amountPaidKobo / 100).toLocaleString()} authoritatively verified with Paystack.`,
+            actor: 'Paystack Gateway',
+            createdAt: new Date().toISOString(),
+          },
+        ],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      inMemoryOrders.unshift(order);
+      diskOrders.unshift(order);
+      saveCustomOrders(diskOrders);
+    }
+
+    if (!order) {
+      return { success: false, status: 'NOT_FOUND', error: 'Matching order not found for this transaction reference.' };
+    }
+
+    // Idempotency: if already marked paid, return early
     if (order.paymentStatus === 'paid') {
       return { success: true, status: 'ALREADY_PAID', order };
     }
@@ -588,30 +779,56 @@ export const db = {
         createdAt: new Date().toISOString(),
       });
 
+      // Persist state update
+      this.saveOrder(order);
       return { success: true, status: 'QUARANTINED_INVENTORY_CONFLICT', order };
     }
 
     // Standard Success: Commit reservations & decrement physical stock
-    for (const res of reservations) {
-      res.isCommitted = true;
-      res.isReleased = false;
+    if (reservations.length > 0) {
+      for (const res of reservations) {
+        res.isCommitted = true;
+        res.isReleased = false;
 
-      for (const p of inMemoryProducts) {
-        const v = p.variants.find((v) => v.id === res.variantId);
-        if (v) {
-          v.stockQuantity = Math.max(0, v.stockQuantity - res.quantityReserved);
-          inMemoryMovements.push({
-            id: `mov_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-            variantId: res.variantId,
-            changeQuantity: -res.quantityReserved,
-            resultingQuantity: v.stockQuantity,
-            reason: 'online_sale',
-            referenceId: order.orderNumber,
-            recordedBy: 'Paystack System',
-            notes: 'Confirmed online payment via Paystack',
-            createdAt: new Date().toISOString(),
-          });
-          break;
+        for (const p of inMemoryProducts) {
+          const v = p.variants.find((v) => v.id === res.variantId);
+          if (v) {
+            v.stockQuantity = Math.max(0, v.stockQuantity - res.quantityReserved);
+            inMemoryMovements.push({
+              id: `mov_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+              variantId: res.variantId,
+              changeQuantity: -res.quantityReserved,
+              resultingQuantity: v.stockQuantity,
+              reason: 'online_sale',
+              referenceId: order.orderNumber,
+              recordedBy: 'Paystack System',
+              notes: 'Confirmed online payment via Paystack',
+              createdAt: new Date().toISOString(),
+            });
+            break;
+          }
+        }
+      }
+    } else if (order.items && order.items.length > 0) {
+      // Fallback stock deduction if reservation was cleared across worker boundary
+      for (const item of order.items) {
+        for (const p of inMemoryProducts) {
+          const v = p.variants.find((v) => v.id === item.variantId);
+          if (v) {
+            v.stockQuantity = Math.max(0, v.stockQuantity - item.quantity);
+            inMemoryMovements.push({
+              id: `mov_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+              variantId: item.variantId,
+              changeQuantity: -item.quantity,
+              resultingQuantity: v.stockQuantity,
+              reason: 'online_sale',
+              referenceId: order.orderNumber,
+              recordedBy: 'Paystack System',
+              notes: 'Confirmed online payment via Paystack (reconciled item)',
+              createdAt: new Date().toISOString(),
+            });
+            break;
+          }
         }
       }
     }
@@ -622,10 +839,13 @@ export const db = {
       id: `tl_${Date.now()}`,
       orderId: order.id,
       title: 'Payment Confirmed',
-      description: `Payment of ₦${(amountPaidKobo / 100).toLocaleString()} confirmed via Paystack. Ready for fulfillment.`,
+      description: `Payment of ₦${(amountPaidKobo / 100).toLocaleString()} confirmed via Paystack (${paystackTransactionId || 'Gateway'}). Ready for fulfillment.`,
       actor: 'Paystack Gateway',
       createdAt: new Date().toISOString(),
     });
+
+    // Persist changes to disk and in-memory
+    await this.saveOrder(order);
 
     return { success: true, status: 'PAID', order };
   },
@@ -684,7 +904,7 @@ export const db = {
     });
 
     const totalKobo = params.unitPriceKobo * params.quantity;
-    const orderNumber = `ARU-OFF-${Math.floor(1000 + Math.random() * 9000)}`;
+    const orderNumber = `ARUBEKEE-OFF-${Math.floor(1000 + Math.random() * 9000)}`;
 
     const newOrder: Order = {
       id: `ord_${Date.now()}`,
@@ -735,6 +955,7 @@ export const db = {
     };
 
     inMemoryOrders.unshift(newOrder);
+    saveCustomOrders(inMemoryOrders);
     return { success: true, order: newOrder };
   },
 
@@ -780,7 +1001,50 @@ export const db = {
     fulfillmentStatus?: string;
     search?: string;
   }): Promise<Order[]> {
-    let list = inMemoryOrders;
+    // 1. Try Supabase if configured
+    if (isSupabaseConfigured && supabaseAdmin) {
+      try {
+        let query = supabaseAdmin
+          .from('orders')
+          .select(`
+            *,
+            order_items(*),
+            order_timeline(*)
+          `)
+          .order('created_at', { ascending: false });
+
+        if (filter?.paymentStatus) query = query.eq('payment_status', filter.paymentStatus);
+        if (filter?.fulfillmentStatus) query = query.eq('fulfillment_status', filter.fulfillmentStatus);
+
+        const { data, error } = await query;
+        if (!error && data && data.length > 0) {
+          const mapped = data.map(mapSupabaseOrder);
+          if (filter?.search) {
+            const q = filter.search.toLowerCase();
+            return mapped.filter(
+              (o) =>
+                o.orderNumber.toLowerCase().includes(q) ||
+                o.customerName.toLowerCase().includes(q) ||
+                o.customerPhone.includes(q) ||
+                o.customerEmail.toLowerCase().includes(q)
+            );
+          }
+          return mapped;
+        }
+      } catch (err) {
+        // Fallback gracefully to local disk and memory
+      }
+    }
+
+    // 2. Local disk & memory fallback
+    const diskOrders = getCustomOrders();
+    const orderMap = new Map<string, Order>();
+    for (const o of diskOrders) orderMap.set(o.id, o);
+    for (const o of inMemoryOrders) orderMap.set(o.id, o);
+
+    let list = Array.from(orderMap.values()).sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
 
     if (filter?.paymentStatus) {
       list = list.filter((o) => o.paymentStatus === filter.paymentStatus);
@@ -803,20 +1067,152 @@ export const db = {
   },
 
   async getOrderByNumber(orderNumber: string): Promise<Order | null> {
-    return inMemoryOrders.find((o) => o.orderNumber === orderNumber) || null;
+    if (isSupabaseConfigured && supabaseAdmin) {
+      try {
+        const { data, error } = await supabaseAdmin
+          .from('orders')
+          .select(`*, order_items(*), order_timeline(*)`)
+          .eq('order_number', orderNumber)
+          .single();
+        if (!error && data) {
+          return mapSupabaseOrder(data);
+        }
+      } catch (err) {
+        // Fallback to local
+      }
+    }
+
+    const inMem = inMemoryOrders.find((o) => o.orderNumber === orderNumber);
+    if (inMem) return inMem;
+    const disk = getCustomOrders().find((o) => o.orderNumber === orderNumber);
+    if (disk) {
+      if (!inMemoryOrders.some((o) => o.id === disk.id)) inMemoryOrders.unshift(disk);
+      return disk;
+    }
+    return null;
   },
 
   async getOrderById(id: string): Promise<Order | null> {
-    return inMemoryOrders.find((o) => o.id === id) || null;
+    if (isSupabaseConfigured && supabaseAdmin) {
+      try {
+        const { data, error } = await supabaseAdmin
+          .from('orders')
+          .select(`*, order_items(*), order_timeline(*)`)
+          .eq('id', id)
+          .single();
+        if (!error && data) {
+          return mapSupabaseOrder(data);
+        }
+      } catch (err) {
+        // Fallback to local
+      }
+    }
+
+    const inMem = inMemoryOrders.find((o) => o.id === id);
+    if (inMem) return inMem;
+    const disk = getCustomOrders().find((o) => o.id === id);
+    if (disk) {
+      if (!inMemoryOrders.some((o) => o.id === disk.id)) inMemoryOrders.unshift(disk);
+      return disk;
+    }
+    return null;
+  },
+
+  async getOrderByPaymentReference(paymentReference: string): Promise<Order | null> {
+    if (isSupabaseConfigured && supabaseAdmin) {
+      try {
+        const { data, error } = await supabaseAdmin
+          .from('orders')
+          .select(`*, order_items(*), order_timeline(*)`)
+          .eq('payment_reference', paymentReference)
+          .single();
+        if (!error && data) {
+          return mapSupabaseOrder(data);
+        }
+      } catch (err) {
+        // Fallback to local
+      }
+    }
+
+    const inMem = inMemoryOrders.find((o) => o.paymentReference === paymentReference);
+    if (inMem) return inMem;
+    const disk = getCustomOrders().find((o) => o.paymentReference === paymentReference);
+    if (disk) {
+      if (!inMemoryOrders.some((o) => o.id === disk.id)) inMemoryOrders.unshift(disk);
+      return disk;
+    }
+    return null;
   },
 
   async saveOrder(order: Order): Promise<Order> {
-    const existingIndex = inMemoryOrders.findIndex((o) => o.id === order.id);
-    if (existingIndex > -1) {
-      inMemoryOrders[existingIndex] = order;
+    // 1. Immediately persist to local disk and memory for synchronous speed
+    const diskOrders = getCustomOrders();
+    const diskIdx = diskOrders.findIndex((o) => o.id === order.id || o.orderNumber === order.orderNumber || o.paymentReference === order.paymentReference);
+
+    // Safeguard: Preserve items if incoming update has empty items
+    if ((!order.items || order.items.length === 0) && diskIdx > -1 && diskOrders[diskIdx].items && diskOrders[diskIdx].items.length > 0) {
+      order.items = diskOrders[diskIdx].items;
+    }
+
+    if (diskIdx > -1) {
+      diskOrders[diskIdx] = order;
+    } else {
+      diskOrders.unshift(order);
+    }
+    saveCustomOrders(diskOrders);
+
+    const memIdx = inMemoryOrders.findIndex((o) => o.id === order.id || o.orderNumber === order.orderNumber || o.paymentReference === order.paymentReference);
+    if (memIdx > -1) {
+      inMemoryOrders[memIdx] = order;
     } else {
       inMemoryOrders.unshift(order);
     }
+
+    // 2. Sync to Supabase cloud database
+    if (isSupabaseConfigured && supabaseAdmin) {
+      try {
+        const payload: any = {
+          order_number: order.orderNumber,
+          order_source: order.orderSource,
+          customer_name: order.customerName,
+          customer_email: order.customerEmail,
+          customer_phone: order.customerPhone,
+          delivery_type: order.deliveryType,
+          shipping_address: order.shippingAddress
+            ? { ...order.shippingAddress, _itemsSnapshot: order.items }
+            : { _itemsSnapshot: order.items },
+          subtotal_kobo: order.subtotalKobo,
+          delivery_fee_kobo: order.deliveryFeeKobo,
+          discount_kobo: order.discountKobo,
+          discount_code: order.discountCode || null,
+          total_kobo: order.totalKobo,
+          payment_status: order.paymentStatus,
+          payment_method: order.paymentMethod,
+          payment_reference: order.paymentReference || null,
+          paid_at: order.paidAt || null,
+          fulfillment_status: order.fulfillmentStatus,
+          carrier_name: order.carrierName || null,
+          tracking_number: order.trackingNumber || null,
+          tracking_url: order.trackingUrl || null,
+          dispatched_at: order.dispatchedAt || null,
+          delivered_at: order.deliveredAt || null,
+          internal_notes: order.internalNotes || null,
+          recorded_by_staff_name: order.recordedByStaffName || null,
+          updated_at: new Date().toISOString(),
+        };
+
+        const { error: upsertError } = await supabaseAdmin
+          .from('orders')
+          .upsert(payload, { onConflict: 'order_number' });
+
+        if (upsertError) {
+          console.warn('[db.saveOrder] Supabase sync notice:', upsertError.message);
+        }
+      } catch (err: any) {
+        console.warn('[db.saveOrder] Supabase sync exception:', err.message);
+      }
+    }
+
     return order;
   },
 

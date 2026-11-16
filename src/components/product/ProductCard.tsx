@@ -94,6 +94,27 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
     )
   );
 
+  // Bags and items without multiple wearable sizing
+  const isBag = product.categorySlug === 'bags';
+  const hasRealSizes = !isBag && uniqueSizes.length > 0 && !(uniqueSizes.length === 1 && (uniqueSizes[0] === 'One Size' || uniqueSizes[0] === 'Free Size' || uniqueSizes[0] === 'OS'));
+  const hasMultipleColors = uniqueColors.length > 1;
+
+  // Desktop Hover Action Label
+  let desktopActionLabel = "Quick Add";
+  if (hasRealSizes) {
+    desktopActionLabel = "Choose Size";
+  } else if (hasMultipleColors) {
+    desktopActionLabel = "Choose Colour";
+  }
+
+  // Mobile Action Label
+  let mobileActionLabel = "Add to Bag";
+  if (hasRealSizes) {
+    mobileActionLabel = "Select Size";
+  } else if (hasMultipleColors) {
+    mobileActionLabel = "Select Colour";
+  }
+
   const inWishlist = isInWishlist(product.id);
 
   const handleWishlistClick = (e: React.MouseEvent) => {
@@ -116,6 +137,27 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
     e.preventDefault();
     e.stopPropagation();
 
+    // If product has no sizing choices and only 1 variant or 1 color in stock
+    if (!hasRealSizes && (!hasMultipleColors || product.variants.length === 1)) {
+      const v = product.variants.find((item) => item.stockQuantity > 0) || product.variants[0];
+      if (v && v.stockQuantity > 0) {
+        addItem({
+          productId: product.id,
+          variantId: v.id,
+          productName: product.name,
+          productSlug: product.slug,
+          image: primaryImage?.url || "",
+          colorName: v.colorName,
+          size: isBag ? 'One Size' : v.size,
+          unitPriceKobo: v.salePriceKobo || v.priceKobo,
+          originalPriceKobo: v.salePriceKobo ? v.priceKobo : undefined,
+          quantity: 1,
+          maxAvailableStock: v.stockQuantity,
+        });
+        return;
+      }
+    }
+
     if (product.variants.length === 1 && product.variants[0].stockQuantity > 0) {
       const v = product.variants[0];
       addItem({
@@ -125,32 +167,38 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
         productSlug: product.slug,
         image: primaryImage?.url || "",
         colorName: v.colorName,
-        size: v.size,
+        size: isBag ? 'One Size' : v.size,
         unitPriceKobo: v.salePriceKobo || v.priceKobo,
         originalPriceKobo: v.salePriceKobo ? v.priceKobo : undefined,
         quantity: 1,
         maxAvailableStock: v.stockQuantity,
       });
     } else {
+      // Ensure selectedVariant is defaulted if there are no size choices (e.g. multi-color bags)
+      if (!hasRealSizes && !selectedVariant) {
+        const matching = product.variants.find((v) => !activeColor || v.colorName === activeColor) || product.variants[0];
+        setSelectedVariant(matching);
+      }
       setIsQuickAddModalOpen(true);
     }
   };
 
   const handleConfirmModalAdd = () => {
-    if (!selectedVariant || selectedVariant.stockQuantity <= 0) return;
+    const variantToAdd = selectedVariant || product.variants.find((v) => !activeColor || v.colorName === activeColor) || product.variants[0];
+    if (!variantToAdd || variantToAdd.stockQuantity <= 0) return;
 
     addItem({
       productId: product.id,
-      variantId: selectedVariant.id,
+      variantId: variantToAdd.id,
       productName: product.name,
       productSlug: product.slug,
       image: primaryImage?.url || "",
-      colorName: selectedVariant.colorName,
-      size: selectedVariant.size,
-      unitPriceKobo: selectedVariant.salePriceKobo || selectedVariant.priceKobo,
-      originalPriceKobo: selectedVariant.salePriceKobo ? selectedVariant.priceKobo : undefined,
+      colorName: variantToAdd.colorName,
+      size: isBag ? 'One Size' : variantToAdd.size,
+      unitPriceKobo: variantToAdd.salePriceKobo || variantToAdd.priceKobo,
+      originalPriceKobo: variantToAdd.salePriceKobo ? variantToAdd.priceKobo : undefined,
       quantity: 1,
-      maxAvailableStock: selectedVariant.stockQuantity,
+      maxAvailableStock: variantToAdd.stockQuantity,
     });
 
     setIsQuickAddModalOpen(false);
@@ -214,25 +262,27 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
             />
           </button>
 
-          {/* Size Pills Hover Overlay on Desktop */}
-          <div className="absolute inset-x-2 bottom-12 hidden sm:flex flex-wrap items-center justify-center gap-1 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 z-10 pointer-events-none">
-            {uniqueSizes.slice(0, 5).map((size) => {
-              const matchingVariant = product.variants.find((v) => v.size === size);
-              const isSizeInStock = matchingVariant && matchingVariant.stockQuantity > 0;
-              return (
-                <span
-                  key={size}
-                  className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase backdrop-blur-md shadow-sm ${
-                    isSizeInStock
-                      ? "bg-white/95 text-stone-900 border border-stone-200"
-                      : "bg-stone-200/80 text-stone-400 line-through"
-                  }`}
-                >
-                  {size}
-                </span>
-              );
-            })}
-          </div>
+          {/* Size Pills Hover Overlay on Desktop - Only for products with wearable sizes (omitted for bags) */}
+          {hasRealSizes && (
+            <div className="absolute inset-x-2 bottom-12 hidden sm:flex flex-wrap items-center justify-center gap-1 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 z-10 pointer-events-none">
+              {uniqueSizes.slice(0, 5).map((size) => {
+                const matchingVariant = product.variants.find((v) => v.size === size);
+                const isSizeInStock = matchingVariant && matchingVariant.stockQuantity > 0;
+                return (
+                  <span
+                    key={size}
+                    className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase backdrop-blur-md shadow-sm ${
+                      isSizeInStock
+                        ? "bg-white/95 text-stone-900 border border-stone-200"
+                        : "bg-stone-200/80 text-stone-400 line-through"
+                    }`}
+                  >
+                    {size}
+                  </span>
+                );
+              })}
+            </div>
+          )}
 
           {/* Quick Add Action Bar - Slides up on desktop */}
           {!isSoldOut && (
@@ -242,7 +292,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
                 className="w-full py-2 bg-stone-900/95 hover:bg-oxblood text-white text-xs font-semibold uppercase tracking-wider rounded-lg flex items-center justify-center gap-1.5 shadow-md active:scale-98 transition-all"
               >
                 <ShoppingBag className="w-3.5 h-3.5" />
-                <span>{product.variants.length === 1 ? "Quick Add" : "Choose Size"}</span>
+                <span>{desktopActionLabel}</span>
               </button>
             </div>
           )}
@@ -334,9 +384,15 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
               )}
             </div>
 
-            {/* Mobile Size Badge or Category */}
+            {/* Mobile Size Badge or Category / Color Count */}
             <span className="text-[10px] text-stone-400 uppercase font-medium">
-              {product.variants.length} {product.variants.length === 1 ? 'size' : 'sizes'}
+              {hasRealSizes
+                ? `${uniqueSizes.length} ${uniqueSizes.length === 1 ? 'size' : 'sizes'}`
+                : hasMultipleColors
+                ? `${uniqueColors.length} ${uniqueColors.length === 1 ? 'colour' : 'colours'}`
+                : isBag
+                ? 'One Size'
+                : product.categorySlug}
             </span>
           </div>
 
@@ -348,7 +404,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
                 className="w-full py-2 bg-stone-900 hover:bg-oxblood text-white text-[11px] uppercase tracking-wider font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-colors shadow-xs"
               >
                 <ShoppingBag className="w-3 h-3" />
-                <span>{product.variants.length === 1 ? "Add to Bag" : "Select Size"}</span>
+                <span>{mobileActionLabel}</span>
               </button>
             </div>
           )}
@@ -361,7 +417,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
       <Modal
         isOpen={isQuickAddModalOpen}
         onClose={() => setIsQuickAddModalOpen(false)}
-        title="Select Your Fit"
+        title={hasRealSizes ? "Select Your Fit" : hasMultipleColors ? "Select Your Colour" : "Add to Bag"}
         description={product.name}
         maxWidth="sm"
       >
@@ -401,47 +457,49 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
             </div>
           )}
 
-          {/* Sizes with Live Stock Counters */}
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <label className="block text-[11px] uppercase font-bold tracking-wider text-stone-700">
-                Choose Size ({product.categorySlug === 'shoes' ? 'EU Sizing' : 'UK Sizing'}):
-              </label>
-              <span className="text-[11px] text-stone-500">
-                {selectedVariant ? `${selectedVariant.stockQuantity} in stock` : 'Select size'}
-              </span>
-            </div>
+          {/* Sizes with Live Stock Counters - Only for products with real wearable sizing */}
+          {hasRealSizes && (
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-[11px] uppercase font-bold tracking-wider text-stone-700">
+                  Choose Size ({product.categorySlug === 'shoes' ? 'EU Sizing' : 'UK Sizing'}):
+                </label>
+                <span className="text-[11px] text-stone-500">
+                  {selectedVariant ? `${selectedVariant.stockQuantity} in stock` : 'Select size'}
+                </span>
+              </div>
 
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-              {product.variants
-                .filter((v) => !activeColor || v.colorName === activeColor)
-                .map((variant) => {
-                  const isSelected = selectedVariant?.id === variant.id;
-                  const isAvailable = variant.stockQuantity > 0;
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                {product.variants
+                  .filter((v) => !activeColor || v.colorName === activeColor)
+                  .map((variant) => {
+                    const isSelected = selectedVariant?.id === variant.id;
+                    const isAvailable = variant.stockQuantity > 0;
 
-                  return (
-                    <button
-                      key={variant.id}
-                      type="button"
-                      disabled={!isAvailable}
-                      onClick={() => setSelectedVariant(variant)}
-                      className={`p-2.5 text-center rounded-lg border transition-all text-xs ${
-                        isSelected
-                          ? "border-oxblood bg-oxblood text-white font-bold ring-2 ring-oxblood/20"
-                          : isAvailable
-                          ? "border-stone-200 bg-white hover:border-stone-900 font-semibold text-stone-900"
-                          : "border-stone-200 bg-stone-100 text-stone-400 line-through cursor-not-allowed opacity-60"
-                      }`}
-                    >
-                      <div>{variant.size}</div>
-                      <div className="text-[9px] font-normal opacity-80 mt-0.5">
-                        {isAvailable ? `${variant.stockQuantity} left` : 'Out'}
-                      </div>
-                    </button>
-                  );
-                })}
+                    return (
+                      <button
+                        key={variant.id}
+                        type="button"
+                        disabled={!isAvailable}
+                        onClick={() => setSelectedVariant(variant)}
+                        className={`p-2.5 text-center rounded-lg border transition-all text-xs ${
+                          isSelected
+                            ? "border-oxblood bg-oxblood text-white font-bold ring-2 ring-oxblood/20"
+                            : isAvailable
+                            ? "border-stone-200 bg-white hover:border-stone-900 font-semibold text-stone-900"
+                            : "border-stone-200 bg-stone-100 text-stone-400 line-through cursor-not-allowed opacity-60"
+                        }`}
+                      >
+                        <div>{variant.size}</div>
+                        <div className="text-[9px] font-normal opacity-80 mt-0.5">
+                          {isAvailable ? `${variant.stockQuantity} left` : 'Out'}
+                        </div>
+                      </button>
+                    );
+                  })}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Price & CTA */}
           <div className="pt-3 border-t border-stone-200 flex items-center justify-between">

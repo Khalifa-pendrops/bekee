@@ -328,15 +328,15 @@ export default function NewProductGuidedPage() {
     <div className="max-w-4xl mx-auto space-y-6">
       
       {/* Top Breadcrumb & Step Tracker */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-stone-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
         <div>
           <Link
             href="/admin/products"
-            className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-stone-500 hover:text-stone-900 transition-colors mb-1.5"
+            className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-stone-400 hover:text-white transition-colors mb-1.5"
           >
             <ArrowLeft className="w-3.5 h-3.5 mr-1" /> Back to Products List
           </Link>
-          <h1 className="font-serif text-2xl md:text-3xl font-bold text-stone-900">
+          <h1 className="font-serif text-2xl md:text-3xl font-bold text-white">
             Guided Product Creator
           </h1>
         </div>
@@ -348,7 +348,7 @@ export default function NewProductGuidedPage() {
             className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-colors ${
               currentStep === 1
                 ? 'bg-oxblood-700 text-white'
-                : 'bg-stone-200 text-stone-700 hover:bg-stone-300'
+                : 'bg-white/10 text-stone-300 hover:bg-white/20 border border-white/15'
             }`}
           >
             <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">1</span>
@@ -362,7 +362,7 @@ export default function NewProductGuidedPage() {
             className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-colors ${
               currentStep === 2
                 ? 'bg-oxblood-700 text-white'
-                : 'bg-stone-200 text-stone-700 hover:bg-stone-300'
+                : 'bg-white/10 text-stone-300 hover:bg-white/20 border border-white/15'
             }`}
           >
             <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">2</span>
@@ -376,7 +376,7 @@ export default function NewProductGuidedPage() {
             className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-colors ${
               currentStep === 3
                 ? 'bg-oxblood-700 text-white'
-                : 'bg-stone-200 text-stone-700 hover:bg-stone-300'
+                : 'bg-white/10 text-stone-300 hover:bg-white/20 border border-white/15'
             }`}
           >
             <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">3</span>

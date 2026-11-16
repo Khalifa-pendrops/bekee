@@ -36,7 +36,8 @@ export async function POST(req: NextRequest) {
     }
 
     const data = parsed.data;
-    const normalizedPhone = normalizeNigerianPhone(data.phone);
+    const phoneNorm = normalizeNigerianPhone(data.phone);
+    const normalizedPhone = phoneNorm.isValid ? phoneNorm.e164 : data.phone;
 
     const createdQuote = await db.submitDeliveryQuoteRequest({
       customerName: data.customerName,

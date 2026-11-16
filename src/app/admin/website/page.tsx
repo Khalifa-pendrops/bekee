@@ -62,13 +62,13 @@ export default function AdminWebsitePage() {
     <div className="space-y-6 max-w-4xl mx-auto">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-stone-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
         <div>
-          <h1 className="font-serif text-2xl md:text-3xl font-bold text-stone-900 flex items-center gap-2">
-            <Globe className="w-6 h-6 text-oxblood-700" />
+          <h1 className="font-serif text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
+            <Globe className="w-6 h-6 text-oxblood-500" />
             Website Content & Merchandising
           </h1>
-          <p className="text-xs text-stone-500 mt-0.5">
+          <p className="text-xs text-stone-400 mt-0.5">
             Update your announcement bar, Aba showroom address, customer care WhatsApp, and store policies without code.
           </p>
         </div>
@@ -76,7 +76,7 @@ export default function AdminWebsitePage() {
         <Link
           href="/"
           target="_blank"
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-semibold rounded-lg transition-colors"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-white/10 hover:bg-white/20 text-stone-200 border border-white/15 text-xs font-semibold rounded-lg transition-colors"
         >
           <span>Preview Live Website</span>
           <ExternalLink className="w-3.5 h-3.5" />

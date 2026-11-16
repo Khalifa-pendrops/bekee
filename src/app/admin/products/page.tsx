@@ -86,12 +86,12 @@ export default async function AdminProductsPage({ searchParams = {} }: AdminProd
     <div className="space-y-6">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-stone-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
         <div>
-          <h1 className="font-serif text-2xl md:text-3xl font-bold text-stone-900">
+          <h1 className="font-serif text-2xl md:text-3xl font-bold text-white">
             Products & Catalogue
           </h1>
-          <p className="text-xs text-stone-500 mt-0.5">
+          <p className="text-xs text-stone-400 mt-0.5">
             Manage your ready-to-wear designs, shoe lines, bags, and artisan accessories.
           </p>
         </div>

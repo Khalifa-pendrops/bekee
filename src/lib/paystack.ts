@@ -39,18 +39,42 @@ interface PaystackVerifyResponse {
 }
 
 export class PaystackService {
-  private static secretKey = process.env.PAYSTACK_SECRET_KEY || '';
+  private static getSecretKey(): string {
+    return (process.env.PAYSTACK_SECRET_KEY || '').trim();
+  }
+
+  /**
+   * Determines whether Paystack should run in simulated mock test mode.
+   * Activated when ENABLE_DEV_MOCK_CHECKOUT=true OR when keys are placeholders/dummy values.
+   */
+  public static isMockMode(): boolean {
+    if (process.env.ENABLE_DEV_MOCK_CHECKOUT === 'true') {
+      return true;
+    }
+    const key = this.getSecretKey();
+    if (!key) return true;
+    if (
+      key.includes('xxxx') ||
+      key.includes('placeholder') ||
+      key.includes('your-paystack') ||
+      key === 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' ||
+      !key.startsWith('sk_')
+    ) {
+      return true;
+    }
+    return false;
+  }
 
   /**
    * Initializes a Paystack transaction.
-   * If secret key is not set or in test mock mode, returns a mock authorization url for local development.
+   * If secret key is not set, contains placeholders, or is in mock mode, returns a mock authorization url for testing.
    */
   public static async initializeTransaction(params: InitializePaymentParams): Promise<PaystackInitResponse> {
     const { email, amountKobo, reference, callbackUrl, metadata } = params;
 
-    if (!this.secretKey || this.secretKey.startsWith('sk_test_placeholder') || this.secretKey === 'your-paystack-secret-key') {
+    if (this.isMockMode()) {
       // Local development or unconfigured Paystack: Provide safe mock checkout redirect
-      console.warn('[PaystackService] PAYSTACK_SECRET_KEY is not configured with live credentials. Using local callback simulation.');
+      console.warn('[PaystackService] Using simulated checkout flow for local development (no live key provided).');
       return {
         status: true,
         message: 'Mock authorization URL created for testing',
@@ -62,11 +86,13 @@ export class PaystackService {
       };
     }
 
+    const secretKey = this.getSecretKey();
+
     try {
       const response = await fetch('https://api.paystack.co/transaction/initialize', {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${this.secretKey}`,
+          Authorization: `Bearer ${secretKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -93,7 +119,7 @@ export class PaystackService {
    * Authoritatively verifies transaction status from Paystack API.
    */
   public static async verifyTransaction(reference: string): Promise<PaystackVerifyResponse> {
-    if (!this.secretKey || this.secretKey.startsWith('sk_test_placeholder') || this.secretKey === 'your-paystack-secret-key') {
+    if (this.isMockMode()) {
       // Development mock response
       return {
         status: true,
@@ -114,11 +140,13 @@ export class PaystackService {
       };
     }
 
+    const secretKey = this.getSecretKey();
+
     try {
       const response = await fetch(`https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`, {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${this.secretKey}`,
+          Authorization: `Bearer ${secretKey}`,
           'Content-Type': 'application/json',
         },
       });
@@ -135,7 +163,11 @@ export class PaystackService {
    * Validates Paystack webhook HMAC SHA-512 signature.
    */
   public static verifyWebhookSignature(signature: string | null, rawBody: string): boolean {
-    const webhookSecret = process.env.PAYSTACK_WEBHOOK_SECRET || process.env.PAYSTACK_SECRET_KEY;
+    if (this.isMockMode()) {
+      return true;
+    }
+
+    const webhookSecret = process.env.PAYSTACK_WEBHOOK_SECRET || this.getSecretKey();
     if (!webhookSecret || !signature) {
       return false;
     }
@@ -148,4 +180,3 @@ export class PaystackService {
     return hash === signature;
   }
 }
-

@@ -42,7 +42,8 @@ export async function POST(req: NextRequest) {
     const { items: requestItems, customer, deliveryType, discountCode } = parsed.data;
 
     // 1. Normalize Nigerian phone number (e.g. 080... to +23480...)
-    const normalizedPhone = normalizeNigerianPhone(customer.phone);
+    const phoneNorm = normalizeNigerianPhone(customer.phone);
+    const normalizedPhone = phoneNorm.isValid ? phoneNorm.e164 : customer.phone;
 
     // 2. Authoritative Server-Side Item Price & Stock Validation
     const allProducts = await db.getProducts();
@@ -128,10 +129,10 @@ export async function POST(req: NextRequest) {
       calculatedSubtotalKobo + calculatedDeliveryFeeKobo - calculatedDiscountKobo
     );
 
-    // 6. Generate Order ID and Unique Payment Reference
+    // 6. Generate Order ID and Unique Payment Reference (Full ARUBEKEE Brand Prefix)
     const orderId = `ord_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
-    const orderNumber = `ARU-${new Date().getFullYear().toString().slice(-2)}${(new Date().getMonth() + 1).toString().padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
-    const paymentReference = `ARU_PAY_${orderNumber}_${Date.now()}`;
+    const orderNumber = `ARUBEKEE-${new Date().getFullYear().toString().slice(-2)}${(new Date().getMonth() + 1).toString().padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const paymentReference = `ARUBEKEE_PAY_${orderNumber}_${Date.now()}`;
 
     // 7. Atomic Concurrency Lock: 15-Minute Stock Reservation
     const reservationResult = await db.createStockReservation(
@@ -214,8 +215,12 @@ export async function POST(req: NextRequest) {
     });
 
     if (!paystackRes.status || !paystackRes.data) {
+      const msg = paystackRes.message === 'Invalid key'
+        ? 'Paystack Secret Key is invalid. Please add your live or test secret key from your Paystack dashboard in .env.local, or set ENABLE_DEV_MOCK_CHECKOUT=true.'
+        : paystackRes.message || 'Could not communicate with Paystack payment gateway.';
+
       return NextResponse.json(
-        { error: paystackRes.message || 'Could not communicate with Paystack payment gateway.' },
+        { error: msg },
         { status: 502 }
       );
     }
