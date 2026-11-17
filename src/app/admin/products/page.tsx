@@ -92,7 +92,7 @@ export default async function AdminProductsPage({ searchParams = {} }: AdminProd
             Products & Catalogue
           </h1>
           <p className="text-xs text-stone-400 mt-0.5">
-            Manage your ready-to-wear designs, shoe lines, bags, and artisan accessories.
+            Manage your ready-to-wear inventory, shoes, bags, and curated accessories.
           </p>
         </div>
 

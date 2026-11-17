@@ -171,13 +171,13 @@ function ShopContent() {
       <div className="border-b border-stone-line pb-6 text-left">
         <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-oxblood font-semibold mb-1">
           <Sparkles className="w-3.5 h-3.5 text-gold" />
-          <span>Curated Catalogue • Aba Atelier</span>
+          <span>Curated Catalogue • Aba Showroom</span>
         </div>
         <h1 className="editorial-heading text-3xl sm:text-4xl lg:text-5xl text-obsidian font-normal">
           The Full Collection
         </h1>
         <p className="text-xs sm:text-sm text-obsidian-muted mt-2 max-w-2xl leading-relaxed">
-          Explore artisanal ready-to-wear dresses, architectural footwear, structured bags, and statement accessories handcrafted in Aba, Abia State.
+          Explore curated ready-to-wear dresses, architectural footwear, structured bags, and statement accessories handpicked in Aba, Abia State.
         </p>
       </div>
 

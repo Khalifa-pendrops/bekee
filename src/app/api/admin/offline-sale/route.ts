@@ -12,6 +12,15 @@ const offlineSaleSchema = z.object({
   customerName: z.string().optional(),
   customerPhone: z.string().optional(),
   notes: z.string().optional(),
+  isInvoice: z.boolean().optional(),
+  deliveryFeeKobo: z.number().int().nonnegative().optional(),
+  deliveryType: z.enum(['aba_pickup', 'state_capital', 'major_city', 'remote_area']).optional(),
+  shippingAddress: z.object({
+    streetAddress: z.string().min(1),
+    city: z.string().min(1),
+    state: z.string().min(1),
+    landmark: z.string().optional(),
+  }).optional(),
 });
 
 export async function POST(req: NextRequest) {

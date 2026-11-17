@@ -118,7 +118,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         <div className="py-20 text-center border border-stone-line bg-ivory-warm p-8 space-y-4">
           <p className="font-serif text-2xl text-obsidian">No items found in this section</p>
           <p className="text-xs text-obsidian-muted max-w-md mx-auto">
-            Our artisans are currently cutting new pieces for this category in our Aba studio.
+            Our styling team is currently curating fresh pieces for this category. New drop landing soon.
           </p>
           <Link href="/shop">
             <Button variant="outline" size="sm" className="mt-2">

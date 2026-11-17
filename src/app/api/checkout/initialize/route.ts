@@ -55,7 +55,12 @@ export async function POST(req: NextRequest) {
       let matchedVariant = null;
 
       for (const p of allProducts) {
-        const v = p.variants.find((variant) => variant.id === reqItem.variantId);
+        const v = p.variants.find(
+          (variant) =>
+            variant.id === reqItem.variantId ||
+            variant.sku === reqItem.variantId ||
+            (variant.sku && reqItem.variantId && variant.sku.toLowerCase() === reqItem.variantId.toLowerCase())
+        );
         if (v) {
           matchedProduct = p;
           matchedVariant = v;
@@ -137,7 +142,7 @@ export async function POST(req: NextRequest) {
     // 7. Atomic Concurrency Lock: 15-Minute Stock Reservation
     const reservationResult = await db.createStockReservation(
       orderId,
-      requestItems.map((i) => ({ variantId: i.variantId, quantity: i.quantity })),
+      immutableItems.map((i) => ({ variantId: i.variantId, quantity: i.quantity })),
       15 // 15 minutes window
     );
 

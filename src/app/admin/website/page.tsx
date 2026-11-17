@@ -181,7 +181,7 @@ export default function AdminWebsitePage() {
 
             <div>
               <label className="block font-semibold uppercase tracking-wider text-stone-700 mb-1.5">
-                Customer Care WhatsApp Number (e.g. 2348030001234):
+                Customer Care WhatsApp Number (e.g. 2349164161091):
               </label>
               <input
                 type="text"

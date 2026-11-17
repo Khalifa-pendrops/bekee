@@ -87,15 +87,29 @@ export function normalizeNigerianPhone(phone: string): {
 
 /**
  * Generate a prefilled WhatsApp link for direct shopping enquiries.
+ * Includes direct product image URL and price for instant visual clarity in the chat.
  */
 export function buildWhatsAppProductUrl(
   waNumber: string,
   productName: string,
   variantSummary: string,
-  productUrl: string
+  productUrl: string,
+  imageUrl?: string,
+  priceFormatted?: string
 ): string {
   const cleanNumber = waNumber.replace(/[^0-9]/g, '');
-  const message = `Hello ARUBEKEE Collection! 🌸\n\nI would like to enquire about:\n*${productName}*\nOption: ${variantSummary}\n\nLink: ${productUrl}\n\nPlease confirm availability and payment details. Thank you!`;
+  
+  let message = `Hello ARUBEKEE COLLECTION! 🌸\n\nI would like to enquire about / order:\n👗 *${productName}*\n🎨 Option: ${variantSummary}`;
+  
+  if (priceFormatted) {
+    message += `\n💵 Price: ${priceFormatted}`;
+  }
+  
+  if (imageUrl) {
+    message += `\n\n📸 Item Photo: ${imageUrl}`;
+  }
+  
+  message += `\n🔗 Product Link: ${productUrl}\n\nPlease confirm availability and dispatch schedule. Thank you!`;
   
   return `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
 }

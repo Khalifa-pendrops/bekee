@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { Order } from "@/types";
 import { formatKoboToNaira } from "@/lib/utils";
 import { Input } from "@/components/ui/Input";
@@ -14,36 +15,44 @@ import {
   CheckCircle2, 
   Clock, 
   ExternalLink,
-  AlertCircle
+  AlertCircle,
+  CreditCard,
+  Copy,
+  Check,
+  MessageCircle,
+  ShieldCheck
 } from "lucide-react";
 
-export default function TrackOrderPage() {
-  const [orderNumber, setOrderNumber] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+function TrackOrderContent() {
+  const searchParams = useSearchParams();
+  const initialRef = searchParams.get('ref') || '';
+  const initialPhone = searchParams.get('phone') || '';
+
+  const [orderNumber, setOrderNumber] = useState(initialRef);
+  const [phoneNumber, setPhoneNumber] = useState(initialPhone);
   const [isLoading, setIsLoading] = useState(false);
   const [order, setOrder] = useState<Order | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
+  const [copiedAccount, setCopiedAccount] = useState(false);
 
-  const handleTrackSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMessage("");
-    setOrder(null);
-    setHasSearched(true);
-
-    if (!orderNumber.trim()) {
+  const fetchTrackOrder = async (queryRef: string, queryPhone: string) => {
+    if (!queryRef.trim()) {
       setErrorMessage("Please enter your Order Reference (e.g. ARUBEKEE-...)");
       return;
     }
 
     setIsLoading(true);
+    setErrorMessage("");
+    setHasSearched(true);
+
     try {
       const res = await fetch("/api/orders/track", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          query: orderNumber.trim(),
-          phone: phoneNumber.trim(),
+          query: queryRef.trim(),
+          phone: queryPhone.trim(),
         }),
       });
 
@@ -63,18 +72,37 @@ export default function TrackOrderPage() {
     }
   };
 
+  useEffect(() => {
+    if (initialRef) {
+      fetchTrackOrder(initialRef, initialPhone);
+    }
+  }, [initialRef, initialPhone]);
+
+  const handleTrackSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    fetchTrackOrder(orderNumber, phoneNumber);
+  };
+
+  const copyBankDetails = () => {
+    navigator.clipboard.writeText("1018938472");
+    setCopiedAccount(true);
+    setTimeout(() => setCopiedAccount(false), 2500);
+  };
+
+  const boutiqueWhatsApp = "2349164161091";
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 space-y-10">
       {/* Page Header */}
       <div className="text-center space-y-2 max-w-xl mx-auto">
         <span className="text-xs uppercase tracking-widest font-semibold text-oxblood">
-          Live Dispatch Tracking
+          Live Dispatch &amp; Order Tracking
         </span>
         <h1 className="editorial-heading text-3xl sm:text-4xl text-obsidian font-normal">
           Track Your Fashion Parcel
         </h1>
         <p className="text-xs sm:text-sm text-obsidian-muted leading-relaxed">
-          Enter the Order Number sent to your email or SMS, along with your registered phone number, to check live dispatch and fulfillment status.
+          Enter your Order or Invoice Reference, along with your registered phone number, to check live dispatch, payment status, and fulfillment.
         </p>
       </div>
 
@@ -82,8 +110,8 @@ export default function TrackOrderPage() {
       <div className="bg-ivory border border-stone-line p-6 sm:p-8 shadow-card max-w-xl mx-auto">
         <form onSubmit={handleTrackSubmit} className="space-y-4">
           <Input
-            label="Order Reference"
-            placeholder="e.g. ARUBEKEE-2611-9481 or ARUBEKEE-OFF-..."
+            label="Order / Invoice Reference"
+            placeholder="e.g. ARUBEKEE-2611-9481 or ARUBEKEE-INV-..."
             value={orderNumber}
             onChange={(e) => setOrderNumber(e.target.value)}
             required
@@ -94,7 +122,7 @@ export default function TrackOrderPage() {
             placeholder="e.g. 0803 123 4567"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            hint="For security verification"
+            hint="For security verification (optional if link has reference)"
           />
 
           <Button
@@ -104,7 +132,7 @@ export default function TrackOrderPage() {
             isLoading={isLoading}
             className="w-full uppercase tracking-wider text-xs"
           >
-            Track Order
+            Track Order / View Invoice
           </Button>
 
           {errorMessage && (
@@ -123,19 +151,19 @@ export default function TrackOrderPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-line pb-6">
             <div>
               <span className="text-[10px] uppercase font-bold tracking-widest text-oxblood">
-                Order Status
+                {order.orderNumber.includes('INV') ? 'Pro-Forma Invoice' : 'Order Status'}
               </span>
               <h2 className="font-serif text-2xl text-obsidian mt-0.5">
                 {order.orderNumber}
               </h2>
               <p className="text-xs text-obsidian-muted mt-0.5">
-                Placed on {new Date(order.createdAt).toLocaleDateString('en-NG', { dateStyle: 'long' })}
+                Issued on {new Date(order.createdAt).toLocaleDateString('en-NG', { dateStyle: 'long' })}
               </p>
             </div>
 
             <div className="flex flex-wrap gap-2">
               <Badge
-                variant={order.paymentStatus === 'paid' ? 'success' : order.paymentStatus === 'inventory_conflict_quarantined' ? 'warning' : 'default'}
+                variant={order.paymentStatus === 'paid' ? 'success' : order.paymentStatus === 'pending' ? 'warning' : 'default'}
               >
                 Payment: {order.paymentStatus.replace(/_/g, ' ')}
               </Badge>
@@ -147,6 +175,67 @@ export default function TrackOrderPage() {
               </Badge>
             </div>
           </div>
+
+          {/* Pending Payment Pro-Forma Invoice Banner (If Unpaid / WhatsApp Invoice) */}
+          {order.paymentStatus === 'pending' && (
+            <div className="bg-amber-50/70 border-2 border-amber-300/80 p-5 sm:p-6 space-y-4">
+              <div className="flex items-center gap-2 text-amber-900 font-semibold text-sm">
+                <CreditCard className="w-5 h-5 text-amber-700" />
+                <span>Awaiting Bank Transfer • Garment Reserved</span>
+              </div>
+              <p className="text-xs text-amber-800 leading-relaxed">
+                Your order is currently placed on reserve in our Aba showroom. Please complete a direct bank transfer of{" "}
+                <strong className="text-amber-950 font-bold font-serif text-sm">
+                  {formatKoboToNaira(order.totalKobo)}
+                </strong>{" "}
+                using the official boutique account details below to confirm dispatch.
+              </p>
+
+              {/* Bank Account Details Card */}
+              <div className="bg-white border border-amber-200/90 p-4 rounded-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="space-y-1 text-xs">
+                  <div className="text-obsidian-muted">Bank Name: <strong className="text-obsidian">Zenith Bank PLC</strong></div>
+                  <div className="text-obsidian-muted">Account Name: <strong className="text-obsidian">ARUBEKEE COLLECTION ATELIER</strong></div>
+                  <div className="text-obsidian-muted flex items-center gap-2">
+                    <span>Account Number:</span>
+                    <span className="font-mono text-base font-bold text-obsidian tracking-wider">1018938472</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <button
+                    type="button"
+                    onClick={copyBankDetails}
+                    className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-stone-100 hover:bg-stone-200 border border-stone-300 text-obsidian text-xs font-semibold transition-colors"
+                  >
+                    {copiedAccount ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-emerald-700">Account Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5 text-obsidian-muted" />
+                        <span>Copy Account No</span>
+                      </>
+                    )}
+                  </button>
+
+                  <a
+                    href={`https://wa.me/${boutiqueWhatsApp}?text=${encodeURIComponent(
+                      `Hello ARUBEKEE COLLECTION, I have transferred payment for invoice ${order.orderNumber} (${formatKoboToNaira(order.totalKobo)}). Here is my payment receipt / confirmation:`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold shadow-sm transition-colors"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" />
+                    <span>Send Receipt via WhatsApp</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Logistics & Tracking Reference */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-ivory-warm p-5 border border-stone-line">
@@ -204,7 +293,9 @@ export default function TrackOrderPage() {
                 </div>
               ) : (
                 <p className="text-xs text-obsidian-muted">
-                  Your parcel is being packaged in our Aba studio. Dispatch details will update once handed over to the courier.
+                  {order.paymentStatus === 'pending'
+                    ? "Dispatch will commence immediately once bank transfer confirmation is received."
+                    : "Your items are being retrieved from our Aba showroom racks, quality-inspected, and boxed for courier transit."}
                 </p>
               )}
             </div>
@@ -213,7 +304,7 @@ export default function TrackOrderPage() {
           {/* Order Items Snapshot */}
           <div className="space-y-3">
             <h3 className="text-xs uppercase font-semibold tracking-wider text-obsidian-soft">
-              Items in this Parcel
+              Items in this {order.paymentStatus === 'pending' ? 'Invoice' : 'Parcel'}
             </h3>
             <div className="divide-y divide-stone-line border-y border-stone-line">
               {order.items.map((item) => (
@@ -232,7 +323,9 @@ export default function TrackOrderPage() {
             </div>
 
             <div className="pt-2 flex justify-between items-baseline text-sm">
-              <span className="font-semibold uppercase tracking-wider text-xs text-obsidian">Total Paid:</span>
+              <span className="font-semibold uppercase tracking-wider text-xs text-obsidian">
+                {order.paymentStatus === 'pending' ? 'Total Due:' : 'Total Paid:'}
+              </span>
               <span className="font-serif text-lg font-bold text-oxblood">
                 {formatKoboToNaira(order.totalKobo)}
               </span>
@@ -264,6 +357,18 @@ export default function TrackOrderPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function TrackOrderPage() {
+  return (
+    <Suspense fallback={
+      <div className="max-w-4xl mx-auto px-4 py-16 text-center text-xs uppercase tracking-widest text-obsidian-muted">
+        Loading Order Tracker...
+      </div>
+    }>
+      <TrackOrderContent />
+    </Suspense>
   );
 }
 

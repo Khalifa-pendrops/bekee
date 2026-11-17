@@ -85,10 +85,10 @@ export default async function HomePage() {
                 {/* Overlaid Editorial Plaque */}
                 <div className="absolute -bottom-6 -left-6 bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-[#EADDCF] shadow-floating max-w-[250px] hidden sm:block animate-float">
                   <span className="text-[10px] tracking-widest uppercase font-bold text-oxblood block">
-                    Signature Atelier Edit
+                    Signature Curated Edit
                   </span>
                   <p className="font-serif text-sm text-obsidian mt-1 leading-snug">
-                    Bespoke tailored two-tone pencil dress in deep oxblood & blush.
+                    Handpicked two-tone structured pencil dress in deep oxblood &amp; blush.
                   </p>
                 </div>
               </div>
@@ -270,21 +270,21 @@ export default async function HomePage() {
         <div className="bg-obsidian text-ivory-light p-8 sm:p-12 lg:p-16 border border-obsidian-soft relative overflow-hidden">
           <div className="max-w-2xl space-y-6 relative z-10">
             <span className="text-xs uppercase tracking-widest font-semibold text-gold">
-              The Aba Craftsmanship Story
+              The Aba Curation Story
             </span>
 
             <h2 className="editorial-heading text-3xl sm:text-4xl text-ivory leading-tight">
-              Honouring the commercial capital of African garment craftsmanship.
+              Curating the finest fashion from the commercial capital of African trade.
             </h2>
 
             <p className="text-xs sm:text-sm text-ivory-muted leading-relaxed">
-              Every garment and accessory in the Arubekee Collection is conceived and finished in Aba, Abia State. Our pattern cutters and leather artisans blend traditional Igbo trade diligence with contemporary silhouettes. No fast-fashion polyester disposability — only durable elegance made to be cherished.
+              Every garment and accessory in the Arubekee Collection is handpicked in the vibrant fashion hub of Aba, Abia State. Our styling team scours premier makers and cordwainers, selecting only pieces with exceptional fabric weight, clean seams, and flattering silhouettes. No fast-fashion polyester disposability — only durable elegance, vetted and ready to ship.
             </p>
 
             <div className="pt-4 flex flex-wrap gap-4 items-center">
               <Link href="/about">
                 <Button variant="gold" size="md">
-                  <span>Our Heritage & Process</span>
+                  <span>Our Boutique &amp; Process</span>
                 </Button>
               </Link>
 

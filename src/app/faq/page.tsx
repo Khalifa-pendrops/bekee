@@ -77,8 +77,12 @@ export default function FAQPage() {
           a: 'Our clothing uses standard UK dress sizing (UK 6 to UK 20). Our shoes use EU sizing (EU 36 to EU 42). Please consult our detailed Size Guide with centimeter measurements for bust, waist, and hips before placing your order.',
         },
         {
-          q: 'Can I request bespoke sizing or custom length?',
-          a: 'Yes. Because our garments are tailored in Aba, our atelier can often accommodate minor hem length adjustments. Tap the "Inquire via WhatsApp" button on any product page with your measurements.',
+          q: 'Are your items in stock and ready to ship, or custom tailored?',
+          a: 'All our pieces are 100% ready-to-wear and physically in stock at our Aba boutique showroom. We do not make you wait weeks for custom tailoring—every garment, pair of shoes, and bag is handpicked, quality-inspected, and dispatched within 24 hours.',
+        },
+        {
+          q: 'How do I ensure the best fit before ordering?',
+          a: 'Each piece features verified measurements and our Stylist’s Note on fit. If you are unsure between sizes, tap "Enquire on WhatsApp" and our boutique team will happily advise you on the exact fit.',
         },
       ],
     },
@@ -92,7 +96,7 @@ export default function FAQPage() {
         },
         {
           q: 'How do I start an exchange?',
-          a: 'Enter your order number on our Track Order page, or message our Aba customer care concierge directly on WhatsApp (+234 803 000 1234) with your order reference.',
+          a: 'Enter your order number on our Track Order page, or message our Aba customer care concierge directly on WhatsApp (+234 916 416 1091) with your order reference.',
         },
       ],
     },
@@ -163,10 +167,10 @@ export default function FAQPage() {
         <div className="mt-12 bg-sand-100 p-8 rounded-lg border border-sand-300 text-center">
           <h3 className="font-serif text-xl text-stone-900 mb-2">Still Have a Question?</h3>
           <p className="text-xs text-stone-600 mb-6 max-w-md mx-auto">
-            Our Aba boutique styling team is available Monday to Saturday to assist you with bespoke sizing, urgent waybill requests, or fabrics.
+            Our Aba boutique styling team is available Monday to Saturday to assist you with styling advice, sizing recommendations, or urgent waybill requests.
           </p>
           <a
-            href="https://wa.me/2348030001234?text=Hello%20ARUBEKEE%20COLLECTION%2C%20I%20have%20an%20inquiry%20about%20your%20products."
+            href="https://wa.me/2349164161091?text=Hello%20ARUBEKEE%20COLLECTION%2C%20I%20have%20an%20inquiry%20about%20your%20products."
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-700 text-white text-xs font-semibold tracking-wider uppercase rounded hover:bg-emerald-800 transition-colors shadow-sm"

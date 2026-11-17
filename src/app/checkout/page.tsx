@@ -299,7 +299,7 @@ export default function CheckoutPage() {
           </div>
           <h1 className="font-serif text-3xl text-stone-900 mb-3">Your Shopping Bag is Empty</h1>
           <p className="text-stone-600 text-sm mb-8">
-            You haven't selected any items from ARUBEKEE COLLECTION yet. Explore our handcrafted ready-to-wear pieces and artisan accessories.
+            You haven&apos;t selected any items from ARUBEKEE COLLECTION yet. Explore our curated ready-to-wear pieces, shoes, and luxury accessories.
           </p>
           <Link
             href="/shop"

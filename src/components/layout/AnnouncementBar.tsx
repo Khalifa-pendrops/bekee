@@ -10,7 +10,7 @@ interface AnnouncementBarProps {
 }
 
 export function AnnouncementBar({
-  message = "Bespoke & Ready-to-Wear Fashion from Aba, Abia State • Nationwide Express Dispatch • Free Aba Pickup",
+  message = "Curated Contemporary Fashion & Statement Accessories • In-Stock & Ready to Ship • Free Aba Pickup",
   link = "/shop",
 }: AnnouncementBarProps) {
   const [isVisible, setIsVisible] = useState(true);

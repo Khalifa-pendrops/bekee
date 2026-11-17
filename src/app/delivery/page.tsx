@@ -21,7 +21,7 @@ export default function DeliveryPage() {
           Delivery Rates & Store Pickup
         </h1>
         <p className="text-xs sm:text-sm text-obsidian-muted max-w-xl">
-          We dispatch parcels from our Aba atelier every afternoon (Monday – Saturday). All delivery fees are stated upfront before you make payment.
+          We dispatch parcels from our Aba showroom every afternoon (Monday – Saturday). All delivery fees are stated upfront before you make payment.
         </p>
       </div>
 

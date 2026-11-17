@@ -123,7 +123,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <Link 
               href="/admin" 
               className={`flex items-center gap-3 group transition-opacity ${isCollapsed ? 'mx-auto' : ''}`}
-              title="ARUBEKEE Atelier Workspace"
+              title="ARUBEKEE Boutique Workspace"
             >
               {/* Circular Atelier Seal Avatar */}
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-oxblood-600 via-oxblood-700 to-oxblood-900 text-white flex items-center justify-center font-serif font-bold text-base shadow-lg shadow-black/40 border border-white/35 shrink-0 group-hover:scale-105 transition-transform">
@@ -136,7 +136,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <span>ARUBEKEE</span>
                   </div>
                   <div className="text-[10px] text-sand-200 font-medium tracking-wide truncate drop-shadow-[0_1px_1px_rgba(0,0,0,0.7)]">
-                    Atelier Workspace
+                    Boutique HQ
                   </div>
                 </div>
               )}
@@ -336,7 +336,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                       Store Manager
                     </div>
                     <div className="text-[10px] text-stone-300 font-mono truncate drop-shadow-sm">
-                      Aba Atelier • Live
+                      Aba Boutique • Live
                     </div>
                   </div>
                 </div>
@@ -418,7 +418,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <div className="w-7 h-7 rounded-full bg-oxblood-700 text-white flex items-center justify-center font-serif text-xs font-bold border border-white/30">
                   A
                 </div>
-                <span className="text-xs uppercase tracking-widest text-sand-200 font-semibold">Atelier Workspace Menu</span>
+                <span className="text-xs uppercase tracking-widest text-sand-200 font-semibold">Boutique HQ Menu</span>
               </div>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}

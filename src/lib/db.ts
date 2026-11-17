@@ -3,6 +3,8 @@ import {
   Category, 
   Collection, 
   DeliveryZone, 
+  DeliveryType,
+  ShippingAddress,
   StoreSettings, 
   Order, 
   ImmutableOrderItem,
@@ -165,8 +167,8 @@ function mapSupabaseOrder(row: any): Order {
       actor: t.actor || 'System',
       createdAt: t.created_at,
     })),
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
+    createdAt: row.created_at || new Date().toISOString(),
+    updatedAt: row.updated_at || new Date().toISOString(),
   };
 }
 
@@ -205,6 +207,8 @@ export const db = {
           .from('products')
           .select(`
             *,
+            category:categories(id, name, slug),
+            subcategory:subcategories(id, name, slug),
             images:product_images(*),
             variants:product_variants(*)
           `)
@@ -213,29 +217,56 @@ export const db = {
 
         const { data, error } = await query;
         if (!error && data && data.length > 0) {
-          const sbMapped = (data as any[]).map((sb) => ({
-            id: sb.id,
-            name: sb.name,
-            slug: sb.slug,
-            tagline: sb.tagline,
-            description: sb.description,
-            categorySlug: sb.category_slug || 'clothing',
-            subCategorySlug: sb.sub_category_slug || 'dresses',
-            collectionSlugs: sb.collection_slugs || ['new-arrivals'],
-            fabricAndCare: sb.fabric_and_care || [],
-            images: sb.images || [],
-            variants: sb.variants || [],
-            hasVariants: (sb.variants || []).length > 1,
-            isPublished: sb.is_published,
-            isFeatured: sb.is_featured,
-            isArchived: sb.is_archived,
-            tags: sb.tags || [],
-            createdAt: sb.created_at,
-            updatedAt: sb.updated_at,
-          })) as Product[];
+          const sbMapped = (data as any[]).map((sb) => {
+            const mappedVariants = (sb.variants || []).map((v: any) => ({
+              id: v.id,
+              productId: sb.id,
+              sku: v.sku,
+              colorName: v.color_name || 'Standard',
+              colorHex: v.color_hex || '#54121B',
+              size: v.size,
+              priceKobo: v.price_kobo,
+              salePriceKobo: v.sale_price_kobo || undefined,
+              stockQuantity: v.stock_quantity ?? 5,
+              lowStockThreshold: v.low_stock_threshold ?? 2,
+              isActive: v.is_active ?? true,
+            }));
 
-          // Merge custom products with Supabase so custom products are NEVER lost
-          results = [...customList, ...sbMapped.filter(s => !customSlugs.has(s.slug))];
+            const mappedImages = (sb.images || [])
+              .sort((a: any, b: any) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+              .map((img: any) => ({
+                id: img.id,
+                url: img.url,
+                altText: img.alt_text || sb.name,
+                isPrimary: !!img.is_primary,
+                sortOrder: img.sort_order ?? 0,
+              }));
+
+            return {
+              id: sb.id,
+              name: sb.name,
+              slug: sb.slug,
+              tagline: sb.tagline || '',
+              description: sb.description || '',
+              categorySlug: sb.category?.slug || 'clothing',
+              subCategorySlug: sb.subcategory?.slug || 'dresses',
+              collectionSlugs: sb.collection_slugs || ['new-arrivals'],
+              fabricAndCare: sb.fabric_and_care || [],
+              images: mappedImages,
+              variants: mappedVariants,
+              hasVariants: mappedVariants.length > 1,
+              isPublished: sb.is_published,
+              isFeatured: sb.is_featured,
+              isArchived: sb.is_archived,
+              tags: sb.tags || [],
+              createdAt: sb.created_at,
+              updatedAt: sb.updated_at,
+            } as Product;
+          });
+
+          // Supabase is our authoritative database; merge any unique local custom products that haven't synced
+          const sbSlugs = new Set(sbMapped.map(s => s.slug));
+          results = [...sbMapped, ...customList.filter(s => !sbSlugs.has(s.slug))];
         }
       } catch (err) {
         // Fall back cleanly to disk/memory mergedBase
@@ -332,24 +363,22 @@ export const db = {
   },
 
   async getProductBySlug(slug: string): Promise<Product | null> {
-    // 1. Check local persistent disk storage first for instant match
-    const customList = getCustomProducts();
-    const foundCustom = customList.find((p) => p.slug === slug || p.id === slug);
-    if (foundCustom) return foundCustom;
-
-    // 2. Check full product list
+    // 1. Fetch full product list (queries Supabase with full relational data)
     const list = await this.getProducts();
     const found = list.find((p) => p.slug === slug || p.id === slug);
     if (found) return found;
+
+    // 2. Check local disk fallback if offline
+    const customList = getCustomProducts();
+    const foundCustom = customList.find((p) => p.slug === slug || p.id === slug);
+    if (foundCustom) return foundCustom;
 
     // 3. Check inMemory fallback
     return inMemoryProducts.find((p) => p.slug === slug || p.id === slug) || null;
   },
 
   async getAllProductsForAdmin(): Promise<Product[]> {
-    const customList = getCustomProducts();
-    const customSlugs = new Set(customList.map(p => p.slug));
-    return [...customList, ...inMemoryProducts.filter(p => !customSlugs.has(p.slug))];
+    return this.getProducts();
   },
 
   async createProduct(newProduct: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>): Promise<Product> {
@@ -377,27 +406,59 @@ export const db = {
           .eq('slug', created.categorySlug)
           .maybeSingle();
 
+        const { data: subData } = await supabaseAdmin
+          .from('subcategories')
+          .select('id')
+          .eq('slug', created.subCategorySlug)
+          .maybeSingle();
+
         if (catData?.id) {
-          const { data: prodData, error: prodErr } = await supabaseAdmin
+          const { data: existingProd } = await supabaseAdmin
             .from('products')
-            .insert({
+            .select('id')
+            .eq('slug', created.slug)
+            .maybeSingle();
+
+          let prodId = existingProd?.id;
+
+          if (prodId) {
+            await supabaseAdmin.from('products').update({
               name: created.name,
-              slug: created.slug,
               tagline: created.tagline,
               description: created.description,
               category_id: catData.id,
+              subcategory_id: subData?.id || null,
               fabric_and_care: created.fabricAndCare,
               is_published: created.isPublished,
               is_featured: created.isFeatured,
               tags: created.tags,
-            })
-            .select()
-            .single();
+              updated_at: new Date().toISOString(),
+            }).eq('id', prodId);
+          } else {
+            const { data: prodData } = await supabaseAdmin
+              .from('products')
+              .insert({
+                name: created.name,
+                slug: created.slug,
+                tagline: created.tagline,
+                description: created.description,
+                category_id: catData.id,
+                subcategory_id: subData?.id || null,
+                fabric_and_care: created.fabricAndCare,
+                is_published: created.isPublished,
+                is_featured: created.isFeatured,
+                tags: created.tags,
+              })
+              .select()
+              .single();
+            prodId = prodData?.id;
+          }
 
-          if (!prodErr && prodData?.id) {
+          if (prodId) {
+            await supabaseAdmin.from('product_variants').delete().eq('product_id', prodId);
             if (created.variants && created.variants.length > 0) {
               const variantRows = created.variants.map((v) => ({
-                product_id: prodData.id,
+                product_id: prodId,
                 sku: v.sku,
                 color_name: v.colorName,
                 color_hex: v.colorHex || '#54121B',
@@ -411,9 +472,10 @@ export const db = {
               await supabaseAdmin.from('product_variants').insert(variantRows);
             }
 
+            await supabaseAdmin.from('product_images').delete().eq('product_id', prodId);
             if (created.images && created.images.length > 0) {
               const imageRows = created.images.map((img, idx) => ({
-                product_id: prodData.id,
+                product_id: prodId,
                 url: img.url,
                 alt_text: img.altText || created.name,
                 is_primary: img.isPrimary,
@@ -462,6 +524,62 @@ export const db = {
       inMemoryProducts[memIndex] = targetProduct;
     } else if (targetProduct) {
       inMemoryProducts.unshift(targetProduct);
+    }
+
+    // Mirror updates to Supabase
+    if (isSupabaseConfigured && supabaseAdmin && targetProduct) {
+      try {
+        const { data: existingProd } = await supabaseAdmin
+          .from('products')
+          .select('id')
+          .or(`id.eq.${id},slug.eq.${targetProduct.slug}`)
+          .maybeSingle();
+
+        if (existingProd?.id) {
+          await supabaseAdmin.from('products').update({
+            name: targetProduct.name,
+            tagline: targetProduct.tagline,
+            description: targetProduct.description,
+            fabric_and_care: targetProduct.fabricAndCare,
+            is_published: targetProduct.isPublished,
+            is_featured: targetProduct.isFeatured,
+            is_archived: targetProduct.isArchived,
+            tags: targetProduct.tags,
+            updated_at: new Date().toISOString(),
+          }).eq('id', existingProd.id);
+
+          if (updates.variants) {
+            await supabaseAdmin.from('product_variants').delete().eq('product_id', existingProd.id);
+            const variantRows = updates.variants.map((v) => ({
+              product_id: existingProd.id,
+              sku: v.sku,
+              color_name: v.colorName,
+              color_hex: v.colorHex || '#54121B',
+              size: v.size,
+              price_kobo: v.priceKobo,
+              sale_price_kobo: v.salePriceKobo || null,
+              stock_quantity: v.stockQuantity,
+              low_stock_threshold: v.lowStockThreshold || 2,
+              is_active: v.isActive ?? true,
+            }));
+            await supabaseAdmin.from('product_variants').insert(variantRows);
+          }
+
+          if (updates.images) {
+            await supabaseAdmin.from('product_images').delete().eq('product_id', existingProd.id);
+            const imageRows = updates.images.map((img, idx) => ({
+              product_id: existingProd.id,
+              url: img.url,
+              alt_text: img.altText || targetProduct!.name,
+              is_primary: img.isPrimary,
+              sort_order: idx,
+            }));
+            await supabaseAdmin.from('product_images').insert(imageRows);
+          }
+        }
+      } catch (err) {
+        // Fall back cleanly
+      }
     }
 
     return targetProduct;
@@ -561,29 +679,45 @@ export const db = {
     items: { variantId: string; quantity: number }[],
     durationMinutes: number = 15
   ): Promise<{ success: boolean; error?: string; expiresAt?: string }> {
-    // If Supabase RPC is available, call it
-    if (isSupabaseConfigured && supabaseAdmin) {
-      const { data, error } = await supabaseAdmin.rpc('create_order_reservation', {
-        p_order_id: orderId,
-        p_items: items.map((i) => ({ variant_id: i.variantId, quantity: i.quantity })),
-        p_duration_minutes: durationMinutes,
-      });
-
-      if (!error && data) return data;
-    }
-
-    // Memory implementation of reservation lock
+    const allProducts = await this.getProducts();
     const now = new Date();
     const expiresAt = new Date(now.getTime() + durationMinutes * 60 * 1000).toISOString();
 
     // Verify stock availability accounting for existing active reservations
     for (const item of items) {
-      let foundVariant = null;
-      for (const p of inMemoryProducts) {
-        const v = p.variants.find((v) => v.id === item.variantId);
+      let foundVariant: any = null;
+      for (const p of allProducts) {
+        const v = p.variants.find(
+          (v) =>
+            v.id === item.variantId ||
+            v.sku === item.variantId ||
+            (v.sku && item.variantId && v.sku.toLowerCase() === item.variantId.toLowerCase())
+        );
         if (v) {
           foundVariant = v;
           break;
+        }
+      }
+
+      // Supabase direct lookup fallback if needed
+      if (!foundVariant && isSupabaseConfigured && supabaseAdmin) {
+        try {
+          const { data: sbVar } = await supabaseAdmin
+            .from('product_variants')
+            .select('*')
+            .or(`id.eq.${item.variantId},sku.eq.${item.variantId}`)
+            .maybeSingle();
+
+          if (sbVar) {
+            foundVariant = {
+              id: sbVar.id,
+              sku: sbVar.sku,
+              stockQuantity: sbVar.stock_quantity ?? 5,
+              priceKobo: sbVar.price_kobo,
+            };
+          }
+        } catch (e) {
+          // Ignore
         }
       }
 
@@ -595,7 +729,7 @@ export const db = {
       const activeReserved = inMemoryReservations
         .filter(
           (r) =>
-            r.variantId === item.variantId &&
+            (r.variantId === foundVariant.id || r.variantId === item.variantId) &&
             !r.isReleased &&
             !r.isCommitted &&
             new Date(r.expiresAt) > now
@@ -746,11 +880,13 @@ export const db = {
 
     // Check for expired reservations where stock became unavailable
     let hasConflict = false;
+    const allProds = await this.getProducts();
+
     for (const res of reservations) {
       if (new Date(res.expiresAt) < now && !res.isCommitted) {
         let currentVariantStock = 0;
-        for (const p of inMemoryProducts) {
-          const v = p.variants.find((v) => v.id === res.variantId);
+        for (const p of allProds) {
+          const v = p.variants.find((v) => v.id === res.variantId || v.sku === res.variantId);
           if (v) {
             currentVariantStock = v.stockQuantity;
             break;
@@ -790,10 +926,20 @@ export const db = {
         res.isCommitted = true;
         res.isReleased = false;
 
-        for (const p of inMemoryProducts) {
-          const v = p.variants.find((v) => v.id === res.variantId);
+        for (const p of allProds) {
+          const v = p.variants.find((v) => v.id === res.variantId || v.sku === res.variantId);
           if (v) {
             v.stockQuantity = Math.max(0, v.stockQuantity - res.quantityReserved);
+
+            // Mirror to Supabase if configured
+            if (isSupabaseConfigured && supabaseAdmin) {
+              supabaseAdmin
+                .from('product_variants')
+                .update({ stock_quantity: v.stockQuantity })
+                .or(`id.eq.${res.variantId},sku.eq.${res.variantId}`)
+                .then(() => {});
+            }
+
             inMemoryMovements.push({
               id: `mov_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
               variantId: res.variantId,
@@ -812,10 +958,20 @@ export const db = {
     } else if (order.items && order.items.length > 0) {
       // Fallback stock deduction if reservation was cleared across worker boundary
       for (const item of order.items) {
-        for (const p of inMemoryProducts) {
-          const v = p.variants.find((v) => v.id === item.variantId);
+        for (const p of allProds) {
+          const v = p.variants.find((v) => v.id === item.variantId || v.sku === item.variantId);
           if (v) {
             v.stockQuantity = Math.max(0, v.stockQuantity - item.quantity);
+
+            // Mirror to Supabase if configured
+            if (isSupabaseConfigured && supabaseAdmin) {
+              supabaseAdmin
+                .from('product_variants')
+                .update({ stock_quantity: v.stockQuantity })
+                .or(`id.eq.${item.variantId},sku.eq.${item.variantId}`)
+                .then(() => {});
+            }
+
             inMemoryMovements.push({
               id: `mov_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
               variantId: item.variantId,
@@ -863,12 +1019,22 @@ export const db = {
     customerName?: string;
     customerPhone?: string;
     notes?: string;
+    isInvoice?: boolean;
+    deliveryFeeKobo?: number;
+    deliveryType?: 'aba_pickup' | 'state_capital' | 'major_city' | 'remote_area';
+    shippingAddress?: {
+      streetAddress: string;
+      city: string;
+      state: string;
+      landmark?: string;
+    };
   }): Promise<{ success: boolean; order?: Order; error?: string }> {
+    const allProds = await this.getProducts();
     let targetProduct: Product | null = null;
-    let targetVariant = null;
+    let targetVariant: any = null;
 
-    for (const p of inMemoryProducts) {
-      const v = p.variants.find((v) => v.id === params.variantId);
+    for (const p of allProds) {
+      const v = p.variants.find((v) => v.id === params.variantId || v.sku === params.variantId);
       if (v) {
         targetProduct = p;
         targetVariant = v;
@@ -887,8 +1053,16 @@ export const db = {
       };
     }
 
-    // Decrement stock
+    // Decrement / reserve physical stock for this invoice/sale
     targetVariant.stockQuantity -= params.quantity;
+
+    if (isSupabaseConfigured && supabaseAdmin) {
+      supabaseAdmin
+        .from('product_variants')
+        .update({ stock_quantity: targetVariant.stockQuantity })
+        .or(`id.eq.${params.variantId},sku.eq.${params.variantId}`)
+        .then(() => {});
+    }
 
     // Log movement
     inMemoryMovements.push({
@@ -896,24 +1070,45 @@ export const db = {
       variantId: params.variantId,
       changeQuantity: -params.quantity,
       resultingQuantity: targetVariant.stockQuantity,
-      reason: params.orderSource === 'whatsapp_order' ? 'whatsapp_order' : 'offline_sale_aba',
-      referenceId: 'OFFLINE-MANUAL',
+      reason: params.isInvoice ? 'whatsapp_order' : (params.orderSource === 'whatsapp_order' ? 'whatsapp_order' : 'offline_sale_aba'),
+      referenceId: params.isInvoice ? 'INVOICE-RESERVED' : 'OFFLINE-MANUAL',
       recordedBy: params.staffName,
-      notes: params.notes || 'In-store Aba walk-in or WhatsApp direct order',
+      notes: params.notes || (params.isInvoice ? 'WhatsApp direct invoice generated' : 'In-store Aba walk-in or WhatsApp sale'),
       createdAt: new Date().toISOString(),
     });
 
-    const totalKobo = params.unitPriceKobo * params.quantity;
-    const orderNumber = `ARUBEKEE-OFF-${Math.floor(1000 + Math.random() * 9000)}`;
+    const subtotalKobo = params.unitPriceKobo * params.quantity;
+    const deliveryFeeKobo = params.deliveryFeeKobo || 0;
+    const totalKobo = subtotalKobo + deliveryFeeKobo;
+    const isPendingInvoice = !!params.isInvoice;
+    const orderNumber = isPendingInvoice
+      ? `ARUBEKEE-INV-${Math.floor(1000 + Math.random() * 9000)}`
+      : `ARUBEKEE-OFF-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    const deliveryType: DeliveryType = params.deliveryType === 'aba_pickup' ? 'aba_pickup' : 'dispatch_delivery';
+    const isShipped = deliveryType !== 'aba_pickup';
+
+    const shippingAddress: ShippingAddress | undefined = params.shippingAddress
+      ? {
+          fullName: params.customerName || (isPendingInvoice ? 'WhatsApp Client' : 'Walk-in Customer'),
+          phone: params.customerPhone || 'N/A',
+          email: 'offline@arubekee.internal',
+          streetAddress: params.shippingAddress.streetAddress,
+          city: params.shippingAddress.city,
+          state: params.shippingAddress.state,
+          landmark: params.shippingAddress.landmark,
+        }
+      : undefined;
 
     const newOrder: Order = {
       id: `ord_${Date.now()}`,
       orderNumber,
       orderSource: params.orderSource,
-      customerName: params.customerName || 'Walk-in Customer',
+      customerName: params.customerName || (isPendingInvoice ? 'WhatsApp Client' : 'Walk-in Customer'),
       customerEmail: 'offline@arubekee.internal',
       customerPhone: params.customerPhone || 'N/A',
-      deliveryType: 'aba_pickup',
+      deliveryType,
+      shippingAddress,
       items: [
         {
           id: `item_${Date.now()}`,
@@ -925,27 +1120,29 @@ export const db = {
           size: targetVariant.size,
           unitPriceKobo: params.unitPriceKobo,
           quantity: params.quantity,
-          totalKobo,
+          totalKobo: subtotalKobo,
           imageUrl: targetProduct.images[0]?.url || '',
         },
       ],
-      subtotalKobo: totalKobo,
-      deliveryFeeKobo: 0,
+      subtotalKobo,
+      deliveryFeeKobo,
       discountKobo: 0,
       totalKobo,
-      paymentStatus: 'paid',
+      paymentStatus: isPendingInvoice ? 'pending' : 'paid',
       paymentMethod: params.paymentMethod,
-      fulfillmentStatus: 'delivered',
-      paidAt: new Date().toISOString(),
-      dispatchedAt: new Date().toISOString(),
+      fulfillmentStatus: isPendingInvoice ? 'unfulfilled' : (isShipped ? 'unfulfilled' : 'delivered'),
+      paidAt: isPendingInvoice ? undefined : new Date().toISOString(),
+      dispatchedAt: (!isPendingInvoice && !isShipped) ? new Date().toISOString() : undefined,
       recordedByStaffName: params.staffName,
       internalNotes: params.notes,
       timeline: [
         {
           id: `tl_${Date.now()}`,
           orderId: `ord_${Date.now()}`,
-          title: 'Offline Sale Logged',
-          description: `Sale of ${params.quantity} item(s) logged by ${params.staffName} via ${params.paymentMethod}. Physical stock deducted.`,
+          title: isPendingInvoice ? 'WhatsApp Invoice Issued' : 'Offline Sale Logged',
+          description: isPendingInvoice
+            ? `Invoice for ${params.quantity} item(s) issued to ${params.customerName || 'customer'} by ${params.staffName}. Stock reserved.`
+            : `Sale of ${params.quantity} item(s) logged by ${params.staffName} via ${params.paymentMethod}. Physical stock deducted.`,
           actor: params.staffName,
           createdAt: new Date().toISOString(),
         },
@@ -966,11 +1163,20 @@ export const db = {
     staffName: string;
     notes?: string;
   }): Promise<{ success: boolean; variant?: any; error?: string }> {
-    for (const p of inMemoryProducts) {
-      const v = p.variants.find((v) => v.id === params.variantId);
+    const allProds = await this.getProducts();
+    for (const p of allProds) {
+      const v = p.variants.find((v) => v.id === params.variantId || v.sku === params.variantId);
       if (v) {
         const change = params.newQuantity - v.stockQuantity;
         v.stockQuantity = Math.max(0, params.newQuantity);
+
+        if (isSupabaseConfigured && supabaseAdmin) {
+          supabaseAdmin
+            .from('product_variants')
+            .update({ stock_quantity: v.stockQuantity })
+            .or(`id.eq.${params.variantId},sku.eq.${params.variantId}`)
+            .then(() => {});
+        }
 
         inMemoryMovements.unshift({
           id: `mov_${Date.now()}`,
@@ -1001,7 +1207,18 @@ export const db = {
     fulfillmentStatus?: string;
     search?: string;
   }): Promise<Order[]> {
-    // 1. Try Supabase if configured
+    const orderMap = new Map<string, Order>();
+
+    // 1. Seed from local persistent disk storage and in-memory cache
+    const diskOrders = getCustomOrders();
+    for (const o of diskOrders) {
+      if (o.orderNumber) orderMap.set(o.orderNumber, o);
+    }
+    for (const o of inMemoryOrders) {
+      if (o.orderNumber) orderMap.set(o.orderNumber, o);
+    }
+
+    // 2. Fetch from Supabase if configured and merge
     if (isSupabaseConfigured && supabaseAdmin) {
       try {
         let query = supabaseAdmin
@@ -1018,32 +1235,25 @@ export const db = {
 
         const { data, error } = await query;
         if (!error && data && data.length > 0) {
-          const mapped = data.map(mapSupabaseOrder);
-          if (filter?.search) {
-            const q = filter.search.toLowerCase();
-            return mapped.filter(
-              (o) =>
-                o.orderNumber.toLowerCase().includes(q) ||
-                o.customerName.toLowerCase().includes(q) ||
-                o.customerPhone.includes(q) ||
-                o.customerEmail.toLowerCase().includes(q)
-            );
+          for (const row of data) {
+            const mapped = mapSupabaseOrder(row);
+            const existing = orderMap.get(mapped.orderNumber);
+            if (existing) {
+              // Preserve full item details if Supabase order_items had no children
+              if ((!mapped.items || mapped.items.length === 0) && existing.items && existing.items.length > 0) {
+                mapped.items = existing.items;
+              }
+            }
+            orderMap.set(mapped.orderNumber, mapped);
           }
-          return mapped;
         }
       } catch (err) {
         // Fallback gracefully to local disk and memory
       }
     }
 
-    // 2. Local disk & memory fallback
-    const diskOrders = getCustomOrders();
-    const orderMap = new Map<string, Order>();
-    for (const o of diskOrders) orderMap.set(o.id, o);
-    for (const o of inMemoryOrders) orderMap.set(o.id, o);
-
     let list = Array.from(orderMap.values()).sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      (a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
     );
 
     if (filter?.paymentStatus) {
@@ -1073,7 +1283,7 @@ export const db = {
           .from('orders')
           .select(`*, order_items(*), order_timeline(*)`)
           .eq('order_number', orderNumber)
-          .single();
+          .maybeSingle();
         if (!error && data) {
           return mapSupabaseOrder(data);
         }
@@ -1093,13 +1303,17 @@ export const db = {
   },
 
   async getOrderById(id: string): Promise<Order | null> {
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+
     if (isSupabaseConfigured && supabaseAdmin) {
       try {
-        const { data, error } = await supabaseAdmin
-          .from('orders')
-          .select(`*, order_items(*), order_timeline(*)`)
-          .eq('id', id)
-          .single();
+        let query = supabaseAdmin.from('orders').select(`*, order_items(*), order_timeline(*)`);
+        if (isUuid) {
+          query = query.eq('id', id);
+        } else {
+          query = query.eq('order_number', id);
+        }
+        const { data, error } = await query.maybeSingle();
         if (!error && data) {
           return mapSupabaseOrder(data);
         }
@@ -1108,9 +1322,9 @@ export const db = {
       }
     }
 
-    const inMem = inMemoryOrders.find((o) => o.id === id);
+    const inMem = inMemoryOrders.find((o) => o.id === id || o.orderNumber === id);
     if (inMem) return inMem;
-    const disk = getCustomOrders().find((o) => o.id === id);
+    const disk = getCustomOrders().find((o) => o.id === id || o.orderNumber === id);
     if (disk) {
       if (!inMemoryOrders.some((o) => o.id === disk.id)) inMemoryOrders.unshift(disk);
       return disk;
@@ -1125,7 +1339,7 @@ export const db = {
           .from('orders')
           .select(`*, order_items(*), order_timeline(*)`)
           .eq('payment_reference', paymentReference)
-          .single();
+          .maybeSingle();
         if (!error && data) {
           return mapSupabaseOrder(data);
         }
@@ -1201,12 +1415,35 @@ export const db = {
           updated_at: new Date().toISOString(),
         };
 
-        const { error: upsertError } = await supabaseAdmin
+        const { data: upsertedOrder, error: upsertError } = await supabaseAdmin
           .from('orders')
-          .upsert(payload, { onConflict: 'order_number' });
+          .upsert(payload, { onConflict: 'order_number' })
+          .select('id')
+          .maybeSingle();
 
         if (upsertError) {
           console.warn('[db.saveOrder] Supabase sync notice:', upsertError.message);
+        } else if (upsertedOrder?.id && order.items && order.items.length > 0) {
+          // Sync items to order_items child table
+          try {
+            await supabaseAdmin.from('order_items').delete().eq('order_id', upsertedOrder.id);
+            const itemRows = order.items.map((i) => ({
+              order_id: upsertedOrder.id,
+              product_id: i.productId,
+              variant_id: i.variantId,
+              sku: i.sku,
+              product_name: i.productName,
+              color_name: i.colorName,
+              size: i.size,
+              unit_price_kobo: i.unitPriceKobo,
+              quantity: i.quantity,
+              total_kobo: i.totalKobo,
+              image_url: i.imageUrl || '',
+            }));
+            await supabaseAdmin.from('order_items').insert(itemRows);
+          } catch (itemErr: any) {
+            console.warn('[db.saveOrder] Order items sync notice:', itemErr.message);
+          }
         }
       } catch (err: any) {
         console.warn('[db.saveOrder] Supabase sync exception:', err.message);

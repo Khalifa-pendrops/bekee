@@ -22,7 +22,8 @@ import {
   Minus, 
   Plus, 
   ChevronRight,
-  ZoomIn
+  ZoomIn,
+  Sparkles
 } from "lucide-react";
 
 interface ProductDetailViewProps {
@@ -169,11 +170,16 @@ export function ProductDetailView({ product, relatedProducts, settings }: Produc
   };
 
   const productUrl = typeof window !== 'undefined' ? window.location.href : `https://arubekee.com/products/${product.slug}`;
+  const currentPriceFormatted = formatKoboToNaira(currentPriceKobo);
+  const currentImageUrl = primaryImage?.url || '';
+
   const whatsAppUrl = buildWhatsAppProductUrl(
     settings.whatsappNumber,
     product.name,
-    `${selectedVariant.colorName} • ${selectedVariant.size}`,
-    productUrl
+    hasRealSizes ? `${selectedVariant.colorName} • Size ${selectedVariant.size}` : `${selectedVariant.colorName || 'Default'}`,
+    productUrl,
+    currentImageUrl,
+    currentPriceFormatted
   );
 
   return (
@@ -489,6 +495,16 @@ export function ProductDetailView({ product, relatedProducts, settings }: Produc
 
           {/* Delivery & Assurance Pillars */}
           <div className="border-t border-stone-line pt-6 space-y-3 text-xs text-obsidian-soft">
+            <div className="flex items-start gap-3 bg-emerald-50/60 p-3 rounded-lg border border-emerald-200/50">
+              <Sparkles className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
+              <div>
+                <strong className="text-emerald-950">In-Stock &amp; Ready to Ship:</strong>{' '}
+                <span className="text-emerald-900">
+                  This curated piece is on the rack in our Aba boutique showroom. Handpicked, quality-inspected, and dispatched within 24 hours.
+                </span>
+              </div>
+            </div>
+
             <div className="flex items-start gap-3">
               <MapPin className="w-4 h-4 text-oxblood shrink-0 mt-0.5" />
               <div>
@@ -499,7 +515,7 @@ export function ProductDetailView({ product, relatedProducts, settings }: Produc
             <div className="flex items-start gap-3">
               <Truck className="w-4 h-4 text-oxblood shrink-0 mt-0.5" />
               <div>
-                <strong>Interstate Dispatch:</strong> 1-2 days to South-East & Port Harcourt; 2-3 days to Lagos & Abuja; 3-5 days nationwide.
+                <strong>Interstate Dispatch:</strong> 1-2 days to South-East &amp; Port Harcourt; 2-3 days to Lagos &amp; Abuja; 3-5 days nationwide.
               </div>
             </div>
 
@@ -538,7 +554,7 @@ export function ProductDetailView({ product, relatedProducts, settings }: Produc
             {product.stylingTips && (
               <div>
                 <h3 className="text-xs uppercase font-semibold tracking-wider text-obsidian-soft mb-1.5">
-                  Atelier Styling Note
+                  Stylist&apos;s Note &amp; Fit Advice
                 </h3>
                 <p className="text-xs italic text-obsidian-muted leading-relaxed">
                   &ldquo;{product.stylingTips}&rdquo;

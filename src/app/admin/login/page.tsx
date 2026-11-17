@@ -73,7 +73,7 @@ function LoginForm() {
       <div className="text-center space-y-2 mb-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-[#EADDCF] rounded-full text-oxblood text-[10px] uppercase font-semibold tracking-widest shadow-xs">
           <Sparkles className="w-3 h-3 text-gold" />
-          <span>Atelier Management Portal</span>
+          <span>Boutique Management Portal</span>
         </div>
 
         <h1 className="font-serif text-3xl sm:text-4xl font-normal text-obsidian tracking-wide uppercase mt-2">

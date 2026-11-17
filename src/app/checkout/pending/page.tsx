@@ -15,7 +15,7 @@ function PendingContent() {
   const whatsappMessage = encodeURIComponent(
     `Hello ARUBEKEE COLLECTION, my payment for order ${orderNumber} is marked as pending/under review. Please help me confirm my reservation.`
   );
-  const whatsappUrl = `https://wa.me/2348030001234?text=${whatsappMessage}`;
+  const whatsappUrl = `https://wa.me/2349164161091?text=${whatsappMessage}`;
 
   return (
     <div className="bg-sand-50 min-h-screen py-16 md:py-24">

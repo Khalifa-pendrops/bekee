@@ -39,7 +39,7 @@ export default function ReturnsPage() {
             <li>Items must be unworn, unwashed, and free from perfume, makeup stains, or deodorant marks.</li>
             <li>All original designer brand tags and garment labels must remain attached.</li>
             <li>Footwear must have pristine, unscuffed soles (we recommend trying on over a rug or carpet).</li>
-            <li>Custom bespoke-tailored orders (sewn to customer-provided non-standard measurements) are non-exchangeable unless defective.</li>
+            <li>Sale, archive, or final-clearance pieces are non-exchangeable unless defective.</li>
           </ul>
         </section>
 
@@ -60,7 +60,7 @@ export default function ReturnsPage() {
 
       <div className="pt-4">
         <a
-          href="https://wa.me/2348030001234?text=Hello%20Arubekee,%20I%20would%20like%20to%20request%20an%20item%20exchange"
+          href="https://wa.me/2349164161091?text=Hello%20Arubekee,%20I%20would%20like%20to%20request%20an%20item%20exchange"
           target="_blank"
           rel="noopener noreferrer"
         >

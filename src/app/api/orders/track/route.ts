@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
 
     // d. Substring extraction (if user pasted full reference or URL containing the order number)
     if (!foundOrder) {
-      const match = rawQuery.match(/(ARUBEKEE-[0-9]{4}-[0-9]{4}|ARU-[0-9]{4}-[0-9]{4}|ARUBEKEE-OFF-[0-9]{4}|ARU-OFF-[0-9]{4})/i);
+      const match = rawQuery.match(/(ARUBEKEE-[0-9]{4}-[0-9]{4}|ARU-[0-9]{4}-[0-9]{4}|ARUBEKEE-OFF-[0-9]{4}|ARU-OFF-[0-9]{4}|ARUBEKEE-INV-[0-9]{4}|ARU-INV-[0-9]{4})/i);
       if (match) {
         const extracted = match[1].toUpperCase();
         foundOrder = allOrders.find(

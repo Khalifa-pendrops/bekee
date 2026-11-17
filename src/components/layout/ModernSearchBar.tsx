@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { Search, Sparkles, X, ArrowRight } from 'lucide-react';
 
 const ATTRACTIVE_PLACEHOLDERS = [
@@ -27,10 +27,16 @@ export function ModernSearchBar({
   autoFocus = false,
 }: ModernSearchBarProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [searchTerm, setSearchTerm] = useState('');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+
+  // Automatically clear input content whenever route/page changes (e.g. rendering search page or returning home)
+  useEffect(() => {
+    setSearchTerm('');
+  }, [pathname]);
 
   // Animated rotating placeholder
   useEffect(() => {
@@ -51,6 +57,10 @@ export function ModernSearchBar({
     e.preventDefault();
     const query = searchTerm.trim() || ATTRACTIVE_PLACEHOLDERS[placeholderIndex].replace(/Search '|'\.\.\./g, '');
     if (query) {
+      setSearchTerm(''); // Clear searched text immediately upon search execution
+      if (typeof document !== 'undefined') {
+        (document.activeElement as HTMLElement)?.blur();
+      }
       router.push(`/search?q=${encodeURIComponent(query)}`);
       if (onSearchExecuted) onSearchExecuted();
     }

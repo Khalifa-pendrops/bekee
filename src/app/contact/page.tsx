@@ -22,13 +22,13 @@ export default function ContactPage() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 space-y-14 text-left">
       <div className="border-b border-stone-line pb-6 space-y-2">
         <span className="text-xs uppercase tracking-widest font-semibold text-oxblood">
-          Aba Boutique & Atelier
+          Aba Boutique & Showroom
         </span>
         <h1 className="editorial-heading text-3xl sm:text-4xl lg:text-5xl text-obsidian font-normal">
           Get in Touch With Us
         </h1>
         <p className="text-xs sm:text-sm text-obsidian-muted max-w-xl">
-          We welcome you to visit our showroom in Aba, chat directly with our founder on WhatsApp, or send an enquiry regarding bespoke tailoring and orders.
+          We welcome you to visit our showroom in Aba, chat directly with our concierge on WhatsApp, or send an enquiry regarding available pieces, sizing, and orders.
         </p>
       </div>
 
@@ -63,7 +63,7 @@ export default function ContactPage() {
                 <Phone className="w-4 h-4 text-oxblood shrink-0 mt-0.5" />
                 <div>
                   <strong className="block text-obsidian font-semibold">Customer Care Phone:</strong>
-                  <span>+234 803 000 1234</span>
+                  <span>+234 916 416 1091</span>
                 </div>
               </div>
 
@@ -78,7 +78,7 @@ export default function ContactPage() {
 
             <div className="pt-2 border-t border-stone-line">
               <a
-                href="https://wa.me/2348030001234?text=Hello%20Arubekee%20Collection,%20I%20would%20like%20to%20enquire%20about%20visiting%20your%20store%20in%20Aba"
+                href="https://wa.me/2349164161091?text=Hello%20Arubekee%20Collection,%20I%20would%20like%20to%20enquire%20about%20visiting%20your%20store%20in%20Aba"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block w-full"

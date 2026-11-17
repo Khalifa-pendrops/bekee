@@ -18,7 +18,7 @@ function SuccessContent() {
   const searchParams = useSearchParams();
   const orderNumber = searchParams.get('orderNumber') || 'ARUBEKEE-ORDER';
 
-  const storePhone = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '2348030001234').replace(/[^0-9]/g, '');
+  const storePhone = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '2349164161091').replace(/[^0-9]/g, '');
   const whatsappMessage = encodeURIComponent(
     `Hello ARUBEKEE COLLECTION, I just completed order ${orderNumber}. Please confirm my receipt and dispatch schedule.`
   );

@@ -45,6 +45,8 @@ export default function AdminOrderDetailPage() {
   const [trackingUrl, setTrackingUrl] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
   const [copiedSlip, setCopiedSlip] = useState(false);
+  const [copiedDispatchNotice, setCopiedDispatchNotice] = useState(false);
+  const [showDispatchBanner, setShowDispatchBanner] = useState(false);
 
   useEffect(() => {
     fetch(`/api/admin/orders/${orderId}`)
@@ -107,9 +109,69 @@ export default function AdminOrderDetailPage() {
   }
 
   const customerWhatsApp = order.customerPhone.replace(/\D/g, '');
-  const waUrl = `https://wa.me/${customerWhatsApp}?text=${encodeURIComponent(
-    `Hello ${order.customerName}, this is ARUBEKEE COLLECTION. Regarding your order ${order.orderNumber}...`
+  const cleanPhone = customerWhatsApp.startsWith('0') ? '234' + customerWhatsApp.slice(1) : customerWhatsApp;
+  
+  const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(
+    `Hello ${order.customerName}, this is ARUBEKEE COLLECTION, Aba. Regarding your order ${order.orderNumber}...`
   )}`;
+
+  // Generate Dispatch WhatsApp Notice
+  const getDispatchWhatsAppMessage = () => {
+    const finalCarrier = selectedCourier === 'Other'
+      ? (customCourier.trim() || 'Custom Courier')
+      : selectedCourier;
+
+    const destination = order.shippingAddress
+      ? `${order.shippingAddress.streetAddress || ''}, ${order.shippingAddress.city || ''}, ${order.shippingAddress.state || ''}`.replace(/^,\s*|,\s*$/g, '')
+      : 'Aba Boutique Pickup';
+
+    const itemsSummary = order.items && order.items.length > 0
+      ? order.items.map(i => `• ${i.productName} (${i.colorName || 'Default'} • Size ${i.size}) - Qty: ${i.quantity}`).join('\n')
+      : '• Garments in packaging';
+
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://bekee.com';
+    const liveTrackingUrl = `${origin}/track-order?ref=${order.orderNumber}&phone=${order.customerPhone.replace(/\D/g, '')}`;
+
+    return `✨ *ARUBEKEE COLLECTION • PARCEL DISPATCHED* 📦✨
+
+Dear ${order.customerName},
+Your parcel of handpicked pieces from ARUBEKEE COLLECTION, Aba, has been carefully inspected, packaged, and dispatched!
+
+📋 *SHIPMENT DETAILS:*
+• *Order Ref:* ${order.orderNumber}
+• *Courier / Waybill:* ${finalCarrier}
+• *Waybill Tracking No:* ${trackingNumber || 'En-route to dispatch hub'}
+• *Destination:* ${destination}
+${trackingUrl ? `• *Carrier Online Portal:* ${trackingUrl}` : ''}
+
+📍 *LIVE DISPATCH TRACKING:*
+Track your delivery progress and carrier handoff live:
+${liveTrackingUrl}
+
+👗 *Items in this delivery:*
+${itemsSummary}
+
+Our Aba concierge is monitoring your parcel until it reaches you safely. If you have any urgent delivery instructions, simply reply directly to this message.
+
+With warm regards,
+*ARUBEKEE COLLECTION*
+Aba Boutique Showroom • Nationwide Express Dispatch • +234 916 416 1091`;
+  };
+
+  const handleSendDispatchWhatsApp = () => {
+    const text = getDispatchWhatsAppMessage();
+    const url = cleanPhone
+      ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`
+      : `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  };
+
+  const handleCopyDispatchNotice = () => {
+    const text = getDispatchWhatsAppMessage();
+    navigator.clipboard.writeText(text);
+    setCopiedDispatchNotice(true);
+    setTimeout(() => setCopiedDispatchNotice(false), 2500);
+  };
 
   // Handle Dispatch
   const handleMarkDispatched = async () => {
@@ -133,6 +195,7 @@ export default function AdminOrderDetailPage() {
       const data = await res.json();
       if (data.success) {
         setOrder(data.order);
+        setShowDispatchBanner(true);
       }
     } catch (e) {
       console.error(e);
@@ -295,6 +358,40 @@ Total: ${formatKoboToNaira(order.totalKobo)}`;
 
           {/* Fulfillment & Waybill Dispatch Form */}
           <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-6 space-y-4">
+            
+            {showDispatchBanner && (
+              <div className="p-4 bg-emerald-50 border-2 border-emerald-300 rounded-xl space-y-2.5 animate-fade-in">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-emerald-950 font-bold text-xs">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    <span>Waybill Consigned & Dispatched!</span>
+                  </div>
+                  <button onClick={() => setShowDispatchBanner(false)} className="text-emerald-700 hover:text-emerald-900 text-xs font-semibold">✕</button>
+                </div>
+                <p className="text-xs text-emerald-800">
+                  Notify {order.customerName} with the official waybill tracking details on WhatsApp with 1 tap.
+                </p>
+                <div className="flex flex-wrap gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={handleSendDispatchWhatsApp}
+                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg transition-all shadow-sm flex items-center gap-1.5"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                    <span>Send WhatsApp Dispatch Slip</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCopyDispatchNotice}
+                    className="px-3 py-2 bg-white hover:bg-emerald-100 text-emerald-950 font-medium text-xs border border-emerald-300 rounded-lg transition-colors flex items-center gap-1.5"
+                  >
+                    {copiedDispatchNotice ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-emerald-700" />}
+                    <span>{copiedDispatchNotice ? 'Copied Slip!' : 'Copy Dispatch Note'}</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
             <h3 className="font-serif text-base font-bold text-stone-900 flex items-center gap-2">
               <Truck className="w-5 h-5 text-oxblood-700" />
               Fulfillment & Waybill Tracking
@@ -412,15 +509,41 @@ Total: ${formatKoboToNaira(order.totalKobo)}`;
               </div>
 
               {order.customerPhone && order.customerPhone !== 'N/A' && (
-                <a
-                  href={waUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-lg font-semibold flex items-center justify-center gap-1.5 transition-colors border border-emerald-200"
-                >
-                  <MessageCircle className="w-4 h-4 text-emerald-600" />
-                  <span>Chat on WhatsApp</span>
-                </a>
+                <div className="pt-2 border-t border-stone-100 space-y-2">
+                  <div className="text-stone-500 uppercase tracking-wider text-[10px] font-semibold">
+                    1-Click WhatsApp Concierge:
+                  </div>
+
+                  {order.fulfillmentStatus === 'dispatched' && (
+                    <button
+                      type="button"
+                      onClick={handleSendDispatchWhatsApp}
+                      className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-sm"
+                    >
+                      <Send className="w-3.5 h-3.5" />
+                      <span>Send WhatsApp Dispatch Slip</span>
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={handleCopyDispatchNotice}
+                    className="w-full py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 rounded-lg font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors border border-emerald-200"
+                  >
+                    {copiedDispatchNotice ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-emerald-700" />}
+                    <span>{copiedDispatchNotice ? 'Copied to Clipboard!' : 'Copy Formatted WhatsApp Slip'}</span>
+                  </button>
+
+                  <a
+                    href={waUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-2 bg-stone-50 hover:bg-stone-100 text-stone-700 rounded-lg font-medium text-xs flex items-center justify-center gap-1.5 transition-colors border border-stone-200"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Open Direct WhatsApp Chat</span>
+                  </a>
+                </div>
               )}
 
               <div className="pt-2 border-t border-stone-100">

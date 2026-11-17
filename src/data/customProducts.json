@@ -7,7 +7,10 @@
     "description": "Handcrafted in Aba with structured crepe, the Chioma pencil dress blends executive authority with refined femininity. Features a contrast soft rose-pink pointed collar, matching covered dome buttons, and delicate flared bell cuffs.",
     "categorySlug": "clothing",
     "subCategorySlug": "dresses",
-    "collectionSlugs": ["workwear", "new-arrivals"],
+    "collectionSlugs": [
+      "workwear",
+      "new-arrivals"
+    ],
     "fabricAndCare": [
       "Imported structured crepe weave",
       "Dry clean only or gentle cold hand wash",
@@ -80,7 +83,14 @@
     "isPublished": true,
     "isArchived": false,
     "isFeatured": true,
-    "tags": ["clothing", "dresses", "workwear", "corporate", "new-arrivals", "nigerian-fashion"],
+    "tags": [
+      "clothing",
+      "dresses",
+      "workwear",
+      "corporate",
+      "new-arrivals",
+      "nigerian-fashion"
+    ],
     "createdAt": "2026-11-11T11:00:00.000Z",
     "updatedAt": "2026-11-11T11:00:00.000Z"
   },
@@ -92,7 +102,10 @@
     "description": "An architectural masterpiece in bespoke drape tailoring. The Adanna boubou combines fluid silhouette movement with bold leopard print shawl lapels, matching sleeve bands, and asymmetric side ruching finished with ornamental gold buttons.",
     "categorySlug": "clothing",
     "subCategorySlug": "dresses",
-    "collectionSlugs": ["occasion-wear", "new-arrivals"],
+    "collectionSlugs": [
+      "occasion-wear",
+      "new-arrivals"
+    ],
     "fabricAndCare": [
       "Heavy silk crepe & leopard satin trim",
       "Hand wash cold separately",
@@ -146,7 +159,14 @@
     "isPublished": true,
     "isArchived": false,
     "isFeatured": true,
-    "tags": ["clothing", "dresses", "boubou", "occasion-wear", "leopard", "new-arrivals"],
+    "tags": [
+      "clothing",
+      "dresses",
+      "boubou",
+      "occasion-wear",
+      "leopard",
+      "new-arrivals"
+    ],
     "createdAt": "2026-11-11T11:00:00.000Z",
     "updatedAt": "2026-11-11T11:00:00.000Z"
   },
@@ -158,7 +178,10 @@
     "description": "Exuding effortless African royalty, the Zikora boubou is tailored from rich imperial wine crepe with vivid circular geometric corded embroidery framing the collar in sunburst yellow, tangerine, emerald, and violet.",
     "categorySlug": "clothing",
     "subCategorySlug": "dresses",
-    "collectionSlugs": ["occasion-wear", "new-arrivals"],
+    "collectionSlugs": [
+      "occasion-wear",
+      "new-arrivals"
+    ],
     "fabricAndCare": [
       "Premium breathable matte crepe",
       "Dry clean recommended for thread embroidery",
@@ -192,7 +215,14 @@
     "isPublished": true,
     "isArchived": false,
     "isFeatured": true,
-    "tags": ["clothing", "dresses", "boubou", "occasion-wear", "embroidery", "new-arrivals"],
+    "tags": [
+      "clothing",
+      "dresses",
+      "boubou",
+      "occasion-wear",
+      "embroidery",
+      "new-arrivals"
+    ],
     "createdAt": "2026-11-11T11:00:00.000Z",
     "updatedAt": "2026-11-11T11:00:00.000Z"
   },
@@ -204,7 +234,11 @@
     "description": "Turn heads at any event. The Ezinne two-piece features a relaxed collared button-down tunic top and flowing wide-leg palazzo trousers, highlighted with decadent gold rhinestone Greek-key borders along the hem, cuffs, and pockets.",
     "categorySlug": "clothing",
     "subCategorySlug": "matching-sets",
-    "collectionSlugs": ["occasion-wear", "weekend-looks", "new-arrivals"],
+    "collectionSlugs": [
+      "occasion-wear",
+      "weekend-looks",
+      "new-arrivals"
+    ],
     "fabricAndCare": [
       "Smooth imported silk crepe",
       "Delicate hand wash inside out",
@@ -277,7 +311,14 @@
     "isPublished": true,
     "isArchived": false,
     "isFeatured": true,
-    "tags": ["clothing", "matching-sets", "palazzo", "silk", "emerald", "new-arrivals"],
+    "tags": [
+      "clothing",
+      "matching-sets",
+      "palazzo",
+      "silk",
+      "emerald",
+      "new-arrivals"
+    ],
     "createdAt": "2026-11-11T11:00:00.000Z",
     "updatedAt": "2026-11-11T11:00:00.000Z"
   },
@@ -289,7 +330,10 @@
     "description": "Bask in resort elegance. The Somto co-ord combines an asymmetric high mock-neck tunic top and wide-leg trousers in a crisp white palm tree landscape print with subtle pink floral undertones.",
     "categorySlug": "clothing",
     "subCategorySlug": "matching-sets",
-    "collectionSlugs": ["weekend-looks", "new-arrivals"],
+    "collectionSlugs": [
+      "weekend-looks",
+      "new-arrivals"
+    ],
     "fabricAndCare": [
       "Ultra-soft fluid chiffon silk",
       "Gentle cold wash",
@@ -349,7 +393,14 @@
     "isPublished": true,
     "isArchived": false,
     "isFeatured": true,
-    "tags": ["clothing", "matching-sets", "resort", "botanical", "palazzo", "weekend-looks"],
+    "tags": [
+      "clothing",
+      "matching-sets",
+      "resort",
+      "botanical",
+      "palazzo",
+      "weekend-looks"
+    ],
     "createdAt": "2026-11-11T11:00:00.000Z",
     "updatedAt": "2026-11-11T11:00:00.000Z"
   },
@@ -361,7 +412,10 @@
     "description": "Engineered to celebrate every curve. The Kamsi dress is tailored from a sculpting rib-knit crepe with a gilded curved brooch accent at the hip, cascading into a sweeping waterfall side sash.",
     "categorySlug": "clothing",
     "subCategorySlug": "dresses",
-    "collectionSlugs": ["occasion-wear", "new-arrivals"],
+    "collectionSlugs": [
+      "occasion-wear",
+      "new-arrivals"
+    ],
     "fabricAndCare": [
       "Stretchy contoured ribbed knit",
       "Hand wash cold to preserve elasticity",
@@ -447,7 +501,14 @@
     "isPublished": true,
     "isArchived": false,
     "isFeatured": true,
-    "tags": ["clothing", "dresses", "maxi", "ribbed", "bodycon", "occasion-wear"],
+    "tags": [
+      "clothing",
+      "dresses",
+      "maxi",
+      "ribbed",
+      "bodycon",
+      "occasion-wear"
+    ],
     "createdAt": "2026-11-11T11:00:00.000Z",
     "updatedAt": "2026-11-11T11:00:00.000Z"
   },
@@ -459,7 +520,10 @@
     "description": "An entrance-making black-tie gown crafted from liquid shimmer jersey. Designed with an ultra-flattering deep plunge neckline, cinched ruched waist, and dramatic center waterfall sash.",
     "categorySlug": "clothing",
     "subCategorySlug": "dresses",
-    "collectionSlugs": ["occasion-wear", "new-arrivals"],
+    "collectionSlugs": [
+      "occasion-wear",
+      "new-arrivals"
+    ],
     "fabricAndCare": [
       "Liquid metallic shimmer jersey",
       "Specialist dry clean only",
@@ -532,7 +596,14 @@
     "isPublished": true,
     "isArchived": false,
     "isFeatured": true,
-    "tags": ["clothing", "dresses", "evening-gown", "grecian", "occasion-wear", "new-arrivals"],
+    "tags": [
+      "clothing",
+      "dresses",
+      "evening-gown",
+      "grecian",
+      "occasion-wear",
+      "new-arrivals"
+    ],
     "createdAt": "2026-11-11T11:00:00.000Z",
     "updatedAt": "2026-11-11T11:00:00.000Z"
   },
@@ -544,7 +615,10 @@
     "description": "Contemporary flair meets comfortable tailoring. Features bold botanical printed balloon lantern sleeves, coordinating pant side-stripes, and a fringe tassel front placket.",
     "categorySlug": "clothing",
     "subCategorySlug": "matching-sets",
-    "collectionSlugs": ["occasion-wear", "new-arrivals"],
+    "collectionSlugs": [
+      "occasion-wear",
+      "new-arrivals"
+    ],
     "fabricAndCare": [
       "Breathable crepe blend",
       "Gentle machine wash cold",
@@ -591,7 +665,13 @@
     "isPublished": true,
     "isArchived": false,
     "isFeatured": true,
-    "tags": ["clothing", "matching-sets", "lantern-sleeve", "occasion-wear", "palazzo"],
+    "tags": [
+      "clothing",
+      "matching-sets",
+      "lantern-sleeve",
+      "occasion-wear",
+      "palazzo"
+    ],
     "createdAt": "2026-11-11T11:00:00.000Z",
     "updatedAt": "2026-11-11T11:00:00.000Z"
   },
@@ -603,7 +683,9 @@
     "description": "Casual luxury from front to back. The Ify relaxed set features a soft blush pink collared button-down shirt revealing an intricate floral lace cut-out down the spine, paired with matching loose palazzo trousers.",
     "categorySlug": "clothing",
     "subCategorySlug": "matching-sets",
-    "collectionSlugs": ["weekend-looks"],
+    "collectionSlugs": [
+      "weekend-looks"
+    ],
     "fabricAndCare": [
       "Lightweight rayon crepe & embroidered lace",
       "Hand wash cold separately",
@@ -650,7 +732,14 @@
     "isPublished": true,
     "isArchived": false,
     "isFeatured": true,
-    "tags": ["clothing", "matching-sets", "lace", "loungewear", "pink", "weekend-looks"],
+    "tags": [
+      "clothing",
+      "matching-sets",
+      "lace",
+      "loungewear",
+      "pink",
+      "weekend-looks"
+    ],
     "createdAt": "2026-11-11T11:00:00.000Z",
     "updatedAt": "2026-11-11T11:00:00.000Z"
   },
@@ -662,7 +751,9 @@
     "description": "The ultimate chic weekend getaway co-ord. Features a relaxed drop-shoulder oversized button-down shirt adorned with white botanical line embroidery, paired with high-comfort tailored shorts.",
     "categorySlug": "clothing",
     "subCategorySlug": "matching-sets",
-    "collectionSlugs": ["weekend-looks"],
+    "collectionSlugs": [
+      "weekend-looks"
+    ],
     "fabricAndCare": [
       "Breathable cotton linen weave",
       "Machine wash gentle cold",
@@ -709,7 +800,14 @@
     "isPublished": true,
     "isArchived": false,
     "isFeatured": true,
-    "tags": ["clothing", "matching-sets", "shorts", "fuchsia", "linen", "weekend-looks"],
+    "tags": [
+      "clothing",
+      "matching-sets",
+      "shorts",
+      "fuchsia",
+      "linen",
+      "weekend-looks"
+    ],
     "createdAt": "2026-11-11T11:00:00.000Z",
     "updatedAt": "2026-11-11T11:00:00.000Z"
   },
@@ -721,7 +819,10 @@
     "description": "Sophisticated modern tailoring. Features a flattering black cinched front-knot tie blouse paired with high-waisted fluid palazzo pants in a bespoke navy and white geometric grid print.",
     "categorySlug": "clothing",
     "subCategorySlug": "matching-sets",
-    "collectionSlugs": ["workwear", "weekend-looks"],
+    "collectionSlugs": [
+      "workwear",
+      "weekend-looks"
+    ],
     "fabricAndCare": [
       "Stretchy poly-blend top & fluid printed crepe trousers",
       "Machine wash cold",
@@ -768,7 +869,14 @@
     "isPublished": true,
     "isArchived": false,
     "isFeatured": true,
-    "tags": ["clothing", "matching-sets", "corporate", "workwear", "palazzo", "geometric"],
+    "tags": [
+      "clothing",
+      "matching-sets",
+      "corporate",
+      "workwear",
+      "palazzo",
+      "geometric"
+    ],
     "createdAt": "2026-11-11T11:00:00.000Z",
     "updatedAt": "2026-11-11T11:00:00.000Z"
   },
@@ -780,7 +888,10 @@
     "description": "Bold, confident, and unforgettable. Cut from high-stretch contour jersey in a warm leopard print, framed by a deep plunging neckline trimmed in intricate scalloped black floral lace.",
     "categorySlug": "clothing",
     "subCategorySlug": "dresses",
-    "collectionSlugs": ["weekend-looks", "occasion-wear"],
+    "collectionSlugs": [
+      "weekend-looks",
+      "occasion-wear"
+    ],
     "fabricAndCare": [
       "Four-way contour stretch jersey & French lace",
       "Hand wash cold only",
@@ -827,7 +938,14 @@
     "isPublished": true,
     "isArchived": false,
     "isFeatured": true,
-    "tags": ["clothing", "dresses", "mini-dress", "bodycon", "leopard", "lace"],
+    "tags": [
+      "clothing",
+      "dresses",
+      "mini-dress",
+      "bodycon",
+      "leopard",
+      "lace"
+    ],
     "createdAt": "2026-11-11T11:00:00.000Z",
     "updatedAt": "2026-11-11T11:00:00.000Z"
   },
@@ -839,7 +957,9 @@
     "description": "Streetwear comfort meets bespoke corset detailing. Tailored from premium fleece-back cotton knit with silver eyelets and adjustable crisscross corset cords along both thighs.",
     "categorySlug": "clothing",
     "subCategorySlug": "trousers-and-jeans",
-    "collectionSlugs": ["weekend-looks"],
+    "collectionSlugs": [
+      "weekend-looks"
+    ],
     "fabricAndCare": [
       "100% heavy fleece-back cotton sweatshirting",
       "Machine wash cold inside out",
@@ -919,7 +1039,14 @@
     "isPublished": true,
     "isArchived": false,
     "isFeatured": true,
-    "tags": ["clothing", "trousers-and-jeans", "corset", "sweatpants", "streetwear", "weekend-looks"],
+    "tags": [
+      "clothing",
+      "trousers-and-jeans",
+      "corset",
+      "sweatpants",
+      "streetwear",
+      "weekend-looks"
+    ],
     "createdAt": "2026-11-11T11:00:00.000Z",
     "updatedAt": "2026-11-11T11:00:00.000Z"
   },
@@ -931,7 +1058,10 @@
     "description": "A structured statement vanity case handcrafted from smooth full-grain leather. Designed with a sturdy curved top handle, polished silver dual-zip closure, and a detachable leather crossbody strap.",
     "categorySlug": "bags",
     "subCategorySlug": "crossbody-bags",
-    "collectionSlugs": ["new-arrivals", "occasion-wear"],
+    "collectionSlugs": [
+      "new-arrivals",
+      "occasion-wear"
+    ],
     "fabricAndCare": [
       "100% Genuine structured calfskin leather",
       "Silver-tone alloy hardware & dual zip",
@@ -1030,7 +1160,14 @@
     "isPublished": true,
     "isArchived": false,
     "isFeatured": true,
-    "tags": ["bags", "crossbody-bags", "handbags", "leather", "vanity-case", "new-arrivals"],
+    "tags": [
+      "bags",
+      "crossbody-bags",
+      "handbags",
+      "leather",
+      "vanity-case",
+      "new-arrivals"
+    ],
     "createdAt": "2026-11-11T11:00:00.000Z",
     "updatedAt": "2026-11-11T11:00:00.000Z"
   },
@@ -1042,7 +1179,10 @@
     "description": "An everyday luxury staple crafted from breathable mid-weight crepe. Features an airy V-neck cut and a prominent woven striped artisanal fabric pocket patch celebrating Nigerian textile heritage.",
     "categorySlug": "clothing",
     "subCategorySlug": "dresses",
-    "collectionSlugs": ["weekend-looks", "occasion-wear"],
+    "collectionSlugs": [
+      "weekend-looks",
+      "occasion-wear"
+    ],
     "fabricAndCare": [
       "Breathable crepe & traditional woven cotton",
       "Hand wash cold separately",
@@ -1089,8 +1229,630 @@
     "isPublished": true,
     "isArchived": false,
     "isFeatured": true,
-    "tags": ["clothing", "dresses", "kaftan", "boubou", "ethnic-pocket", "weekend-looks"],
+    "tags": [
+      "clothing",
+      "dresses",
+      "kaftan",
+      "boubou",
+      "ethnic-pocket",
+      "weekend-looks"
+    ],
     "createdAt": "2026-11-11T11:00:00.000Z",
     "updatedAt": "2026-11-11T11:00:00.000Z"
+  },
+  {
+    "id": "prod_adanna_sculpted_block_mule",
+    "name": "The Adanna Sculpted Block Mule",
+    "slug": "adanna-sculpted-block-mule",
+    "tagline": "Handcrafted Aba leather mule with 65mm architectural flared block heel",
+    "description": "Built for true all-day wear without foot fatigue. Hand-lasted in Aba by master leather cobblers with padded memory-foam footbed and genuine cowhide upper.",
+    "categorySlug": "shoes",
+    "subCategorySlug": "heels",
+    "collectionSlugs": [
+      "workwear",
+      "occasion-wear",
+      "new-arrivals"
+    ],
+    "fabricAndCare": [
+      "100% Genuine Full-Grain Nigerian Cowhide Leather",
+      "Cushioned arch-support memory foam insole",
+      "Non-slip ridged rubber outsole",
+      "Heel height: 65mm (2.5 inches)"
+    ],
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": [
+      "shoes",
+      "heels",
+      "mules",
+      "block-heels",
+      "aba-leather",
+      "comfortable"
+    ],
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=900&q=80",
+        "altText": "Pair of Adanna leather sculpted block mules in warm tan",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "sku": "ARU-SHO-ADA-TAN-37",
+        "colorName": "Warm Tan Leather",
+        "colorHex": "#B45309",
+        "size": "EU 37",
+        "priceKobo": 3600000,
+        "stockQuantity": 4,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-ADA-TAN-38",
+        "colorName": "Warm Tan Leather",
+        "colorHex": "#B45309",
+        "size": "EU 38",
+        "priceKobo": 3600000,
+        "stockQuantity": 6,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-ADA-TAN-39",
+        "colorName": "Warm Tan Leather",
+        "colorHex": "#B45309",
+        "size": "EU 39",
+        "priceKobo": 3600000,
+        "stockQuantity": 8,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-ADA-TAN-40",
+        "colorName": "Warm Tan Leather",
+        "colorHex": "#B45309",
+        "size": "EU 40",
+        "priceKobo": 3600000,
+        "stockQuantity": 5,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-ADA-TAN-41",
+        "colorName": "Warm Tan Leather",
+        "colorHex": "#B45309",
+        "size": "EU 41",
+        "priceKobo": 3600000,
+        "stockQuantity": 3,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-ADA-BLK-38",
+        "colorName": "Midnight Black",
+        "colorHex": "#181514",
+        "size": "EU 38",
+        "priceKobo": 3600000,
+        "stockQuantity": 4,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-ADA-BLK-39",
+        "colorName": "Midnight Black",
+        "colorHex": "#181514",
+        "size": "EU 39",
+        "priceKobo": 3600000,
+        "stockQuantity": 5,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-ADA-BLK-40",
+        "colorName": "Midnight Black",
+        "colorHex": "#181514",
+        "size": "EU 40",
+        "priceKobo": 3600000,
+        "stockQuantity": 4,
+        "lowStockThreshold": 1,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "createdAt": "2026-11-16T14:59:13.589Z",
+    "updatedAt": "2026-11-16T14:59:13.590Z"
+  },
+  {
+    "id": "prod_chioma_strappy_metallic_stiletto_sandal",
+    "name": "The Chioma Strappy Metallic Stiletto Sandal",
+    "slug": "chioma-strappy-metallic-stiletto-sandal",
+    "tagline": "Statement 85mm Evening Heel with Slender Ankle-Wrap Straps",
+    "description": "Designed for grand Nigerian celebrations, gala dinners, and cocktail receptions. Hand-crafted in Aba using metallic mirror calfskin, a balanced 85mm stiletto, and cushioned forefoot pads.",
+    "categorySlug": "shoes",
+    "subCategorySlug": "heels",
+    "collectionSlugs": [
+      "occasion-wear",
+      "new-arrivals"
+    ],
+    "fabricAndCare": [
+      "Metallic mirror leather upper",
+      "Leather lining & padded ball-of-foot support",
+      "Slim ankle strap with gold buckle closure",
+      "Heel height: 85mm (3.3 inches)"
+    ],
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": [
+      "shoes",
+      "heels",
+      "sandals",
+      "stiletto",
+      "evening-wear",
+      "metallic"
+    ],
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=900&q=80",
+        "altText": "The Chioma Strappy Metallic Stiletto Sandal in Champagne Gold",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "sku": "ARU-SHO-CHIO-GLD-37",
+        "colorName": "Champagne Gold",
+        "colorHex": "#D4AF37",
+        "size": "EU 37",
+        "priceKobo": 4200000,
+        "stockQuantity": 3,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-CHIO-GLD-38",
+        "colorName": "Champagne Gold",
+        "colorHex": "#D4AF37",
+        "size": "EU 38",
+        "priceKobo": 4200000,
+        "stockQuantity": 5,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-CHIO-GLD-39",
+        "colorName": "Champagne Gold",
+        "colorHex": "#D4AF37",
+        "size": "EU 39",
+        "priceKobo": 4200000,
+        "stockQuantity": 6,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-CHIO-GLD-40",
+        "colorName": "Champagne Gold",
+        "colorHex": "#D4AF37",
+        "size": "EU 40",
+        "priceKobo": 4200000,
+        "stockQuantity": 4,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-CHIO-ROSE-38",
+        "colorName": "Metallic Rose Bronze",
+        "colorHex": "#B76E79",
+        "size": "EU 38",
+        "priceKobo": 4200000,
+        "stockQuantity": 3,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-CHIO-ROSE-39",
+        "colorName": "Metallic Rose Bronze",
+        "colorHex": "#B76E79",
+        "size": "EU 39",
+        "priceKobo": 4200000,
+        "stockQuantity": 4,
+        "lowStockThreshold": 1,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "createdAt": "2026-11-16T14:59:13.590Z",
+    "updatedAt": "2026-11-16T14:59:13.590Z"
+  },
+  {
+    "id": "prod_ezinne_woven_leather_slide_slippers",
+    "name": "The Ezinne Woven Leather Slide Slippers",
+    "slug": "ezinne-woven-leather-slide-slippers",
+    "tagline": "Effortless Artisanal Slip-On in Hand-Braided Nigerian Calfskin",
+    "description": "The quintessential Aba resort slip-on. Expertly interlinked leather straps provide breathable luxury for warm climates, styled effortlessly with our silk kaftans and wide-leg sets.",
+    "categorySlug": "shoes",
+    "subCategorySlug": "slippers",
+    "collectionSlugs": [
+      "weekend-looks",
+      "new-arrivals"
+    ],
+    "fabricAndCare": [
+      "100% Hand-woven calf leather straps",
+      "Moulded leather arch footbed",
+      "Flexible anti-slip sole"
+    ],
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": [
+      "shoes",
+      "slippers",
+      "slides",
+      "woven-leather",
+      "casual-luxury",
+      "aba-made"
+    ],
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&w=900&q=80",
+        "altText": "The Ezinne Woven Leather Slide Slippers in Camel Tan",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "sku": "ARU-SHO-EZI-CAM-37",
+        "colorName": "Camel Tan",
+        "colorHex": "#C19A6B",
+        "size": "EU 37",
+        "priceKobo": 2800000,
+        "stockQuantity": 5,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-EZI-CAM-38",
+        "colorName": "Camel Tan",
+        "colorHex": "#C19A6B",
+        "size": "EU 38",
+        "priceKobo": 2800000,
+        "stockQuantity": 7,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-EZI-CAM-39",
+        "colorName": "Camel Tan",
+        "colorHex": "#C19A6B",
+        "size": "EU 39",
+        "priceKobo": 2800000,
+        "stockQuantity": 8,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-EZI-CAM-40",
+        "colorName": "Camel Tan",
+        "colorHex": "#C19A6B",
+        "size": "EU 40",
+        "priceKobo": 2800000,
+        "stockQuantity": 6,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-EZI-CAM-41",
+        "colorName": "Camel Tan",
+        "colorHex": "#C19A6B",
+        "size": "EU 41",
+        "priceKobo": 2800000,
+        "stockQuantity": 3,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-EZI-BLK-39",
+        "colorName": "Obsidian Black",
+        "colorHex": "#181514",
+        "size": "EU 39",
+        "priceKobo": 2800000,
+        "stockQuantity": 5,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-EZI-BLK-40",
+        "colorName": "Obsidian Black",
+        "colorHex": "#181514",
+        "size": "EU 40",
+        "priceKobo": 2800000,
+        "stockQuantity": 4,
+        "lowStockThreshold": 1,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "createdAt": "2026-11-16T14:59:13.590Z",
+    "updatedAt": "2026-11-16T14:59:13.590Z"
+  },
+  {
+    "id": "prod_somto_braided_cross_strap_leather_sandal",
+    "name": "The Somto Braided Cross-Strap Leather Sandal",
+    "slug": "somto-braided-cross-strap-leather-sandal",
+    "tagline": "35mm Low Block Heel Sandal with Cushioned Memory Insole",
+    "description": "Striking the ideal harmony between elevated height and everyday ease. Hand-crafted in Aba with interlocking cross straps, brass buckle, and a stable 35mm covered block heel.",
+    "categorySlug": "shoes",
+    "subCategorySlug": "sandals",
+    "collectionSlugs": [
+      "weekend-looks",
+      "workwear"
+    ],
+    "fabricAndCare": [
+      "Smooth full-grain leather straps",
+      "Padded arch support with dual-density foam",
+      "Heel height: 35mm (1.4 inches)"
+    ],
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": [
+      "shoes",
+      "sandals",
+      "block-heel",
+      "leather",
+      "casual-chic"
+    ],
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?auto=format&fit=crop&w=900&q=80",
+        "altText": "The Somto Braided Cross-Strap Leather Sandal",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "sku": "ARU-SHO-SOM-COG-38",
+        "colorName": "Rich Cognac",
+        "colorHex": "#9A3324",
+        "size": "EU 38",
+        "priceKobo": 3200000,
+        "stockQuantity": 5,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-SOM-COG-39",
+        "colorName": "Rich Cognac",
+        "colorHex": "#9A3324",
+        "size": "EU 39",
+        "priceKobo": 3200000,
+        "stockQuantity": 6,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-SOM-COG-40",
+        "colorName": "Rich Cognac",
+        "colorHex": "#9A3324",
+        "size": "EU 40",
+        "priceKobo": 3200000,
+        "stockQuantity": 4,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-SOM-IVR-39",
+        "colorName": "Ivory Cream",
+        "colorHex": "#FFFDD0",
+        "size": "EU 39",
+        "priceKobo": 3200000,
+        "stockQuantity": 4,
+        "lowStockThreshold": 1,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "createdAt": "2026-11-16T14:59:13.590Z",
+    "updatedAt": "2026-11-16T14:59:13.590Z"
+  },
+  {
+    "id": "prod_amara_pointed_toe_leather_mule_flat",
+    "name": "The Amara Pointed-Toe Leather Mule Flat",
+    "slug": "amara-pointed-toe-leather-mule-flat",
+    "tagline": "Architectural V-Cut Vamp Flat Slip-On with Micro Heel",
+    "description": "Sharp, executive, and remarkably comfortable. The Amara mule flat elongates the leg line with a geometric pointed toe and supple glove leather lining.",
+    "categorySlug": "shoes",
+    "subCategorySlug": "flats",
+    "collectionSlugs": [
+      "workwear",
+      "weekend-looks"
+    ],
+    "fabricAndCare": [
+      "100% Genuine polished glove leather",
+      "Micro heel: 15mm (0.6 inch)",
+      "Rubber sole injection for grip"
+    ],
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": [
+      "shoes",
+      "flats",
+      "mules",
+      "pointed-toe",
+      "workwear",
+      "aba-leather"
+    ],
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=900&q=80",
+        "altText": "The Amara Pointed-Toe Leather Mule Flat",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "sku": "ARU-SHO-AMR-OXB-38",
+        "colorName": "Burgundy Oxblood",
+        "colorHex": "#6B1724",
+        "size": "EU 38",
+        "priceKobo": 3100000,
+        "stockQuantity": 4,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-AMR-OXB-39",
+        "colorName": "Burgundy Oxblood",
+        "colorHex": "#6B1724",
+        "size": "EU 39",
+        "priceKobo": 3100000,
+        "stockQuantity": 7,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-AMR-OXB-40",
+        "colorName": "Burgundy Oxblood",
+        "colorHex": "#6B1724",
+        "size": "EU 40",
+        "priceKobo": 3100000,
+        "stockQuantity": 5,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-SHO-AMR-GRN-39",
+        "colorName": "Emerald Green",
+        "colorHex": "#064E3B",
+        "size": "EU 39",
+        "priceKobo": 3100000,
+        "stockQuantity": 4,
+        "lowStockThreshold": 1,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "createdAt": "2026-11-16T14:59:13.590Z",
+    "updatedAt": "2026-11-16T14:59:13.590Z"
+  },
+  {
+    "id": "prod_ngozi_structured_artisan_leather_tote",
+    "name": "The Ngozi Structured Artisan Leather Tote",
+    "slug": "ngozi-structured-artisan-leather-tote",
+    "tagline": "Spacious Architectural Boardroom & Travel Silhouette with Gold Hardware",
+    "description": "Designed for the modern Nigerian executive who moves seamlessly between boardroom and travel. Fits a 14-inch laptop, planner, cosmetics, and phone charger. Finished with burnished edges and reinforced base studs.",
+    "categorySlug": "bags",
+    "subCategorySlug": "handbags",
+    "collectionSlugs": [
+      "workwear",
+      "new-arrivals"
+    ],
+    "fabricAndCare": [
+      "100% Genuine Nigerian Cowhide Leather",
+      "Solid brass hardware in brushed champagne gold",
+      "Dimensions: 38cm (W) x 29cm (H) x 14cm (D)"
+    ],
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": [
+      "bags",
+      "handbags",
+      "tote",
+      "leather",
+      "workwear",
+      "boardroom"
+    ],
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=80",
+        "altText": "The Ngozi Structured Artisan Leather Tote in Caramel Tan",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "sku": "ARU-BAG-NGO-TAN-OS",
+        "colorName": "Caramel Tan",
+        "colorHex": "#B45309",
+        "size": "One Size",
+        "priceKobo": 4800000,
+        "stockQuantity": 4,
+        "lowStockThreshold": 1,
+        "isActive": true
+      },
+      {
+        "sku": "ARU-BAG-NGO-BLK-OS",
+        "colorName": "Midnight Black",
+        "colorHex": "#181514",
+        "size": "One Size",
+        "priceKobo": 4800000,
+        "stockQuantity": 5,
+        "lowStockThreshold": 1,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "createdAt": "2026-11-16T14:59:13.590Z",
+    "updatedAt": "2026-11-16T14:59:13.590Z"
+  },
+  {
+    "id": "prod_adaeze_18k_gold_chunky_collar_necklace",
+    "name": "The Adaeze 18k Gold Chunky Collar Necklace",
+    "slug": "adaeze-18k-gold-chunky-collar-necklace",
+    "tagline": "Architectural Nigerian Handcrafted Statement Collar in Polished Brass & 18k Plating",
+    "description": "Command the room with this high-polish sculptured statement collar. Inspired by traditional Igbo royal ceremonial torque adornments, modernized with an ergonomic hinged rear clasp.",
+    "categorySlug": "accessories",
+    "subCategorySlug": "jewellery",
+    "collectionSlugs": [
+      "occasion-wear",
+      "new-arrivals"
+    ],
+    "fabricAndCare": [
+      "Recycled solid brass with heavy 18k gold vermeil dip",
+      "Hypoallergenic & tarnish-resistant protective coating",
+      "Clean with soft microfibre cloth; store in protective pouch"
+    ],
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": [
+      "accessories",
+      "jewellery",
+      "necklace",
+      "gold",
+      "statement-piece"
+    ],
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=80",
+        "altText": "The Adaeze 18k Gold Chunky Collar Necklace",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "sku": "ARU-ACC-ADA-GLD-OS",
+        "colorName": "18k Polished Gold",
+        "colorHex": "#D4AF37",
+        "size": "One Size",
+        "priceKobo": 2200000,
+        "stockQuantity": 8,
+        "lowStockThreshold": 2,
+        "isActive": true
+      }
+    ],
+    "hasVariants": false,
+    "createdAt": "2026-11-16T14:59:13.590Z",
+    "updatedAt": "2026-11-16T14:59:13.590Z"
   }
 ]

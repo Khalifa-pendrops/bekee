@@ -39,7 +39,7 @@ export default function NotFound() {
           <p className="text-[11px] text-obsidian-subtle">
             Need urgent assistance finding a specific Aba outfit?{' '}
             <a
-              href="https://wa.me/2348030001234?text=Hello%20Arubekee%20Collection,%20I%20am%20looking%20for%20an%20item"
+              href="https://wa.me/2349164161091?text=Hello%20Arubekee%20Collection,%20I%20am%20looking%20for%20an%20item"
               target="_blank"
               rel="noopener noreferrer"
               className="text-oxblood font-semibold underline hover:text-obsidian"

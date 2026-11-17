@@ -68,7 +68,7 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
         <div className="py-20 text-center border border-stone-line bg-ivory-warm p-8 space-y-4">
           <p className="font-serif text-2xl text-obsidian">No pieces in this edit currently</p>
           <p className="text-xs text-obsidian-muted max-w-md mx-auto">
-            Our atelier is updating this collection with fresh Aba-crafted items.
+            Our styling team is currently curating fresh handpicked pieces for this edit.
           </p>
           <Link href="/shop">
             <Button variant="primary" size="sm" className="mt-2">

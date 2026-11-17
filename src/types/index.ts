@@ -353,5 +353,10 @@ export interface StoreSettings {
   // Paystack & Integrations status
   paystackTestMode: boolean;
   isLivePaymentsConfigured: boolean;
+
+  // Direct Boutique Bank Account (for offline transfer invoices)
+  bankName?: string;
+  bankAccountName?: string;
+  bankAccountNumber?: string;
 }
 

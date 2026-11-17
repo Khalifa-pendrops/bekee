@@ -1,5 +1,106 @@
 [
   {
+    "id": "ord_1794843379522_iito",
+    "orderNumber": "ARUBEKEE-2611-4063",
+    "orderSource": "storefront",
+    "customerName": "my name",
+    "customerEmail": "dikee5200@gmail.com",
+    "customerPhone": "+2348012345678",
+    "deliveryType": "dispatch_delivery",
+    "shippingAddress": {
+      "fullName": "my name",
+      "email": "dikee5200@gmail.com",
+      "phone": "+2348012345678",
+      "state": "Edo",
+      "city": "benin",
+      "streetAddress": "ikpoba hill, jemila road",
+      "landmark": "jemila junction",
+      "deliveryInstructions": "call me"
+    },
+    "items": [
+      {
+        "id": "item_1794843379522_djd8",
+        "productId": "2786171e-b5cd-4a3a-b03f-e259e5ee675a",
+        "variantId": "67fc3e44-24c9-43ac-8fa3-cdd9427a175f",
+        "sku": "ARU-SHO-ADA-TAN-41",
+        "productName": "The Adanna Sculpted Block Mule",
+        "colorName": "Warm Tan Leather",
+        "size": "EU 41",
+        "unitPriceKobo": 3600000,
+        "quantity": 1,
+        "totalKobo": 3600000,
+        "imageUrl": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        "id": "item_1794843379522_vjmj",
+        "productId": "7df15310-5dda-4f44-b8e3-15cf3fb4b887",
+        "variantId": "bd12bf2d-8126-4779-995d-79dc5006a5bc",
+        "sku": "ARU-ACC-ADA-GLD-OS",
+        "productName": "The Adaeze 18k Gold Chunky Collar Necklace",
+        "colorName": "18k Polished Gold",
+        "size": "One Size",
+        "unitPriceKobo": 2200000,
+        "quantity": 1,
+        "totalKobo": 2200000,
+        "imageUrl": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        "id": "item_1794843379522_3rdu",
+        "productId": "fc821315-c138-4321-b9c4-65feb8276a1d",
+        "variantId": "2b75953a-9c45-48f6-a48b-a1b617b2ebd5",
+        "sku": "ARU-CLO-KAF-BLK-FS",
+        "productName": "Ngozi V-Neck Striped Pocket Kaftan",
+        "colorName": "Obsidian Black",
+        "size": "Free Size",
+        "unitPriceKobo": 4200000,
+        "quantity": 1,
+        "totalKobo": 4200000,
+        "imageUrl": "/asset/019c751e-527c-45de-841b-78967d8824eb.jpg"
+      }
+    ],
+    "subtotalKobo": 10000000,
+    "deliveryFeeKobo": 650000,
+    "discountKobo": 0,
+    "totalKobo": 10650000,
+    "paymentStatus": "paid",
+    "paymentMethod": "paystack",
+    "paymentReference": "ARUBEKEE_PAY_ARUBEKEE-2611-4063_1794843379522",
+    "fulfillmentStatus": "dispatched",
+    "internalNotes": "Delivery Zone: Nationwide Standard Delivery. Reservation expires: 2026-11-16T15:51:19.833Z",
+    "timeline": [
+      {
+        "id": "tl_1794843379833_init",
+        "orderId": "ord_1794843379522_iito",
+        "title": "Checkout Initiated",
+        "description": "Order initiated for ₦106,500. 15-minute stock lock placed.",
+        "actor": "Customer",
+        "createdAt": "2026-11-16T15:36:19.833Z"
+      },
+      {
+        "id": "tl_1794843461413",
+        "orderId": "ord_1794843379522_iito",
+        "title": "Payment Confirmed",
+        "description": "Payment of ₦106,500 confirmed via Paystack (6770203559). Ready for fulfillment.",
+        "actor": "Paystack Gateway",
+        "createdAt": "2026-11-16T15:37:41.413Z"
+      },
+      {
+        "id": "tl_1794844642409",
+        "orderId": "ord_1794843379522_iito",
+        "title": "Order Dispatched",
+        "description": "Parcel consigned with OK movement. Waybill: ABA-1.",
+        "actor": "Store Manager",
+        "createdAt": "2026-11-16T15:57:22.409Z"
+      }
+    ],
+    "createdAt": "2026-11-16T15:36:19.833Z",
+    "updatedAt": "2026-11-16T15:57:22.409Z",
+    "paidAt": "2026-11-16T15:37:41.413Z",
+    "dispatchedAt": "2026-11-16T15:57:22.409Z",
+    "carrierName": "OK movement",
+    "trackingNumber": "ABA-1"
+  },
+  {
     "id": "30b20709-8f1d-4305-aadf-d9e5447bd791",
     "orderNumber": "ARU-2611-5548",
     "orderSource": "storefront",

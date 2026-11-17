@@ -9,7 +9,7 @@ function FailedContent() {
   const searchParams = useSearchParams();
   const reason = searchParams.get('reason') || 'Transaction was cancelled or declined by your banking institution.';
 
-  const storePhone = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '2348030001234').replace(/[^0-9]/g, '');
+  const storePhone = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '2349164161091').replace(/[^0-9]/g, '');
   const whatsappMessage = encodeURIComponent(
     `Hello ARUBEKEE COLLECTION, I tried paying on your website but encountered an error: "${reason}". Can I pay via direct bank transfer?`
   );

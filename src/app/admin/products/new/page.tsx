@@ -283,7 +283,7 @@ export default function NewProductGuidedPage() {
         name: name.trim(),
         slug: generatedSlug,
         tagline: tagline.trim() || undefined,
-        description: description.trim() || `${name} handcrafted with bespoke artisan tailoring.`,
+        description: description.trim() || `${name} curated and quality-vetted for contemporary elegance.`,
         categorySlug,
         subCategorySlug,
         collectionSlugs: ['new-arrivals'],

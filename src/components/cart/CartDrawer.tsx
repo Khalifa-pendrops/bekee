@@ -27,7 +27,7 @@ export function CartDrawer() {
           <div className="space-y-1">
             <p className="font-serif text-lg text-obsidian">Your bag is empty</p>
             <p className="text-xs text-obsidian-muted max-w-xs">
-              Explore our latest curated collections from Aba fashion artisans.
+              Explore our latest curated edits of ready-to-wear dresses, shoes, and statement bags.
             </p>
           </div>
           <Button

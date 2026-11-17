@@ -58,7 +58,7 @@ export function Footer() {
               </p>
             </div>
             <p className="text-xs text-obsidian-muted leading-relaxed max-w-sm">
-              Artisanal and contemporary ready-to-wear women’s fashion, shoes, structured bags, and accessories, curated and crafted in the commercial fashion hub of Aba, Abia State.
+              Contemporary ready-to-wear women’s fashion, shoes, structured bags, and statement accessories, carefully handpicked and quality-inspected in the commercial fashion hub of Aba, Abia State.
             </p>
 
             <div className="pt-2 space-y-2 text-xs text-obsidian-soft">
@@ -73,7 +73,7 @@ export function Footer() {
               <div className="flex items-center gap-2">
                 <MessageSquare className="w-4 h-4 text-oxblood shrink-0" />
                 <a
-                  href="https://wa.me/2348000000000"
+                  href="https://wa.me/2349164161091"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-oxblood underline"
@@ -180,7 +180,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/about" className="hover:text-oxblood transition-colors">
-                  About Our Aba Atelier
+                  About Our Boutique
                 </Link>
               </li>
               <li>
