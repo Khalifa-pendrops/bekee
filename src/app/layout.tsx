@@ -17,19 +17,24 @@ const sansFont = Plus_Jakarta_Sans({
   display: "swap",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL && !process.env.NEXT_PUBLIC_SITE_URL.includes('localhost')
+  ? process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '')
+  : 'https://arubekeecollection.vercel.app';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     template: "%s | ARUBEKEE COLLECTION - Aba, Nigeria",
-    default: "ARUBEKEE COLLECTION | Premium Women's Fashion • Aba, Nigeria",
+    default: "ARUBEKEE COLLECTION | Curated Women's Fashion • Aba, Nigeria",
   },
   description:
-    "Curated contemporary women's clothing, footwear, bags, and accessories crafted in Aba, Abia State, Nigeria. Express delivery nationwide and free boutique pickup.",
+    "Curated contemporary women's clothing, footwear, bags, and statement accessories handpicked in Aba, Abia State, Nigeria. Express delivery nationwide and free boutique pickup.",
   keywords: [
     "Aba fashion",
     "women clothing Nigeria",
     "Aba dresses",
     "ready to wear Nigeria",
-    "Nigerian fashion designer",
+    "Nigerian fashion boutique",
     "Abia State boutique",
     "women shoes Nigeria",
     "handbags Aba",
@@ -46,11 +51,26 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_NG",
-    url: "https://arubekee.com",
+    url: siteUrl,
     siteName: "ARUBEKEE COLLECTION",
-    title: "ARUBEKEE COLLECTION | Women's Fashion from Aba, Nigeria",
+    title: "ARUBEKEE COLLECTION | Curated Women's Fashion • Aba, Nigeria",
     description:
-      "Distinctive women's clothing, shoes, bags, and accessories from the commercial heart of Nigerian fashion craftsmanship.",
+      "Curated contemporary women's clothing, footwear, bags, and statement accessories handpicked in Aba, Abia State, Nigeria.",
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: "ARUBEKEE COLLECTION - Curated Contemporary Fashion",
+        type: 'image/jpeg',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "ARUBEKEE COLLECTION | Curated Women's Fashion • Aba, Nigeria",
+    description: "Curated contemporary women's clothing, footwear, bags, and statement accessories handpicked in Aba, Abia State, Nigeria.",
+    images: ['/og-image.jpg'],
   },
 };
 
