@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { SizeGuideModal } from "@/components/product/SizeGuideModal";
 import { ProductCard } from "@/components/product/ProductCard";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { 
@@ -586,8 +587,10 @@ export function ProductDetailView({ product, relatedProducts, settings }: Produc
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            {relatedProducts.map((rel) => (
-              <ProductCard key={rel.id} product={rel} />
+            {relatedProducts.map((rel, idx) => (
+              <ScrollReveal key={rel.id} animation="slide-up" delay={idx * 70}>
+                <ProductCard product={rel} />
+              </ScrollReveal>
             ))}
           </div>
         </section>

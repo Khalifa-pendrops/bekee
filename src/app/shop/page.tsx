@@ -7,6 +7,7 @@ import { Product, Category, CategorySlug } from "@/types";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Button } from "@/components/ui/Button";
 import { Drawer } from "@/components/ui/Drawer";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { formatKoboToNaira, parseNairaToKobo } from "@/lib/utils";
 import { 
   SlidersHorizontal, 
@@ -168,18 +169,20 @@ function ShopContent() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
       {/* Editorial Header */}
-      <div className="border-b border-stone-line pb-6 text-left">
-        <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-oxblood font-semibold mb-1">
-          <Sparkles className="w-3.5 h-3.5 text-gold" />
-          <span>Curated Catalogue • Aba Showroom</span>
+      <ScrollReveal animation="slide-up">
+        <div className="border-b border-stone-line pb-6 text-left">
+          <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-oxblood font-semibold mb-1">
+            <Sparkles className="w-3.5 h-3.5 text-gold" />
+            <span>Curated Catalogue • Aba Showroom</span>
+          </div>
+          <h1 className="editorial-heading text-3xl sm:text-4xl lg:text-5xl text-obsidian font-normal">
+            The Full Collection
+          </h1>
+          <p className="text-xs sm:text-sm text-obsidian-muted mt-2 max-w-2xl leading-relaxed">
+            Explore curated ready-to-wear dresses, architectural footwear, structured bags, and statement accessories handpicked in Aba, Abia State.
+          </p>
         </div>
-        <h1 className="editorial-heading text-3xl sm:text-4xl lg:text-5xl text-obsidian font-normal">
-          The Full Collection
-        </h1>
-        <p className="text-xs sm:text-sm text-obsidian-muted mt-2 max-w-2xl leading-relaxed">
-          Explore curated ready-to-wear dresses, architectural footwear, structured bags, and statement accessories handpicked in Aba, Abia State.
-        </p>
-      </div>
+      </ScrollReveal>
 
       {/* Control Bar: Categories Quick Switcher & Sort/Filter */}
       <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 pb-4 border-b border-stone-line">
@@ -323,8 +326,10 @@ function ShopContent() {
             Showing {filteredProducts.length} {filteredProducts.length === 1 ? 'piece' : 'pieces'}
           </p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {filteredProducts.map((product, idx) => (
+              <ScrollReveal key={product.id} animation="slide-up" delay={(idx % 4) * 60}>
+                <ProductCard product={product} />
+              </ScrollReveal>
             ))}
           </div>
         </div>

@@ -8,6 +8,7 @@ import { Product } from "@/types";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 function SearchContent() {
   const searchParams = useSearchParams();
@@ -83,8 +84,10 @@ function SearchContent() {
           ) : (
             <div className="space-y-4">
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                {results.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                {results.map((product, idx) => (
+                  <ScrollReveal key={product.id} animation="slide-up" delay={(idx % 4) * 60}>
+                    <ProductCard product={product} />
+                  </ScrollReveal>
                 ))}
               </div>
             </div>

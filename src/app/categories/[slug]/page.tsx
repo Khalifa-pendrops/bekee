@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Sparkles, ChevronRight, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -135,8 +136,10 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {allProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {allProducts.map((product, idx) => (
+              <ScrollReveal key={product.id} animation="slide-up" delay={(idx % 4) * 60}>
+                <ProductCard product={product} />
+              </ScrollReveal>
             ))}
           </div>
         </div>

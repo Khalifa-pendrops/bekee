@@ -4,6 +4,7 @@ import { mockCategories, mockCollections, mockStoreSettings } from "@/data/mockD
 import { db } from "@/lib/db";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Button } from "@/components/ui/Button";
+import { ScrollReveal, ScrollRevealStagger } from "@/components/ui/ScrollReveal";
 import { ArrowRight, Sparkles, MapPin, MessageCircle, ShieldCheck, Truck } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
@@ -23,7 +24,7 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left Content */}
-            <div className="lg:col-span-7 space-y-6 text-left">
+            <ScrollReveal animation="slide-up" duration={800} className="lg:col-span-7 space-y-6 text-left">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-ivory border border-stone-line text-oxblood text-xs uppercase tracking-widest font-semibold">
                 <Sparkles className="w-3.5 h-3.5 text-gold" />
                 <span>Crafted in Aba, Abia State</span>
@@ -47,7 +48,7 @@ export default async function HomePage() {
 
                 <Link href="/collections/occasion-wear">
                   <Button variant="outline" size="lg" className="border-oxblood/30 text-oxblood hover:bg-oxblood/5 rounded-lg">
-                    <span>Occasion & Weekend Wear</span>
+                    <span>Occasion &amp; Weekend Wear</span>
                   </Button>
                 </Link>
               </div>
@@ -64,13 +65,13 @@ export default async function HomePage() {
                 </div>
                 <div className="flex items-center gap-2 col-span-2 sm:col-span-1">
                   <ShieldCheck className="w-4 h-4 text-oxblood shrink-0" />
-                  <span>Verified Leather & Crepe</span>
+                  <span>Verified Leather &amp; Crepe</span>
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
 
             {/* Right Hero Visual Collage */}
-            <div className="lg:col-span-5 relative">
+            <ScrollReveal animation="slide-left" delay={150} duration={850} className="lg:col-span-5 relative">
               <div className="relative mx-auto max-w-md lg:max-w-none">
                 {/* Main Portrait */}
                 <div className="aspect-[3/4] overflow-hidden rounded-2xl border-2 border-[#EADDCF] shadow-card bg-stone-subtle">
@@ -92,32 +93,34 @@ export default async function HomePage() {
                   </p>
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
 
       {/* 2. CATEGORY DISCOVERY (SHEIN-agility with luxury aesthetics) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-4 border-b border-stone-line">
-          <div>
-            <span className="text-xs font-semibold tracking-widest uppercase text-oxblood">
-              Curated Departments
-            </span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-normal text-obsidian mt-1">
-              Shop by Category
-            </h2>
+        <ScrollReveal animation="slide-up">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-4 border-b border-stone-line">
+            <div>
+              <span className="text-xs font-semibold tracking-widest uppercase text-oxblood">
+                Curated Departments
+              </span>
+              <h2 className="font-serif text-2xl sm:text-3xl font-normal text-obsidian mt-1">
+                Shop by Category
+              </h2>
+            </div>
+            <Link
+              href="/shop"
+              className="text-xs uppercase tracking-wider font-semibold text-obsidian hover:text-oxblood flex items-center gap-1.5 mt-2 sm:mt-0"
+            >
+              <span>View All Departments</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
-          <Link
-            href="/shop"
-            className="text-xs uppercase tracking-wider font-semibold text-obsidian hover:text-oxblood flex items-center gap-1.5 mt-2 sm:mt-0"
-          >
-            <span>View All Departments</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
+        </ScrollReveal>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+        <ScrollRevealStagger staggerDelay={80} className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
           {mockCategories.map((cat) => (
             <Link
               key={cat.id}
@@ -158,40 +161,42 @@ export default async function HomePage() {
               </div>
             </Link>
           ))}
-        </div>
+        </ScrollRevealStagger>
       </section>
 
       {/* 3. NEW ARRIVALS CAROUSEL / GRID */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-4 border-b border-stone-line">
-          <div>
-            <span className="text-xs font-semibold tracking-widest uppercase text-oxblood">
-              Just Dropped
-            </span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-normal text-obsidian mt-1">
-              New Arrivals from Aba
-            </h2>
+        <ScrollReveal animation="slide-up">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-4 border-b border-stone-line">
+            <div>
+              <span className="text-xs font-semibold tracking-widest uppercase text-oxblood">
+                Just Dropped
+              </span>
+              <h2 className="font-serif text-2xl sm:text-3xl font-normal text-obsidian mt-1">
+                New Arrivals from Aba
+              </h2>
+            </div>
+            <Link
+              href="/collections/new-arrivals"
+              className="text-xs uppercase tracking-wider font-semibold text-obsidian hover:text-oxblood flex items-center gap-1.5 mt-2 sm:mt-0"
+            >
+              <span>View All New Pieces ({newArrivals.length})</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
-          <Link
-            href="/collections/new-arrivals"
-            className="text-xs uppercase tracking-wider font-semibold text-obsidian hover:text-oxblood flex items-center gap-1.5 mt-2 sm:mt-0"
-          >
-            <span>View All New Pieces ({newArrivals.length})</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
+        </ScrollReveal>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <ScrollRevealStagger staggerDelay={70} className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {newArrivals.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
-        </div>
+        </ScrollRevealStagger>
       </section>
 
       {/* 4. CURATED COLLECTIONS BANNER */}
       <section className="bg-ivory-warm border-y border-stone-line py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
+          <ScrollReveal animation="slide-up" className="text-center max-w-2xl mx-auto mb-12 space-y-2">
             <span className="text-xs font-semibold tracking-widest uppercase text-oxblood">
               Editorial Curation
             </span>
@@ -201,9 +206,9 @@ export default async function HomePage() {
             <p className="text-xs sm:text-sm text-obsidian-muted">
               Explore hand-selected edits structured around your work calendar, weekend brunches, and high-society events.
             </p>
-          </div>
+          </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <ScrollRevealStagger staggerDelay={90} className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {mockCollections.filter(c => c.slug !== 'new-arrivals' && c.slug !== 'sale').map((collection) => (
               <div
                 key={collection.id}
@@ -232,75 +237,79 @@ export default async function HomePage() {
                 </div>
               </div>
             ))}
-          </div>
+          </ScrollRevealStagger>
         </div>
       </section>
 
       {/* 5. SALE SPOTLIGHT (GENUINE MARKDOWNS) */}
       {saleProducts.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-4 border-b border-stone-line">
-            <div>
-              <span className="text-xs font-semibold tracking-widest uppercase text-oxblood">
-                Limited Archive
-              </span>
-              <h2 className="font-serif text-2xl sm:text-3xl font-normal text-obsidian mt-1">
-                Special Sale Edit
-              </h2>
+          <ScrollReveal animation="slide-up">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-4 border-b border-stone-line">
+              <div>
+                <span className="text-xs font-semibold tracking-widest uppercase text-oxblood">
+                  Limited Archive
+                </span>
+                <h2 className="font-serif text-2xl sm:text-3xl font-normal text-obsidian mt-1">
+                  Special Sale Edit
+                </h2>
+              </div>
+              <Link
+                href="/collections/sale"
+                className="text-xs uppercase tracking-wider font-semibold text-oxblood hover:underline flex items-center gap-1.5 mt-2 sm:mt-0"
+              >
+                <span>Explore All Markdown Pieces</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
-            <Link
-              href="/collections/sale"
-              className="text-xs uppercase tracking-wider font-semibold text-oxblood hover:underline flex items-center gap-1.5 mt-2 sm:mt-0"
-            >
-              <span>Explore All Markdown Pieces</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
+          </ScrollReveal>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <ScrollRevealStagger staggerDelay={70} className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {saleProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
-          </div>
+          </ScrollRevealStagger>
         </section>
       )}
 
       {/* 6. ABA ATELIER HERITAGE & BOUTIQUE PICKUP */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-obsidian text-ivory-light p-8 sm:p-12 lg:p-16 border border-obsidian-soft relative overflow-hidden">
-          <div className="max-w-2xl space-y-6 relative z-10">
-            <span className="text-xs uppercase tracking-widest font-semibold text-gold">
-              The Aba Curation Story
-            </span>
+        <ScrollReveal animation="slide-up" duration={800}>
+          <div className="bg-obsidian text-ivory-light p-8 sm:p-12 lg:p-16 border border-obsidian-soft relative overflow-hidden rounded-2xl">
+            <div className="max-w-2xl space-y-6 relative z-10">
+              <span className="text-xs uppercase tracking-widest font-semibold text-gold">
+                The Aba Curation Story
+              </span>
 
-            <h2 className="editorial-heading text-3xl sm:text-4xl text-ivory leading-tight">
-              Curating the finest fashion from the commercial capital of African trade.
-            </h2>
+              <h2 className="editorial-heading text-3xl sm:text-4xl text-ivory leading-tight">
+                Curating the finest fashion from the commercial capital of African trade.
+              </h2>
 
-            <p className="text-xs sm:text-sm text-ivory-muted leading-relaxed">
-              Every garment and accessory in the Arubekee Collection is handpicked in the vibrant fashion hub of Aba, Abia State. Our styling team scours premier makers and cordwainers, selecting only pieces with exceptional fabric weight, clean seams, and flattering silhouettes. No fast-fashion polyester disposability — only durable elegance, vetted and ready to ship.
-            </p>
+              <p className="text-xs sm:text-sm text-ivory-muted leading-relaxed">
+                Every garment and accessory in the Arubekee Collection is handpicked in the vibrant fashion hub of Aba, Abia State. Our styling team scours premier makers and cordwainers, selecting only pieces with exceptional fabric weight, clean seams, and flattering silhouettes. No fast-fashion polyester disposability — only durable elegance, vetted and ready to ship.
+              </p>
 
-            <div className="pt-4 flex flex-wrap gap-4 items-center">
-              <Link href="/about">
-                <Button variant="gold" size="md">
-                  <span>Our Boutique &amp; Process</span>
-                </Button>
-              </Link>
+              <div className="pt-4 flex flex-wrap gap-4 items-center">
+                <Link href="/about">
+                  <Button variant="gold" size="md">
+                    <span>Our Boutique &amp; Process</span>
+                  </Button>
+                </Link>
 
-              <a
-                href={`https://wa.me/${mockStoreSettings.whatsappNumber}?text=Hello%20Arubekee!%20I%20would%20like%20to%20learn%20more%20about%20your%20Aba%20store`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button variant="outline" size="md" className="border-ivory-muted text-ivory hover:bg-ivory/10 gap-2">
-                  <MessageCircle className="w-4 h-4 text-[#25D366]" />
-                  <span>Chat With Founder on WhatsApp</span>
-                </Button>
-              </a>
+                <a
+                  href={`https://wa.me/${mockStoreSettings.whatsappNumber}?text=Hello%20Arubekee!%20I%20would%20like%20to%20learn%20more%20about%20your%20Aba%20store`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button variant="outline" size="md" className="border-ivory-muted text-ivory hover:bg-ivory/10 gap-2">
+                    <MessageCircle className="w-4 h-4 text-[#25D366]" />
+                    <span>Chat With Founder on WhatsApp</span>
+                  </Button>
+                </a>
+              </div>
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
     </div>
   );

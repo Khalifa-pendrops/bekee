@@ -114,5 +114,38 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* Editorial Luxury Scroll Reveal Animations */
+  .reveal-init {
+    opacity: 0;
+    transition-property: opacity, transform;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+
+  .reveal-slide-up {
+    transform: translate3d(0, 30px, 0);
+  }
+
+  .reveal-slide-down {
+    transform: translate3d(0, -30px, 0);
+  }
+
+  .reveal-slide-left {
+    transform: translate3d(36px, 0, 0);
+  }
+
+  .reveal-slide-right {
+    transform: translate3d(-36px, 0, 0);
+  }
+
+  .reveal-fade {
+    transform: scale(0.97);
+  }
+
+  .reveal-visible {
+    opacity: 1 !important;
+    transform: translate3d(0, 0, 0) scale(1) !important;
+  }
 }
 
