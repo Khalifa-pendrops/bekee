@@ -217,18 +217,11 @@ function LoginForm() {
           </button>
         </form>
 
-        {/* Security & Credentials Notice */}
-        <div className="pt-4 border-t border-stone-100 space-y-2">
-          <div className="p-3 bg-stone-50 rounded-xl border border-stone-200/80 text-[11px] text-stone-600 space-y-1">
-            <div className="font-semibold text-stone-900 flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Default Store Access Credentials:</span>
-            </div>
-            <div className="font-mono text-[10px] text-stone-700 space-y-0.5 pt-0.5">
-              <div>Quick PIN: <strong className="text-oxblood">202688</strong></div>
-              <div>Password: <strong className="text-oxblood">Arubekee@Aba2026</strong></div>
-            </div>
-          </div>
+        {/* Security Notice */}
+        <div className="pt-4 border-t border-stone-100 text-center">
+          <p className="text-[11px] text-stone-400">
+            Restricted access. Authorized Arubekee boutique management &amp; staff only.
+          </p>
         </div>
 
       </div>
