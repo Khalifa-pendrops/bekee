@@ -35,6 +35,14 @@ export const metadata: Metadata = {
     "handbags Aba",
   ],
   authors: [{ name: "ARUBEKEE COLLECTION" }],
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: '32x32' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/icon.svg',
+  },
   openGraph: {
     type: "website",
     locale: "en_NG",
