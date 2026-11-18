@@ -306,15 +306,20 @@ export default function EditProductPage() {
 
     const prefix = (product?.slug || 'AB').substring(0, 6).toUpperCase();
     const colorCode = finalColorName.replace(/[^A-Za-z]/g, '').substring(0, 3).toUpperCase() || 'COL';
+    const prodId = product?.id || productId;
 
     const newVariants: ProductVariant[] = newColorSelectedSizes.map((size) => {
       const sizeCode = size.replace(/\s+/g, '').toUpperCase();
       return {
         id: `var_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+        productId: prodId,
         sku: `${prefix}-${colorCode}-${sizeCode}`,
         colorName: finalColorName,
+        colorHex: COLOR_SWATCH_MAP[finalColorName.toLowerCase()] || '#6B1724',
         size,
         stockQuantity: initialQty,
+        lowStockThreshold: 2,
+        isActive: true,
         priceKobo: baseKobo,
         salePriceKobo: saleKobo,
       };
@@ -347,13 +352,18 @@ export default function EditProductPage() {
     const colorCode = colorName.replace(/[^A-Za-z]/g, '').substring(0, 3).toUpperCase() || 'COL';
     const sizeCode = trimmedSize.replace(/\s+/g, '').toUpperCase();
     const qty = Math.max(0, parseInt(inlineNewQty) || 0);
+    const prodId = product?.id || productId;
 
     const newVar: ProductVariant = {
       id: `var_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      productId: prodId,
       sku: `${prefix}-${colorCode}-${sizeCode}`,
       colorName,
+      colorHex: COLOR_SWATCH_MAP[colorName.toLowerCase()] || '#6B1724',
       size: trimmedSize,
       stockQuantity: qty,
+      lowStockThreshold: 2,
+      isActive: true,
       priceKobo: baseKobo,
       salePriceKobo: saleKobo,
     };
