@@ -20,8 +20,16 @@ import {
   Copy,
   Check,
   MessageCircle,
-  ShieldCheck
+  ShieldCheck,
+  X
 } from "lucide-react";
+import { 
+  getSavedOrders, 
+  saveOrderToHistory, 
+  removeOrderFromHistory, 
+  clearOrderHistory, 
+  TrackedOrderRecord 
+} from "@/lib/orderStorage";
 
 function TrackOrderContent() {
   const searchParams = useSearchParams();
@@ -30,15 +38,163 @@ function TrackOrderContent() {
 
   const [orderNumber, setOrderNumber] = useState(initialRef);
   const [phoneNumber, setPhoneNumber] = useState(initialPhone);
+  const [savedOrders, setSavedOrders] = useState<TrackedOrderRecord[]>([]);
+  const [isAutoFilled, setIsAutoFilled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [order, setOrder] = useState<Order | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
   const [copiedAccount, setCopiedAccount] = useState(false);
 
+  // Load saved order history or auto-discover customer's active orders from server
+  useEffect(() => {
+    let isMounted = true;
+
+    async function initializeTracker() {
+      const list = getSavedOrders();
+      setSavedOrders(list);
+
+      let refToUse = initialRef;
+      let phoneToUse = initialPhone;
+
+      // 1. Check local storage single keys if not already provided via search params
+      if (!refToUse && typeof window !== 'undefined') {
+        const storedRef = localStorage.getItem('arubekee_last_order_ref');
+        if (storedRef) refToUse = storedRef;
+      }
+      if (!phoneToUse && typeof window !== 'undefined') {
+        const storedPhone = localStorage.getItem('arubekee_last_customer_phone');
+        if (storedPhone) phoneToUse = storedPhone;
+      }
+
+      // 2. Check saved orders list
+      if (!refToUse && list.length > 0) {
+        refToUse = list[0].orderNumber;
+      }
+      if (!phoneToUse && list.length > 0 && list[0].phone) {
+        phoneToUse = list[0].phone;
+      }
+
+      // Immediately sync state with whatever we found locally so fields are populated
+      if (refToUse) setOrderNumber(refToUse);
+      if (phoneToUse) setPhoneNumber(phoneToUse);
+
+      // 3. If either ref or phone is missing, discover from server API (cookies or latest active order)
+      if (!refToUse || !phoneToUse) {
+        try {
+          const params = new URLSearchParams();
+          if (phoneToUse) params.set('phone', phoneToUse);
+          if (refToUse) params.set('ref', refToUse);
+
+          const res = await fetch(`/api/orders/track?${params.toString()}`);
+          const data = await res.json();
+          if (isMounted && data.success && data.latestOrder) {
+            if (!refToUse && data.latestOrder.orderNumber) {
+              refToUse = data.latestOrder.orderNumber;
+              setOrderNumber(refToUse);
+            }
+            if (!phoneToUse && data.latestOrder.phone) {
+              phoneToUse = data.latestOrder.phone;
+              setPhoneNumber(phoneToUse);
+            }
+            setIsAutoFilled(true);
+
+            // Register active orders (strictly omitting delivered orders)
+            if (data.latestOrder.fulfillmentStatus !== 'delivered') {
+              saveOrderToHistory(
+                data.latestOrder.orderNumber, 
+                data.latestOrder.phone || phoneToUse, 
+                undefined, 
+                data.latestOrder.fulfillmentStatus
+              );
+            }
+            if (Array.isArray(data.activeOrders)) {
+              data.activeOrders.forEach((act: any) => {
+                if (act.fulfillmentStatus !== 'delivered') {
+                  saveOrderToHistory(act.orderNumber, act.phone || phoneToUse, act.totalKobo, act.fulfillmentStatus);
+                }
+              });
+            }
+            setSavedOrders(getSavedOrders());
+          }
+        } catch (e) {
+          console.error('[TrackOrder] Auto-discovery error:', e);
+        }
+      }
+
+      if (refToUse) {
+        setIsAutoFilled(true);
+      }
+
+      // 4. If we have both fields, execute tracking immediately without requiring manual submit
+      if (refToUse && refToUse.trim() && phoneToUse && phoneToUse.trim()) {
+        fetchTrackOrder(refToUse.trim(), phoneToUse.trim());
+      }
+    }
+
+    initializeTracker();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [initialRef, initialPhone]);
+
+  const handleOrderNumberChange = (value: string) => {
+    setOrderNumber(value);
+    if (typeof window !== 'undefined' && value.trim()) {
+      localStorage.setItem('arubekee_last_order_ref', value.trim());
+    }
+  };
+
+  const handlePhoneNumberChange = (value: string) => {
+    setPhoneNumber(value);
+    if (typeof window !== 'undefined' && value.trim()) {
+      localStorage.setItem('arubekee_last_customer_phone', value.trim());
+    }
+  };
+
+  const handleSelectSavedOrder = (entry: TrackedOrderRecord) => {
+    setOrderNumber(entry.orderNumber);
+    if (entry.phone) {
+      setPhoneNumber(entry.phone);
+    }
+    setErrorMessage("");
+    fetchTrackOrder(entry.orderNumber, entry.phone || phoneNumber);
+  };
+
+  const handleRemoveOrder = (ref: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const updated = removeOrderFromHistory(ref);
+    setSavedOrders(updated);
+    if (orderNumber.toUpperCase() === ref.toUpperCase()) {
+      if (updated.length > 0) {
+        setOrderNumber(updated[0].orderNumber);
+        if (updated[0].phone) setPhoneNumber(updated[0].phone);
+        fetchTrackOrder(updated[0].orderNumber, updated[0].phone || phoneNumber);
+      } else {
+        setOrderNumber('');
+        setOrder(null);
+        setIsAutoFilled(false);
+      }
+    }
+  };
+
+  const handleClearAllSaved = () => {
+    clearOrderHistory();
+    setSavedOrders([]);
+    setOrderNumber('');
+    setPhoneNumber('');
+    setOrder(null);
+    setIsAutoFilled(false);
+  };
+
   const fetchTrackOrder = async (queryRef: string, queryPhone: string) => {
     if (!queryRef.trim()) {
       setErrorMessage("Please enter your Order Reference (e.g. ARUBEKEE-...)");
+      return;
+    }
+    if (!queryPhone.trim()) {
+      setErrorMessage("Please enter your registered phone number or email for security verification.");
       return;
     }
 
@@ -65,18 +221,34 @@ function TrackOrderContent() {
       }
 
       setOrder(data.order);
+
+      // Save currently tracked order with its live fulfillment status
+      saveOrderToHistory(
+        queryRef.trim(), 
+        queryPhone.trim(), 
+        data.order?.totalKobo, 
+        data.order?.fulfillmentStatus
+      );
+
+      // Register all other active undelivered orders for this customer
+      if (Array.isArray(data.activeOrders)) {
+        data.activeOrders.forEach((act: any) => {
+          if (act.fulfillmentStatus !== 'delivered') {
+            saveOrderToHistory(act.orderNumber, act.phone || queryPhone.trim(), act.totalKobo, act.fulfillmentStatus);
+          }
+        });
+      }
+
+      // Filtered to active undelivered orders only
+      const updatedList = getSavedOrders();
+      setSavedOrders(updatedList);
+      setIsAutoFilled(true);
     } catch (err) {
       setErrorMessage("Unable to retrieve order details right now. Please try again or chat with us on WhatsApp.");
     } finally {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (initialRef) {
-      fetchTrackOrder(initialRef, initialPhone);
-    }
-  }, [initialRef, initialPhone]);
 
   const handleTrackSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,27 +274,77 @@ function TrackOrderContent() {
           Track Your Fashion Parcel
         </h1>
         <p className="text-xs sm:text-sm text-obsidian-muted leading-relaxed">
-          Enter your Order or Invoice Reference, along with your registered phone number, to check live dispatch, payment status, and fulfillment.
+          Check live dispatch, courier waybill number, and fulfillment status for your ARUBEKEE order or invoice.
         </p>
       </div>
 
       {/* Lookup Form */}
-      <div className="bg-ivory border border-stone-line p-6 sm:p-8 shadow-card max-w-xl mx-auto">
+      <div className="bg-ivory border border-stone-line p-6 sm:p-8 shadow-card max-w-xl mx-auto relative">
+        {/* Multi-Order History Switcher */}
+        {savedOrders.length > 0 && (
+          <div className="mb-5 pb-4 border-b border-stone-line space-y-2">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-semibold text-obsidian uppercase tracking-wider text-[10px] flex items-center gap-1.5">
+                <Package className="w-3.5 h-3.5 text-oxblood" />
+                <span>Your Saved Orders ({savedOrders.length})</span>
+              </span>
+              <button
+                type="button"
+                onClick={handleClearAllSaved}
+                className="text-[10px] text-stone-400 hover:text-stone-700 underline"
+              >
+                Clear History
+              </button>
+            </div>
+
+            <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+              {savedOrders.map((item, index) => {
+                const isSelected = orderNumber.toUpperCase() === item.orderNumber.toUpperCase();
+                return (
+                  <button
+                    key={item.orderNumber}
+                    type="button"
+                    onClick={() => handleSelectSavedOrder(item)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium border flex items-center gap-1.5 transition-all shrink-0 ${
+                      isSelected
+                        ? 'bg-oxblood text-white border-oxblood shadow-xs font-semibold'
+                        : 'bg-white border-stone-300 text-stone-700 hover:border-stone-900 hover:bg-stone-50'
+                    }`}
+                  >
+                    <span>{item.orderNumber}</span>
+                    <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-stone-100 text-stone-500'}`}>
+                      {index === 0 ? 'Latest' : item.date}
+                    </span>
+                    <span
+                      onClick={(e) => handleRemoveOrder(item.orderNumber, e)}
+                      className={`ml-0.5 rounded-full p-0.5 transition-colors ${isSelected ? 'text-white/70 hover:text-white' : 'text-stone-400 hover:text-red-600'}`}
+                      title="Remove from history"
+                    >
+                      <X className="w-3 h-3" />
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         <form onSubmit={handleTrackSubmit} className="space-y-4">
           <Input
             label="Order / Invoice Reference"
             placeholder="e.g. ARUBEKEE-2611-9481 or ARUBEKEE-INV-..."
             value={orderNumber}
-            onChange={(e) => setOrderNumber(e.target.value)}
+            onChange={(e) => handleOrderNumberChange(e.target.value)}
             required
           />
 
           <Input
-            label="Registered Phone Number"
-            placeholder="e.g. 0803 123 4567"
+            label="Registered Phone Number or Email"
+            placeholder="e.g. 0803 123 4567 or customer@email.com"
             value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            hint="For security verification (optional if link has reference)"
+            onChange={(e) => handlePhoneNumberChange(e.target.value)}
+            required
+            hint="Recipient verification (matches order checkout phone/email)"
           />
 
           <Button
@@ -259,8 +481,7 @@ function TrackOrderContent() {
 
               {order.shippingAddress && (
                 <p className="text-xs text-obsidian-muted">
-                  {order.shippingAddress.streetAddress}, {order.shippingAddress.city}, {order.shippingAddress.state}
-                  {order.shippingAddress.landmark && ` (Near ${order.shippingAddress.landmark})`}
+                  Destination: {order.shippingAddress.city}, {order.shippingAddress.state}
                 </p>
               )}
             </div>
@@ -312,7 +533,7 @@ function TrackOrderContent() {
                   <div>
                     <p className="font-semibold text-obsidian">{item.productName}</p>
                     <p className="text-obsidian-muted text-[11px]">
-                      {item.colorName} • {item.size} • Qty: {item.quantity}
+                      {item.colorName} {/* • {item.size} */} • Qty: {item.quantity}
                     </p>
                   </div>
                   <span className="font-semibold text-obsidian">

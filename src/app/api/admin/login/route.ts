@@ -8,8 +8,42 @@ import {
 
 export const dynamic = 'force-dynamic';
 
+// In-memory rate limiting map for admin authentication attempts
+interface RateLimitRecord {
+  failedAttempts: number;
+  lockoutUntil: number;
+}
+const loginRateLimitMap = new Map<string, RateLimitRecord>();
+
+function getClientIp(req: NextRequest): string {
+  const forwarded = req.headers.get('x-forwarded-for');
+  if (forwarded) {
+    return forwarded.split(',')[0].trim();
+  }
+  const realIp = req.headers.get('x-real-ip');
+  if (realIp) {
+    return realIp.trim();
+  }
+  return 'unknown-ip';
+}
+
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const nowMs = Date.now();
+    const rateRecord = loginRateLimitMap.get(ip);
+
+    // Check if IP is currently locked out
+    if (rateRecord && rateRecord.lockoutUntil > nowMs) {
+      const waitMinutes = Math.ceil((rateRecord.lockoutUntil - nowMs) / 60000);
+      return NextResponse.json(
+        { 
+          error: `Too many failed login attempts. For security, please wait ${waitMinutes} minute(s) before trying again.` 
+        },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
     const { email, password, pin, authMode } = body;
 
@@ -39,15 +73,43 @@ export async function POST(req: NextRequest) {
     }
 
     if (!isAuthorized) {
+      // Increment failed attempts and introduce delay to stop high-speed brute force
+      const currentFailures = (rateRecord?.failedAttempts || 0) + 1;
+      const MAX_ATTEMPTS = 5;
+      const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes
+
+      if (currentFailures >= MAX_ATTEMPTS) {
+        loginRateLimitMap.set(ip, {
+          failedAttempts: currentFailures,
+          lockoutUntil: nowMs + LOCKOUT_DURATION_MS,
+        });
+      } else {
+        loginRateLimitMap.set(ip, {
+          failedAttempts: currentFailures,
+          lockoutUntil: 0,
+        });
+      }
+
+      // 600ms artificial delay to slow down automated enumeration
+      await new Promise((resolve) => setTimeout(resolve, 600));
+
+      const attemptsRemaining = Math.max(0, MAX_ATTEMPTS - currentFailures);
+      const attemptWarning = attemptsRemaining > 0 
+        ? ` (${attemptsRemaining} attempt(s) remaining before temporary lockout)`
+        : ' (Account temporarily locked for 15 minutes)';
+
       return NextResponse.json(
         { 
           error: authMethod === 'pin' 
-            ? 'Invalid 6-digit access PIN. Please verify and try again.' 
-            : 'Invalid email or password. Please verify and try again.' 
+            ? `Invalid 6-digit access PIN.${attemptWarning}` 
+            : `Invalid email or password.${attemptWarning}` 
         },
         { status: 401 }
       );
     }
+
+    // Authentication succeeded: clear rate limiting record for this IP
+    loginRateLimitMap.delete(ip);
 
     // Generate signed session token valid for 7 days
     const now = Math.floor(Date.now() / 1000);

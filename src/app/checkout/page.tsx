@@ -20,6 +20,7 @@ import {
 import { useCart } from '@/context/CartContext';
 import { formatKoboToNaira, normalizeNigerianPhone } from '@/lib/utils';
 import { DeliveryZone } from '@/types';
+import { saveOrderToHistory } from '@/lib/orderStorage';
 
 // Standard 36 Nigerian States + FCT
 const NIGERIAN_STATES = [
@@ -45,6 +46,14 @@ export default function CheckoutPage() {
   const [streetAddress, setStreetAddress] = useState('');
   const [landmark, setLandmark] = useState('');
   const [deliveryInstructions, setDeliveryInstructions] = useState('');
+
+  // Pre-fill saved customer details if available
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedPhone = localStorage.getItem('arubekee_last_customer_phone');
+      if (savedPhone) setPhone(savedPhone);
+    }
+  }, []);
 
   // Discount
   const [discountCodeInput, setDiscountCodeInput] = useState('');
@@ -85,17 +94,16 @@ export default function CheckoutPage() {
       return;
     }
 
-    // Match zone according to state
+    // Match zone according to state (Logistics courier determines fee; paid directly to courier on delivery)
     const cleanState = state.trim().toLowerCase();
-    
     if (cleanState === 'abia') {
       setMatchedZone({
         id: 'zone_aba_local',
         name: 'Aba Metropolis Dispatch',
-        description: 'Direct dispatch rider within Aba metropolis.',
+        description: 'Direct dispatch rider within Aba metropolis (Delivery fee paid to rider on arrival).',
         estimatedDays: 'Same-day or next-day',
         statesIncluded: ['Abia'],
-        feeKobo: 250000, // ₦2,500
+        feeKobo: 0, // Billed directly by courier upon delivery
         isActive: true,
         priorityOrder: 1,
       });
@@ -103,10 +111,10 @@ export default function CheckoutPage() {
       setMatchedZone({
         id: 'zone_south_east',
         name: 'South-East Interstate Express',
-        description: 'Enugu, Owerri, Onitsha, Awka, Abakaliki via dedicated express logistics.',
+        description: 'Enugu, Owerri, Onitsha, Awka, Abakaliki (Waybill fee paid directly to courier on collection).',
         estimatedDays: '1 - 2 business days',
         statesIncluded: ['Imo', 'Enugu', 'Anambra', 'Ebonyi'],
-        feeKobo: 400000, // ₦4,000
+        feeKobo: 0, // Billed directly by courier upon delivery
         isActive: true,
         priorityOrder: 2,
       });
@@ -114,10 +122,10 @@ export default function CheckoutPage() {
       setMatchedZone({
         id: 'zone_lagos_ph_abuja',
         name: 'Lagos, PH & Abuja Air/Express Corridor',
-        description: 'Priority courier transit to high-volume commercial capitals.',
+        description: 'Air/overland priority transit (Courier fee billed and paid on delivery).',
         estimatedDays: '2 - 3 business days',
         statesIncluded: ['Lagos', 'Rivers', 'Abuja FCT'],
-        feeKobo: 550000, // ₦5,500
+        feeKobo: 0, // Billed directly by courier upon delivery
         isActive: true,
         priorityOrder: 3,
       });
@@ -125,10 +133,10 @@ export default function CheckoutPage() {
       setMatchedZone({
         id: 'zone_nationwide',
         name: 'Nationwide Interstate Waybill',
-        description: 'Interstate courier waybill across all other Nigerian states.',
+        description: 'All other states via GIG Logistics / Peace Mass Transit (Waybill fee paid to courier on delivery).',
         estimatedDays: '3 - 5 business days',
         statesIncluded: ['All other states'],
-        feeKobo: 650000, // ₦6,500
+        feeKobo: 0, // Billed directly by courier upon delivery
         isActive: true,
         priorityOrder: 4,
       });
@@ -276,6 +284,11 @@ export default function CheckoutPage() {
         throw new Error(initData.error || 'Unable to start payment checkout.');
       }
 
+      // Persist order in customer history for seamless 1-click tracking
+      if (initData.orderNumber) {
+        saveOrderToHistory(initData.orderNumber, phone, totalKobo);
+      }
+
       // Redirect customer to Paystack authorization URL
       if (initData.authorizationUrl) {
         window.location.href = initData.authorizationUrl;
@@ -410,7 +423,13 @@ export default function CheckoutPage() {
                       required
                       placeholder="0803 123 4567"
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setPhone(val);
+                        if (typeof window !== 'undefined' && val.trim()) {
+                          localStorage.setItem('arubekee_last_customer_phone', val.trim());
+                        }
+                      }}
                       className="w-full px-3.5 py-2.5 text-sm bg-sand-50 border border-sand-300 rounded focus:outline-none focus:border-stone-900 text-stone-900"
                     />
                     <span className="text-[10px] text-stone-400 mt-1 block">
@@ -452,7 +471,7 @@ export default function CheckoutPage() {
                     )}
                   </div>
                   <div className="font-medium text-xs text-stone-900 mb-0.5">Doorstep / Waybill</div>
-                  <div className="text-[11px] text-stone-500">Standard rates per state</div>
+                  <div className="text-[11px] text-amber-900 font-medium">Billed by Courier on Arrival</div>
                 </button>
 
                 {/* Option 2: Aba Boutique Pickup */}
@@ -530,6 +549,14 @@ export default function CheckoutPage() {
               {/* Address Form (Shown for Delivery or Quote) */}
               {deliveryMode !== 'pickup' && (
                 <div className="space-y-4 pt-4 border-t border-sand-200">
+                  <div className="p-3.5 bg-amber-50/80 border border-amber-200/90 rounded-lg text-xs text-amber-950 flex items-start gap-2.5">
+                    <Truck className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="font-semibold block text-stone-900">Fair Courier Delivery Pricing:</strong>
+                      <span>To protect you from inflated shipping costs, delivery fees are determined directly by the logistics carrier (GIG Logistics, Peace Mass Transit, or interstate dispatch) based on your parcel weight and destination. You pay the exact official waybill fee directly to the courier upon parcel arrival.</span>
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1.5">
@@ -644,7 +671,7 @@ export default function CheckoutPage() {
                         {item.productName}
                       </h4>
                       <div className="text-[11px] text-stone-500">
-                        {item.colorName} • {item.size} • Qty {item.quantity}
+                        {item.colorName} {/* • {item.size} */} • Qty {item.quantity}
                       </div>
                       <div className="text-xs font-semibold text-stone-900 mt-0.5">
                         {formatKoboToNaira(item.unitPriceKobo * item.quantity)}
@@ -698,10 +725,10 @@ export default function CheckoutPage() {
                   <span className="font-medium text-stone-900">
                     {deliveryMode === 'quote' ? (
                       <span className="text-oxblood-700 font-normal">Quoted post-review</span>
-                    ) : deliveryFeeKobo === 0 ? (
-                      <span className="text-emerald-700 font-semibold">FREE</span>
+                    ) : deliveryMode === 'pickup' ? (
+                      <span className="text-emerald-700 font-semibold">FREE (Showroom Collection)</span>
                     ) : (
-                      formatKoboToNaira(deliveryFeeKobo)
+                      <span className="text-amber-800 font-medium">Billed by Courier on Arrival</span>
                     )}
                   </span>
                 </div>

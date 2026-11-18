@@ -234,7 +234,7 @@ Aba Boutique Showroom • Nationwide Express Dispatch • +234 916 416 1091`;
         ? order.items
             .map(
               (i) =>
-                `- ${i.productName} | ${i.colorName || 'Default'} | Size: ${i.size} | Qty: ${i.quantity} (${formatKoboToNaira(i.totalKobo)})`
+                `- ${i.productName} | ${i.colorName || 'Default'} | Qty: ${i.quantity} (${formatKoboToNaira(i.totalKobo)})`
             )
             .join('\n')
         : 'No garments recorded in order snapshot';
@@ -321,7 +321,7 @@ Total: ${formatKoboToNaira(order.totalKobo)}`;
                     <h3 className="text-sm font-semibold text-stone-900">{item.productName}</h3>
                     <div className="text-xs text-stone-500 font-mono mt-0.5">{item.sku}</div>
                     <div className="text-xs text-stone-700 mt-1">
-                      Colour: <strong className="font-semibold">{item.colorName}</strong> • Size: <strong className="font-semibold">{item.size}</strong>
+                      Colour: <strong className="font-semibold">{item.colorName}</strong>{/* • Size: <strong className="font-semibold">{item.size}</strong> */}
                     </div>
                   </div>
 

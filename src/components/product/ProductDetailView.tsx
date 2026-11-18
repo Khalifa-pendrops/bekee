@@ -102,7 +102,9 @@ export function ProductDetailView({ product, relatedProducts, settings }: Produc
 
   // Bags and items without apparel sizing do not have size selectors
   const isBag = product.categorySlug === 'bags';
-  const hasRealSizes = !isBag && uniqueSizes.length > 0 && !(uniqueSizes.length === 1 && (uniqueSizes[0] === 'One Size' || uniqueSizes[0] === 'Free Size' || uniqueSizes[0] === 'OS'));
+  // Owner preference: Sizing removed across board (simplified standard sizing)
+  // const hasRealSizes = !isBag && uniqueSizes.length > 0 && !(uniqueSizes.length === 1 && (uniqueSizes[0] === 'One Size' || uniqueSizes[0] === 'Free Size' || uniqueSizes[0] === 'OS'));
+  const hasRealSizes = false;
 
   // Update selected variant when color or size changes
   const handleColorChange = (color: string) => {
@@ -368,7 +370,7 @@ export function ProductDetailView({ product, relatedProducts, settings }: Produc
             </div>
           </div>
 
-          {/* Size Selection - Only for products with wearable sizes (omitted for bags) */}
+          {/* Sizing removed across board per owner preference
           {hasRealSizes && (
             <div className="space-y-3">
               <div className="flex justify-between items-center text-xs">
@@ -414,6 +416,7 @@ export function ProductDetailView({ product, relatedProducts, settings }: Produc
               </div>
             </div>
           )}
+          */}
 
           {/* Live Stock Alert */}
           <div className="space-y-2">

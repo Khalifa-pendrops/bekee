@@ -94,10 +94,13 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // 3. Server-Side Delivery Calculation
+    // 3. Server-Side Delivery Calculation (Courier-determined logistics model: fee paid to carrier on arrival)
     let calculatedDeliveryFeeKobo = 0;
-    let deliveryZoneName = 'Aba Boutique Pickup';
+    let deliveryZoneName = deliveryType === 'aba_pickup' 
+      ? 'Aba Boutique Showroom Pickup' 
+      : 'Courier Transit (Fee Paid to Courier on Arrival)';
 
+    /* Former zone-based delivery fee calculation commented out per owner instructions
     if (deliveryType === 'aba_pickup') {
       calculatedDeliveryFeeKobo = 0;
       deliveryZoneName = 'Aba Boutique Showroom Pickup';
@@ -115,6 +118,7 @@ export async function POST(req: NextRequest) {
       calculatedDeliveryFeeKobo = matchedZone.feeKobo;
       deliveryZoneName = matchedZone.name;
     }
+    */
 
     // 4. Server-Side Discount Validation
     let calculatedDiscountKobo = 0;

@@ -1,7 +1,12 @@
 // Web Crypto API HMAC-SHA256 Token Signing & Verification (Edge & Node compatible)
 
 const SESSION_COOKIE_NAME = 'arubekee_admin_session';
-const SECRET_KEY = process.env.ADMIN_SESSION_SECRET || 'arubekee_super_secret_session_key_aba_2026_secured';
+const DEFAULT_FALLBACK_SECRET = 'arubekee_super_secret_session_key_aba_2026_secured';
+const SECRET_KEY = process.env.ADMIN_SESSION_SECRET || DEFAULT_FALLBACK_SECRET;
+
+if (process.env.NODE_ENV === 'production' && SECRET_KEY === DEFAULT_FALLBACK_SECRET) {
+  console.warn('[SECURITY WARNING] ADMIN_SESSION_SECRET is using the default fallback key in production. Please set a unique, high-entropy ADMIN_SESSION_SECRET in your production environment settings.');
+}
 
 export function getAdminCredentials() {
   return {

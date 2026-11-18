@@ -20,7 +20,11 @@ export async function GET(req: NextRequest) {
       sort,
     });
 
-    return NextResponse.json(products);
+    return NextResponse.json(products, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+      },
+    });
   } catch (error: any) {
     console.error('[API /api/products] Error:', error);
     return NextResponse.json({ error: 'Failed to fetch products', message: error.message }, { status: 500 });

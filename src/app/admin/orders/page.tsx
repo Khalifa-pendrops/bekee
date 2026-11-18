@@ -161,6 +161,17 @@ export default async function AdminOrdersPage({
           </Link>
 
           <Link
+            href={makeFilterUrl({ fulfillment: undefined, payment: 'pending' })}
+            className={`px-3 py-1.5 rounded-lg font-medium transition-colors ${
+              payment === 'pending'
+                ? 'bg-amber-600 text-white shadow-xs'
+                : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+            }`}
+          >
+            Pending / Abandoned
+          </Link>
+
+          <Link
             href={makeFilterUrl({ fulfillment: undefined, payment: 'inventory_conflict_quarantined' })}
             className={`px-3 py-1.5 rounded-lg font-medium transition-colors ${
               payment === 'inventory_conflict_quarantined'

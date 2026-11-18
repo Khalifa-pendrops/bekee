@@ -96,7 +96,9 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
 
   // Bags and items without multiple wearable sizing
   const isBag = product.categorySlug === 'bags';
-  const hasRealSizes = !isBag && uniqueSizes.length > 0 && !(uniqueSizes.length === 1 && (uniqueSizes[0] === 'One Size' || uniqueSizes[0] === 'Free Size' || uniqueSizes[0] === 'OS'));
+  // Owner preference: Sizing removed across board (simplified standard sizing)
+  // const hasRealSizes = !isBag && uniqueSizes.length > 0 && !(uniqueSizes.length === 1 && (uniqueSizes[0] === 'One Size' || uniqueSizes[0] === 'Free Size' || uniqueSizes[0] === 'OS'));
+  const hasRealSizes = false;
   const hasMultipleColors = uniqueColors.length > 1;
 
   // Desktop Hover Action Label
@@ -457,7 +459,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
             </div>
           )}
 
-          {/* Sizes with Live Stock Counters - Only for products with real wearable sizing */}
+          {/* Sizing removed across board per owner preference
           {hasRealSizes && (
             <div>
               <div className="flex justify-between items-center mb-2">
@@ -500,6 +502,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
               </div>
             </div>
           )}
+          */}
 
           {/* Price & CTA */}
           <div className="pt-3 border-t border-stone-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { ScrollReveal, ScrollRevealStagger } from "@/components/ui/ScrollReveal";
 import { ArrowRight, Sparkles, MapPin, MessageCircle, ShieldCheck, Truck } from "lucide-react";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export default async function HomePage() {
   const allProducts = await db.getProducts();

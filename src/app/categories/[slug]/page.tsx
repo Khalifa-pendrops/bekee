@@ -7,8 +7,12 @@ import { Sparkles, ChevronRight, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const categories = await db.getCategories();
+  return categories.map((c) => ({ slug: c.slug }));
+}
 
 interface CategoryPageProps {
   params: {

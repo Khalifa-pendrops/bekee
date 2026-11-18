@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import React, { Suspense } from "react";
 import { StorefrontShell } from "@/components/layout/StorefrontShell";
+import { NavigationProgress } from "@/components/layout/NavigationProgress";
 import { CartProvider } from "@/context/CartContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 
@@ -93,6 +95,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${serifFont.variable} ${sansFont.variable}`}>
       <body className="bg-ivory text-obsidian flex flex-col min-h-screen w-full max-w-full min-w-0 relative">
+        <Suspense fallback={null}>
+          <NavigationProgress />
+        </Suspense>
         <CartProvider>
           <WishlistProvider>
             <StorefrontShell>{children}</StorefrontShell>

@@ -36,7 +36,8 @@ function CallbackContent() {
         if (data.status === 'PAID' || data.status === 'ALREADY_PAID') {
           // Success: Clear guest cart and redirect to success
           clearCart();
-          router.replace(`/checkout/success?orderNumber=${encodeURIComponent(data.orderNumber)}`);
+          const phoneParam = data.customerPhone ? `&phone=${encodeURIComponent(data.customerPhone)}` : '';
+          router.replace(`/checkout/success?orderNumber=${encodeURIComponent(data.orderNumber)}${phoneParam}`);
         } else if (data.status === 'QUARANTINED_INVENTORY_CONFLICT') {
           clearCart();
           router.replace(`/checkout/pending?reason=inventory_conflict&orderNumber=${encodeURIComponent(data.orderNumber)}`);

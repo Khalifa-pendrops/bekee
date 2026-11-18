@@ -144,46 +144,47 @@ export const mockDeliveryZones: DeliveryZone[] = [
   {
     id: "zone_aba_local",
     name: "Aba Metropolis Doorstep Express",
-    description: "Direct dispatch rider anywhere within Aba city limits.",
+    description: "Direct dispatch rider anywhere within Aba city limits. Delivery fee paid directly to rider on arrival.",
     estimatedDays: "Same day / 24 hours",
     statesIncluded: ["Abia"],
-    feeKobo: 250000, // ₦2,500
-    freeShippingAboveKobo: 5000000, // Free above ₦50,000
+    feeKobo: 0, // Billed directly by courier on delivery
+    freeShippingAboveKobo: 0,
     isActive: true,
     priorityOrder: 2,
   },
   {
     id: "zone_south_east",
     name: "South-East Regional Transit",
-    description: "Enugu, Owerri, Umuahia, Onitsha, Awka, Abakaliki via secure transport park courier.",
+    description: "Enugu, Owerri, Umuahia, Onitsha, Awka, Abakaliki via secure courier. Waybill fee paid to courier on arrival.",
     estimatedDays: "1 - 2 business days",
     statesIncluded: ["Abia", "Imo", "Enugu", "Anambra", "Ebonyi"],
-    feeKobo: 400000, // ₦4,000
-    freeShippingAboveKobo: 7500000, // Free above ₦75,000
+    feeKobo: 0, // Billed directly by courier on delivery
+    freeShippingAboveKobo: 0,
     isActive: true,
     priorityOrder: 3,
   },
   {
     id: "zone_lagos_ph_abuja",
     name: "Lagos, Port Harcourt & Abuja Corridor",
-    description: "Air cargo and express overland door-to-door courier dispatch.",
+    description: "Air cargo and express overland door-to-door courier dispatch. Courier fee paid on delivery.",
     estimatedDays: "2 - 3 business days",
     statesIncluded: ["Lagos", "Rivers", "Federal Capital Territory"],
-    feeKobo: 550000, // ₦5,500
-    freeShippingAboveKobo: 10000000, // Free above ₦100,000
+    feeKobo: 0, // Billed directly by courier on delivery
+    freeShippingAboveKobo: 0,
     isActive: true,
     priorityOrder: 4,
   },
   {
     id: "zone_nationwide",
     name: "Nationwide Standard Delivery",
-    description: "All other Nigerian states and territories via GIG Logistics / Peace Mass Transit Cargo.",
+    description: "All other Nigerian states via GIG Logistics / Peace Mass Transit. Waybill fee paid directly to courier on collection.",
     estimatedDays: "3 - 5 business days",
     statesIncluded: [
       "Delta", "Edo", "Akwa Ibom", "Cross River", "Ogun", "Oyo", "Osun", 
       "Ondo", "Ekiti", "Kwara", "Kogi", "Benue", "Plateau", "Kaduna", "Kano"
     ],
-    feeKobo: 650000, // ₦6,500
+    feeKobo: 0, // Billed directly by courier on delivery
+    freeShippingAboveKobo: 0,
     isActive: true,
     priorityOrder: 5,
   },

@@ -177,6 +177,16 @@ export class PaystackService {
       .update(rawBody)
       .digest('hex');
 
-    return hash === signature;
+    // Timing-safe comparison to prevent side-channel timing attacks
+    try {
+      const hashBuffer = Buffer.from(hash, 'utf8');
+      const sigBuffer = Buffer.from(signature, 'utf8');
+      if (hashBuffer.length !== sigBuffer.length) {
+        return false;
+      }
+      return crypto.timingSafeEqual(hashBuffer, sigBuffer);
+    } catch {
+      return false;
+    }
   }
 }

@@ -13,10 +13,22 @@ import {
   Calendar,
   Truck
 } from 'lucide-react';
+import { saveOrderToHistory } from '@/lib/orderStorage';
 
 function SuccessContent() {
   const searchParams = useSearchParams();
   const orderNumber = searchParams.get('orderNumber') || 'ARUBEKEE-ORDER';
+  const paramPhone = searchParams.get('phone') || '';
+
+  React.useEffect(() => {
+    if (orderNumber && !orderNumber.includes('ORDER')) {
+      const existingPhone = paramPhone || (typeof window !== 'undefined' ? localStorage.getItem('arubekee_last_customer_phone') || '' : '');
+      saveOrderToHistory(orderNumber, existingPhone);
+      if (paramPhone && typeof window !== 'undefined') {
+        localStorage.setItem('arubekee_last_customer_phone', paramPhone);
+      }
+    }
+  }, [orderNumber, paramPhone]);
 
   const storePhone = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '2349164161091').replace(/[^0-9]/g, '');
   const whatsappMessage = encodeURIComponent(

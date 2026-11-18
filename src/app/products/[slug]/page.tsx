@@ -1,11 +1,21 @@
-import React from "react";
+import React, { cache } from "react";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { ProductDetailView } from "@/components/product/ProductDetailView";
 import type { Metadata } from "next";
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// Incremental Static Regeneration: pre-rendered at build time, revalidated in background
+export const revalidate = 60;
+
+// Request deduplication cache: metadata and page component share 1 single call
+const getCachedProduct = cache(async (slug: string) => {
+  return db.getProductBySlug(slug);
+});
+
+export async function generateStaticParams() {
+  const products = await db.getProducts();
+  return products.map((p) => ({ slug: p.slug }));
+}
 
 interface ProductPageProps {
   params: {
@@ -14,7 +24,7 @@ interface ProductPageProps {
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const product = await db.getProductBySlug(params.slug);
+  const product = await getCachedProduct(params.slug);
   if (!product) return { title: "Product Not Found" };
 
   const primaryImage = product.images.find((img) => img.isPrimary) || product.images[0];
@@ -58,7 +68,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const product = await db.getProductBySlug(params.slug);
+  const product = await getCachedProduct(params.slug);
   if (!product) {
     notFound();
   }

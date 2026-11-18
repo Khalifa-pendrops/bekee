@@ -77,8 +77,8 @@ export function CartDrawer() {
 
                     <div className="flex items-center gap-2 mt-1 text-xs text-obsidian-muted">
                       <span>{item.colorName}</span>
-                      <span>•</span>
-                      <span className="font-medium text-obsidian">{item.size}</span>
+                      {/* <span>•</span> */}
+                      {/* <span className="font-medium text-obsidian">{item.size}</span> */}
                     </div>
 
                     <div className="mt-1 font-sans font-semibold text-sm text-oxblood">
@@ -129,8 +129,8 @@ export function CartDrawer() {
               </span>
             </div>
 
-            <p className="text-[11px] text-obsidian-subtle">
-              Delivery fees calculated at checkout based on location (Aba pickup or nationwide courier).
+            <p className="text-[11px] text-obsidian-muted">
+              Garment subtotal only. Logistics waybill fee is determined directly by the carrier and paid upon delivery (Free Aba Showroom Pickup available).
             </p>
 
             <div className="space-y-2 pt-1">
