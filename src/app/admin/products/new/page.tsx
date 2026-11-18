@@ -932,15 +932,31 @@ export default function NewProductGuidedPage() {
                     <div className="text-[11px] font-mono text-stone-400 truncate max-w-[160px] sm:max-w-none">{v.sku}</div>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <span className="text-stone-500 text-[11px]">In Stock:</span>
-                    <input
-                      type="number"
-                      min="0"
-                      value={v.stockQuantity}
-                      onChange={(e) => handleUpdateStock(v.sku, parseInt(e.target.value) || 0)}
-                      className="w-16 px-2 py-1 text-center font-bold text-xs bg-white border border-stone-300 rounded focus:outline-none focus:border-stone-900"
-                    />
+                  <div className="flex items-center gap-2">
+                    <span className="text-stone-600 text-[11px] font-semibold">In Stock:</span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => handleUpdateStock(v.sku, Math.max(0, (v.stockQuantity || 0) - 1))}
+                        className="w-7 h-7 flex items-center justify-center bg-stone-100 hover:bg-stone-200 text-stone-800 rounded font-bold text-xs"
+                      >
+                        -
+                      </button>
+                      <input
+                        type="number"
+                        min="0"
+                        value={v.stockQuantity}
+                        onChange={(e) => handleUpdateStock(v.sku, parseInt(e.target.value) || 0)}
+                        className="w-16 px-2 py-1 text-center font-bold text-xs bg-white text-stone-950 border border-stone-300 rounded focus:outline-none focus:border-stone-900 focus:ring-1 focus:ring-stone-900 shadow-inner"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleUpdateStock(v.sku, (v.stockQuantity || 0) + 1)}
+                        className="w-7 h-7 flex items-center justify-center bg-stone-100 hover:bg-stone-200 text-stone-800 rounded font-bold text-xs"
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}

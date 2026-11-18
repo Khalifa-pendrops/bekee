@@ -1,5 +1,56 @@
 [
   {
+    "name": "TEST PRODUCT",
+    "slug": "test-product",
+    "tagline": "Ignore this",
+    "description": "Don't mind.",
+    "categorySlug": "accessories",
+    "subCategorySlug": "jewellery",
+    "collectionSlugs": [
+      "new-arrivals"
+    ],
+    "fabricAndCare": [
+      "Premium breathable crepe",
+      "Hand wash cold or dry clean",
+      "Do not bleach"
+    ],
+    "images": [
+      {
+        "id": "img_1794992964777_0",
+        "url": "/uploads/glass-side-bar-1794992963103-841.jpeg",
+        "altText": "Product photo",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "id": "var_1794994178152_1je4",
+        "sku": "ARU-ACC-TP-BUR-ONESIZE",
+        "colorName": "Burnt Terracotta",
+        "size": "One Size",
+        "priceKobo": 450000,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "productId": "",
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "isPublished": true,
+    "isArchived": false,
+    "isFeatured": true,
+    "tags": [
+      "accessories",
+      "jewellery",
+      "new-arrival",
+      "nigerian-fashion"
+    ],
+    "id": "prod_1794994433623_sfnxw",
+    "createdAt": "2026-11-18T09:33:53.623Z",
+    "updatedAt": "2026-11-18T10:10:23.659Z"
+  },
+  {
     "id": "prod_chioma_pencil",
     "name": "Chioma Two-Tone Executive Pencil Dress",
     "slug": "chioma-two-tone-executive-pencil-dress",

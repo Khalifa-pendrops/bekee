@@ -145,7 +145,8 @@
 
   .reveal-visible {
     opacity: 1 !important;
-    transform: translate3d(0, 0, 0) scale(1) !important;
+    transform: none !important;
+    will-change: auto !important;
   }
 }
 

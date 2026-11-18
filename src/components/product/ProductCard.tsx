@@ -502,10 +502,10 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           )}
 
           {/* Price & CTA */}
-          <div className="pt-3 border-t border-stone-200 flex items-center justify-between">
+          <div className="pt-3 border-t border-stone-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div className="text-[10px] text-stone-400 uppercase font-semibold">Total Price:</div>
-              <div className="font-serif text-lg font-bold text-oxblood">
+              <div className="font-serif text-lg sm:text-xl font-bold text-oxblood">
                 {selectedVariant ? formatKoboToNaira(selectedVariant.salePriceKobo || selectedVariant.priceKobo) : formatKoboToNaira(startingPriceKobo)}
               </div>
             </div>
@@ -514,9 +514,9 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
               type="button"
               disabled={!selectedVariant || selectedVariant.stockQuantity <= 0}
               onClick={handleConfirmModalAdd}
-              className="px-6 py-2.5 bg-stone-900 hover:bg-oxblood text-white text-xs font-bold uppercase tracking-wider rounded-lg transition-colors disabled:opacity-50 flex items-center gap-1.5 shadow-sm"
+              className="w-full sm:w-auto px-6 py-3 sm:py-2.5 bg-stone-900 hover:bg-oxblood text-white text-xs font-bold uppercase tracking-wider rounded-xl sm:rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shadow-sm whitespace-nowrap"
             >
-              <ShoppingBag className="w-3.5 h-3.5" />
+              <ShoppingBag className="w-3.5 h-3.5 shrink-0" />
               <span>Add to Shopping Bag</span>
             </button>
           </div>
