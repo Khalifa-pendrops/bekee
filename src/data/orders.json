@@ -1,146 +1,217 @@
 [
   {
-    "id": "ord_1794911200000_amak",
-    "orderNumber": "ARUBEKEE-2611-8921",
+    "id": "3f5e2116-50ec-4e87-afd0-4075e156eef7",
+    "orderNumber": "ARUBEKEE-2611-9718",
     "orderSource": "storefront",
-    "customerName": "Amaka Obi",
-    "customerEmail": "amaka.obi@gmail.com",
-    "customerPhone": "+2348035552391",
+    "customerName": "neche",
+    "customerEmail": "dikee5200@gmail.com",
+    "customerPhone": "+2349134008010",
     "deliveryType": "dispatch_delivery",
     "shippingAddress": {
-      "fullName": "Amaka Obi",
-      "email": "amaka.obi@gmail.com",
-      "phone": "+2348035552391",
-      "state": "Lagos",
-      "city": "Lekki Phase 1",
-      "streetAddress": "Plot 12 Admiralty Way, Lekki",
-      "landmark": "Near Ebeano Supermarket",
-      "deliveryInstructions": "Call security upon arrival"
+      "city": "Standard Delivery Route",
+      "email": "dikee5200@gmail.com",
+      "phone": "+2349134008010",
+      "state": "Courier Transit (Fee Paid to Courier on Arrival)",
+      "fullName": "neche",
+      "streetAddress": "Online Order Delivery"
     },
     "items": [
       {
-        "id": "item_1794911200000_1",
-        "productId": "prod_chioma_pencil",
-        "variantId": "var_chioma_12",
-        "sku": "ARU-CLO-DRS-OXB-12",
+        "id": "b176d3f0-8e02-4b31-b858-75003e8f48f1",
+        "productId": "1e32a6ae-655f-4b43-a929-640be937613c",
+        "variantId": "d1ca5605-37ea-4a44-a32b-eab416718d4e",
+        "sku": "ARU-CLO-DRS-OXB-10",
         "productName": "Chioma Two-Tone Executive Pencil Dress",
-        "colorName": "Imperial Oxblood",
-        "size": "UK 12",
+        "colorName": "Oxblood & Blush",
+        "size": "UK 10",
         "unitPriceKobo": 4500000,
         "quantity": 1,
         "totalKobo": 4500000,
-        "imageUrl": "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=900&q=80"
-      },
-      {
-        "id": "item_1794911200000_2",
-        "productId": "prod_zikora_boubou",
-        "variantId": "var_zikora_gld",
-        "sku": "ARU-CLO-ZIK-GLD-FS",
-        "productName": "Zikora Royal Neckline Embroidered Boubou",
-        "colorName": "Royal Gold",
-        "size": "Free Size",
-        "unitPriceKobo": 5800000,
-        "quantity": 1,
-        "totalKobo": 5800000,
-        "imageUrl": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=900&q=80"
+        "imageUrl": "/asset/80772648-ba30-4794-a044-2de173b5fc1f.jpg"
       }
     ],
-    "subtotalKobo": 10300000,
+    "subtotalKobo": 4500000,
     "deliveryFeeKobo": 0,
     "discountKobo": 0,
-    "totalKobo": 10300000,
+    "totalKobo": 4500000,
     "paymentStatus": "paid",
     "paymentMethod": "paystack",
-    "paymentReference": "ARUBEKEE_PAY_ARUBEKEE-2611-8921_1794911200000",
+    "paymentReference": "ARUBEKEE_PAY_ARUBEKEE-2611-9718_1795079375694",
+    "paidAt": "2026-11-19T09:10:49.344+00:00",
     "fulfillmentStatus": "unfulfilled",
-    "internalNotes": "Express Air Corridor to Lagos. Waybill fee to be settled with courier on collection.",
-    "timeline": [
-      {
-        "id": "tl_1794911200000_init",
-        "orderId": "ord_1794911200000_amak",
-        "title": "Checkout Initiated",
-        "description": "Order initiated for ₦103,000. Customer selected Doorstep Waybill to Lagos.",
-        "actor": "Customer",
-        "createdAt": "2026-11-18T14:20:00.000Z"
-      },
-      {
-        "id": "tl_1794911260000_pay",
-        "orderId": "ord_1794911200000_amak",
-        "title": "Payment Confirmed",
-        "description": "Payment of ₦103,000 confirmed via Paystack. Awaiting garment packing in Aba workshop.",
-        "actor": "Paystack Gateway",
-        "createdAt": "2026-11-18T14:22:30.000Z"
-      }
-    ],
-    "createdAt": "2026-11-18T14:20:00.000Z",
-    "updatedAt": "2026-11-18T14:22:30.000Z",
-    "paidAt": "2026-11-18T14:22:30.000Z"
+    "internalNotes": "Delivery Zone: Courier Transit (Fee Paid to Courier on Arrival). [Auto-recovered & reconciled via Paystack gateway 6778776829]",
+    "timeline": [],
+    "createdAt": "2026-11-19T09:09:36.026297+00:00",
+    "updatedAt": "2026-11-19T09:10:49.346+00:00"
   },
   {
-    "id": "ord_1794912000000_ngoz",
-    "orderNumber": "ARUBEKEE-2611-3140",
+    "id": "9e6133bd-3130-48ad-8d95-b5266c525f6a",
+    "orderNumber": "ARUBEKEE-2611-9453",
     "orderSource": "storefront",
-    "customerName": "Ngozi Eze",
-    "customerEmail": "ngozi.eze@outlook.com",
-    "customerPhone": "+2348028884920",
-    "deliveryType": "aba_pickup",
+    "customerName": "Arubekee ",
+    "customerEmail": "Arubekeejoyce@gmail.com",
+    "customerPhone": "+2349134008010",
+    "deliveryType": "dispatch_delivery",
     "shippingAddress": {
-      "fullName": "Ngozi Eze",
-      "email": "ngozi.eze@outlook.com",
-      "phone": "+2348028884920",
-      "state": "Abia",
       "city": "Aba",
-      "streetAddress": "Aba Boutique Showroom Pickup",
-      "deliveryInstructions": "Picking up on Saturday morning"
+      "email": "Arubekeejoyce@gmail.com",
+      "phone": "+2349134008010",
+      "state": "Abia",
+      "fullName": "Arubekee ",
+      "landmark": "Slaughter ",
+      "streetAddress": "Number 2 Ibere off Ngwa road ",
+      "deliveryInstructions": "Give anyone around "
     },
     "items": [
       {
-        "id": "item_1794912000000_1",
-        "productId": "2786171e-b5cd-4a3a-b03f-e259e5ee675a",
-        "variantId": "67fc3e44-24c9-43ac-8fa3-cdd9427a175f",
-        "sku": "ARU-SHO-ADA-TAN-40",
-        "productName": "The Adanna Sculpted Block Mule",
-        "colorName": "Warm Tan Leather",
+        "id": "c7337826-ce95-418a-8f9d-b7e72b1fe1c4",
+        "productId": "6aa7e310-dcff-4327-bd1b-84f648e0b9f9",
+        "variantId": "4a79201e-44d7-494a-924b-d03b89a05d5a",
+        "sku": "ARU-SHO-CHIO-GLD-40",
+        "productName": "The Chioma Strappy Metallic Stiletto Sandal",
+        "colorName": "Champagne Gold",
         "size": "EU 40",
-        "unitPriceKobo": 3600000,
+        "unitPriceKobo": 4200000,
         "quantity": 1,
-        "totalKobo": 3600000,
-        "imageUrl": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=900&q=80"
+        "totalKobo": 4200000,
+        "imageUrl": "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=900&q=80"
       }
     ],
-    "subtotalKobo": 3600000,
-    "deliveryFeeKobo": 0,
+    "subtotalKobo": 4200000,
+    "deliveryFeeKobo": 250000,
     "discountKobo": 0,
-    "totalKobo": 3600000,
+    "totalKobo": 4450000,
     "paymentStatus": "paid",
     "paymentMethod": "paystack",
-    "paymentReference": "ARUBEKEE_PAY_ARUBEKEE-2611-3140_1794912000000",
-    "fulfillmentStatus": "ready_for_pickup",
-    "internalNotes": "Showroom Pickup: Ehi Road Fashion District, Aba.",
-    "timeline": [
-      {
-        "id": "tl_1794912000000_init",
-        "orderId": "ord_1794912000000_ngoz",
-        "title": "Payment Confirmed",
-        "description": "Payment of ₦36,000 confirmed via Paystack. Customer selected Aba boutique showroom collection.",
-        "actor": "Paystack Gateway",
-        "createdAt": "2026-11-18T16:00:00.000Z"
-      },
-      {
-        "id": "tl_1794912600000_ready",
-        "orderId": "ord_1794912000000_ngoz",
-        "title": "Ready for Boutique Pickup",
-        "description": "Item inspected, tagged, and placed in customer collection shelf at Aba showroom.",
-        "actor": "Store Manager",
-        "createdAt": "2026-11-18T16:30:00.000Z"
-      }
-    ],
-    "createdAt": "2026-11-18T16:00:00.000Z",
-    "updatedAt": "2026-11-18T16:30:00.000Z",
-    "paidAt": "2026-11-18T16:00:00.000Z"
+    "paymentReference": "ARUBEKEE_PAY_ARUBEKEE-2611-9453_1795002646824",
+    "paidAt": "2026-11-18T11:52:19.072+00:00",
+    "fulfillmentStatus": "unfulfilled",
+    "internalNotes": "Delivery Zone: Aba Metropolis Doorstep Express. Reservation expires: 2026-11-18T12:05:47.249Z",
+    "timeline": [],
+    "createdAt": "2026-11-18T11:50:47.5133+00:00",
+    "updatedAt": "2026-11-18T11:52:19.073+00:00"
   },
   {
-    "id": "ord_1794843379522_iito",
+    "id": "18381461-ba31-4147-87ce-0138cce63099",
+    "orderNumber": "ARUBEKEE-2611-8858",
+    "orderSource": "storefront",
+    "customerName": "Joyce ",
+    "customerEmail": "Arubekeejoyce@gmail.com",
+    "customerPhone": "+2349134008010",
+    "deliveryType": "dispatch_delivery",
+    "shippingAddress": {
+      "city": "Aba",
+      "email": "Arubekeejoyce@gmail.com",
+      "phone": "+2349134008010",
+      "state": "Abia",
+      "fullName": "Joyce ",
+      "landmark": "Slaughter",
+      "streetAddress": "Number 2 Ibere off Ngwa road ",
+      "deliveryInstructions": "Leave it with anyone around "
+    },
+    "items": [
+      {
+        "id": "9d4650a8-7723-4199-9576-94dbe64038cc",
+        "productId": "e37b70b9-4fbb-49e9-88d7-0ebabdc7d709",
+        "variantId": "9237634e-5216-42f0-8229-0680b2622b9b",
+        "sku": "ARU-CLO-SET-PLM-10",
+        "productName": "Somto Palm Oasis Asymmetric Tunic & Palazzo Set",
+        "colorName": "Palm Oasis White",
+        "size": "UK 10",
+        "unitPriceKobo": 5200000,
+        "quantity": 1,
+        "totalKobo": 5200000,
+        "imageUrl": "/asset/3bc9dbd8-9d61-43f9-b9be-a6e74d8ddfdc.jpg"
+      },
+      {
+        "id": "6b687037-0e7e-448c-bf4d-4be396fdf427",
+        "productId": "47445c51-16b5-4b45-8d42-c7eb96df3e8a",
+        "variantId": "f382c653-8328-4ea9-a8eb-f67c1a9e4b99",
+        "sku": "ARU-CLO-SET-WHT-12",
+        "productName": "Amara Botanical Lantern-Sleeve Palazzo Set",
+        "colorName": "Crisp White",
+        "size": "UK 12",
+        "unitPriceKobo": 5400000,
+        "quantity": 1,
+        "totalKobo": 5400000,
+        "imageUrl": "/asset/fa563944-f7ce-4c4e-8096-9c7f29ebfbe3.jpg"
+      }
+    ],
+    "subtotalKobo": 10600000,
+    "deliveryFeeKobo": 250000,
+    "discountKobo": 0,
+    "totalKobo": 10850000,
+    "paymentStatus": "paid",
+    "paymentMethod": "paystack",
+    "paymentReference": "ARUBEKEE_PAY_ARUBEKEE-2611-8858_1795001648292",
+    "paidAt": "2026-11-18T11:36:42.595+00:00",
+    "fulfillmentStatus": "unfulfilled",
+    "internalNotes": "Delivery Zone: Aba Metropolis Doorstep Express. Reservation expires: 2026-11-18T11:49:08.738Z",
+    "timeline": [],
+    "createdAt": "2026-11-18T11:34:09.049421+00:00",
+    "updatedAt": "2026-11-18T11:36:42.595+00:00"
+  },
+  {
+    "id": "25b5fc02-f4a1-41ad-a312-11ca3f7f3ba0",
+    "orderNumber": "ARUBEKEE-2611-5135",
+    "orderSource": "storefront",
+    "customerName": "Ezinne ",
+    "customerEmail": "Chinaecheremarubekee@gmail.com",
+    "customerPhone": "+2349162178102",
+    "deliveryType": "dispatch_delivery",
+    "shippingAddress": {
+      "city": "Aba ",
+      "email": "Chinaecheremarubekee@gmail.com",
+      "phone": "+2349162178102",
+      "state": "Abia",
+      "fullName": "Ezinne ",
+      "landmark": "Ibere junction ",
+      "streetAddress": "Number 2 Ibere ",
+      "deliveryInstructions": ""
+    },
+    "items": [
+      {
+        "id": "b20c6a16-1954-406c-887b-2be0af9732c8",
+        "productId": "e37b70b9-4fbb-49e9-88d7-0ebabdc7d709",
+        "variantId": "9237634e-5216-42f0-8229-0680b2622b9b",
+        "sku": "ARU-CLO-SET-PLM-10",
+        "productName": "Somto Palm Oasis Asymmetric Tunic & Palazzo Set",
+        "colorName": "Palm Oasis White",
+        "size": "UK 10",
+        "unitPriceKobo": 5200000,
+        "quantity": 1,
+        "totalKobo": 5200000,
+        "imageUrl": "/asset/3bc9dbd8-9d61-43f9-b9be-a6e74d8ddfdc.jpg"
+      },
+      {
+        "id": "a079359b-ad56-44d4-bf6d-d081f9cd6f75",
+        "productId": "47445c51-16b5-4b45-8d42-c7eb96df3e8a",
+        "variantId": "f382c653-8328-4ea9-a8eb-f67c1a9e4b99",
+        "sku": "ARU-CLO-SET-WHT-12",
+        "productName": "Amara Botanical Lantern-Sleeve Palazzo Set",
+        "colorName": "Crisp White",
+        "size": "UK 12",
+        "unitPriceKobo": 5400000,
+        "quantity": 1,
+        "totalKobo": 5400000,
+        "imageUrl": "/asset/fa563944-f7ce-4c4e-8096-9c7f29ebfbe3.jpg"
+      }
+    ],
+    "subtotalKobo": 10600000,
+    "deliveryFeeKobo": 250000,
+    "discountKobo": 0,
+    "totalKobo": 10850000,
+    "paymentStatus": "pending",
+    "paymentMethod": "paystack",
+    "paymentReference": "ARUBEKEE_PAY_ARUBEKEE-2611-5135_1795001213018",
+    "fulfillmentStatus": "unfulfilled",
+    "internalNotes": "Delivery Zone: Aba Metropolis Doorstep Express. Reservation expires: 2026-11-18T11:41:53.490Z",
+    "timeline": [],
+    "createdAt": "2026-11-18T11:26:53.791516+00:00",
+    "updatedAt": "2026-11-18T11:26:53.518+00:00"
+  },
+  {
+    "id": "ef26c0dc-6afd-450e-8723-058c68b41359",
     "orderNumber": "ARUBEKEE-2611-4063",
     "orderSource": "storefront",
     "customerName": "my name",
@@ -148,18 +219,18 @@
     "customerPhone": "+2348012345678",
     "deliveryType": "dispatch_delivery",
     "shippingAddress": {
-      "fullName": "my name",
+      "city": "benin",
       "email": "dikee5200@gmail.com",
       "phone": "+2348012345678",
       "state": "Edo",
-      "city": "benin",
-      "streetAddress": "ikpoba hill, jemila road",
+      "fullName": "my name",
       "landmark": "jemila junction",
+      "streetAddress": "ikpoba hill, jemila road",
       "deliveryInstructions": "call me"
     },
     "items": [
       {
-        "id": "item_1794843379522_djd8",
+        "id": "abd74393-dd12-4e19-9283-302a9890959b",
         "productId": "2786171e-b5cd-4a3a-b03f-e259e5ee675a",
         "variantId": "67fc3e44-24c9-43ac-8fa3-cdd9427a175f",
         "sku": "ARU-SHO-ADA-TAN-41",
@@ -172,7 +243,7 @@
         "imageUrl": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=900&q=80"
       },
       {
-        "id": "item_1794843379522_vjmj",
+        "id": "03424c2c-c85c-4db1-b988-79410770c8bc",
         "productId": "7df15310-5dda-4f44-b8e3-15cf3fb4b887",
         "variantId": "bd12bf2d-8126-4779-995d-79dc5006a5bc",
         "sku": "ARU-ACC-ADA-GLD-OS",
@@ -185,7 +256,7 @@
         "imageUrl": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=80"
       },
       {
-        "id": "item_1794843379522_3rdu",
+        "id": "e09e6abf-a8a8-44f9-b7b2-6ff453bf6839",
         "productId": "fc821315-c138-4321-b9c4-65feb8276a1d",
         "variantId": "2b75953a-9c45-48f6-a48b-a1b617b2ebd5",
         "sku": "ARU-CLO-KAF-BLK-FS",
@@ -205,40 +276,16 @@
     "paymentStatus": "paid",
     "paymentMethod": "paystack",
     "paymentReference": "ARUBEKEE_PAY_ARUBEKEE-2611-4063_1794843379522",
-    "fulfillmentStatus": "dispatched",
-    "internalNotes": "Delivery Zone: Nationwide Standard Delivery. Reservation expires: 2026-11-16T15:51:19.833Z",
-    "timeline": [
-      {
-        "id": "tl_1794843379833_init",
-        "orderId": "ord_1794843379522_iito",
-        "title": "Checkout Initiated",
-        "description": "Order initiated for ₦106,500. 15-minute stock lock placed.",
-        "actor": "Customer",
-        "createdAt": "2026-11-16T15:36:19.833Z"
-      },
-      {
-        "id": "tl_1794843461413",
-        "orderId": "ord_1794843379522_iito",
-        "title": "Payment Confirmed",
-        "description": "Payment of ₦106,500 confirmed via Paystack (6770203559). Ready for fulfillment.",
-        "actor": "Paystack Gateway",
-        "createdAt": "2026-11-16T15:37:41.413Z"
-      },
-      {
-        "id": "tl_1794844642409",
-        "orderId": "ord_1794843379522_iito",
-        "title": "Order Dispatched",
-        "description": "Parcel consigned with OK movement. Waybill: ABA-1.",
-        "actor": "Store Manager",
-        "createdAt": "2026-11-16T15:57:22.409Z"
-      }
-    ],
-    "createdAt": "2026-11-16T15:36:19.833Z",
-    "updatedAt": "2026-11-16T15:57:22.409Z",
-    "paidAt": "2026-11-16T15:37:41.413Z",
-    "dispatchedAt": "2026-11-16T15:57:22.409Z",
+    "paidAt": "2026-11-16T15:37:41.413+00:00",
+    "fulfillmentStatus": "delivered",
     "carrierName": "OK movement",
-    "trackingNumber": "ABA-1"
+    "trackingNumber": "ABA-1",
+    "dispatchedAt": "2026-11-16T15:57:22.409+00:00",
+    "deliveredAt": "2026-11-19T09:07:19.013+00:00",
+    "internalNotes": "Delivery Zone: Nationwide Standard Delivery. Reservation expires: 2026-11-16T15:51:19.833Z",
+    "timeline": [],
+    "createdAt": "2026-11-16T15:36:19.641794+00:00",
+    "updatedAt": "2026-11-19T09:07:19.015+00:00"
   },
   {
     "id": "30b20709-8f1d-4305-aadf-d9e5447bd791",
@@ -258,21 +305,7 @@
       "streetAddress": "achara street",
       "deliveryInstructions": "call me"
     },
-    "items": [
-      {
-        "id": "item_1794825908925_zhc2",
-        "productId": "prod_chioma_pencil",
-        "variantId": "var_chioma_12",
-        "sku": "ARU-CLO-DRS-OXB-12",
-        "productName": "Chioma Two-Tone Executive Pencil Dress",
-        "colorName": "Oxblood & Blush",
-        "size": "UK 12",
-        "unitPriceKobo": 4500000,
-        "quantity": 1,
-        "totalKobo": 4500000,
-        "imageUrl": "/asset/80772648-ba30-4794-a044-2de173b5fc1f.jpg"
-      }
-    ],
+    "items": [],
     "subtotalKobo": 4500000,
     "deliveryFeeKobo": 400000,
     "discountKobo": 0,
@@ -284,19 +317,10 @@
     "fulfillmentStatus": "delivered",
     "carrierName": "ignore motors",
     "dispatchedAt": "2026-11-16T11:03:17.555+00:00",
-    "deliveredAt": "2026-11-16T11:03:25.541Z",
+    "deliveredAt": "2026-11-16T11:03:25.541+00:00",
     "internalNotes": "Delivery Zone: South-East Regional Transit. Reservation expires: 2026-11-16T11:00:09.263Z",
-    "timeline": [
-      {
-        "id": "tl_1794827005541",
-        "orderId": "30b20709-8f1d-4305-aadf-d9e5447bd791",
-        "title": "Order Delivered",
-        "description": "Customer confirmed parcel receipt.",
-        "actor": "Store Manager",
-        "createdAt": "2026-11-16T11:03:25.541Z"
-      }
-    ],
+    "timeline": [],
     "createdAt": "2026-11-16T10:45:09.463639+00:00",
-    "updatedAt": "2026-11-16T11:03:25.541Z"
+    "updatedAt": "2026-11-16T11:03:25.542+00:00"
   }
 ]
