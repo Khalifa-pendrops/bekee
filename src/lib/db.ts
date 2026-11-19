@@ -105,7 +105,22 @@ function saveCustomProducts(products: Product[]): void {
     if (!filePath) return;
     const dir = path.dirname(filePath);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(filePath, JSON.stringify(products, null, 2), 'utf-8');
+
+    // Deduplicate so duplicate entries for the same slug or id never get written to disk
+    const seenSlugs = new Set<string>();
+    const seenIds = new Set<string>();
+    const cleanList: Product[] = [];
+    for (const p of products) {
+      const slugKey = (p.slug || '').toLowerCase().trim();
+      const idKey = (p.id || '').trim();
+      if (slugKey && seenSlugs.has(slugKey)) continue;
+      if (idKey && seenIds.has(idKey)) continue;
+      if (slugKey) seenSlugs.add(slugKey);
+      if (idKey) seenIds.add(idKey);
+      cleanList.push(p);
+    }
+
+    fs.writeFileSync(filePath, JSON.stringify(cleanList, null, 2), 'utf-8');
   } catch (err) {
     console.error('Failed to save custom products to disk:', err);
   }
@@ -345,18 +360,27 @@ export const db = {
               } as Product;
             });
 
-            // Local customList provides instant override for draft/unpublished states
-            const localCustomMap = new Map(customList.map(p => [p.slug, p]));
+            // Local customList provides instant override for draft/unpublished states and admin edits
+            const localCustomSlugMap = new Map(customList.map(p => [(p.slug || '').toLowerCase(), p]));
+            const localCustomIdMap = new Map(customList.map(p => [p.id, p]));
+
             const mergedSb = sbMapped.map(sb => {
-              const localOverride = localCustomMap.get(sb.slug);
-              if (localOverride && typeof localOverride.isPublished === 'boolean') {
-                return { ...sb, isPublished: localOverride.isPublished };
+              const localOverride = (sb.slug ? localCustomSlugMap.get(sb.slug.toLowerCase()) : undefined) ||
+                                    (sb.id ? localCustomIdMap.get(sb.id) : undefined);
+              if (localOverride) {
+                return {
+                  ...sb,
+                  ...localOverride,
+                  // Keep Supabase UUID if available
+                  id: sb.id || localOverride.id,
+                };
               }
               return sb;
             });
 
-            const sbSlugs = new Set(mergedSb.map(s => s.slug));
-            const uniqueCustom = customList.filter(s => !sbSlugs.has(s.slug));
+            const sbSlugs = new Set(mergedSb.map(s => (s.slug || '').toLowerCase()));
+            const sbIds = new Set(mergedSb.map(s => s.id));
+            const uniqueCustom = customList.filter(s => !sbSlugs.has((s.slug || '').toLowerCase()) && !sbIds.has(s.id));
             baseResults = [...mergedSb, ...uniqueCustom];
           }
         } catch (err) {
@@ -606,41 +630,56 @@ export const db = {
 
   async updateProduct(id: string, updates: Partial<Product>): Promise<Product | null> {
     const customList = getCustomProducts();
-    const foundIndex = customList.findIndex(p => p.id === id || p.slug === id);
+    const matchSlug = (updates.slug || id || '').toLowerCase().trim();
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+
+    let foundIndex = customList.findIndex(p => 
+      (p.id && p.id === id) || 
+      (p.slug && p.slug.toLowerCase() === matchSlug) ||
+      (p.slug && p.slug.toLowerCase() === id.toLowerCase())
+    );
     let targetProduct: Product | null = null;
 
     if (foundIndex > -1) {
       customList[foundIndex] = {
         ...customList[foundIndex],
         ...updates,
+        id: isUuid ? id : (customList[foundIndex].id || id),
         updatedAt: new Date().toISOString(),
       };
       targetProduct = customList[foundIndex];
-      saveCustomProducts(customList);
     } else {
-      const mockFound = mockProducts.find(p => p.id === id || p.slug === id);
+      const mockFound = mockProducts.find(p => 
+        (p.id && p.id === id) || 
+        (p.slug && p.slug.toLowerCase() === matchSlug) ||
+        (p.slug && p.slug.toLowerCase() === id.toLowerCase())
+      );
       if (mockFound) {
         targetProduct = {
           ...mockFound,
           ...updates,
+          id: isUuid ? id : (mockFound.id || id),
           updatedAt: new Date().toISOString(),
         };
         customList.unshift(targetProduct);
-        saveCustomProducts(customList);
       } else {
-        const inMemFound = inMemoryProducts.find(p => p.id === id || p.slug === id);
+        const inMemFound = inMemoryProducts.find(p => 
+          (p.id && p.id === id) || 
+          (p.slug && p.slug.toLowerCase() === matchSlug) ||
+          (p.slug && p.slug.toLowerCase() === id.toLowerCase())
+        );
         if (inMemFound) {
           targetProduct = {
             ...inMemFound,
             ...updates,
+            id: isUuid ? id : (inMemFound.id || id),
             updatedAt: new Date().toISOString(),
           };
           customList.unshift(targetProduct);
-          saveCustomProducts(customList);
-        } else if (updates.name && updates.slug) {
+        } else if (updates.name) {
           targetProduct = {
             id,
-            slug: updates.slug,
+            slug: updates.slug || id,
             name: updates.name,
             tagline: updates.tagline || '',
             description: updates.description || '',
@@ -659,30 +698,43 @@ export const db = {
             updatedAt: new Date().toISOString(),
           };
           customList.unshift(targetProduct);
-          saveCustomProducts(customList);
         }
       }
     }
 
     if (targetProduct) {
-      const memIndex = inMemoryProducts.findIndex((p) => p.id === id || p.slug === id);
-      if (memIndex > -1) {
-        inMemoryProducts[memIndex] = targetProduct;
-      } else {
-        inMemoryProducts.unshift(targetProduct);
+      // Remove any duplicate records sharing targetProduct's id or slug
+      const cleanCustom = [targetProduct];
+      for (const p of customList) {
+        const sameId = p.id && p.id === targetProduct.id;
+        const sameSlug = p.slug && targetProduct.slug && p.slug.toLowerCase() === targetProduct.slug.toLowerCase();
+        if (!sameId && !sameSlug) {
+          cleanCustom.push(p);
+        }
       }
+      saveCustomProducts(cleanCustom);
+
+      inMemoryProducts = [
+        targetProduct,
+        ...inMemoryProducts.filter((p) => p.id !== targetProduct!.id && (!p.slug || !targetProduct!.slug || p.slug.toLowerCase() !== targetProduct!.slug.toLowerCase()))
+      ];
     }
 
     // Mirror updates to Supabase
     const client = getSupabaseAdmin() || supabaseAdmin;
     if (client && targetProduct) {
       try {
-        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+        const targetIsUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(targetProduct.id) ||
+                             /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+        const uuidToUse = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(targetProduct.id)
+          ? targetProduct.id
+          : (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id) ? id : null);
+
         let query = client.from('products').select('id');
-        if (isUuid) {
-          query = query.eq('id', id);
+        if (uuidToUse) {
+          query = query.eq('id', uuidToUse);
         } else {
-          query = query.eq('slug', targetProduct.slug || id);
+          query = query.eq('slug', targetProduct.slug);
         }
         const { data: existingProd, error: fetchErr } = await query.maybeSingle();
 

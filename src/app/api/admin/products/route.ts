@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { Product } from '@/types';
@@ -23,6 +24,20 @@ export async function POST(req: NextRequest) {
       product = updated;
     } else {
       product = await db.createProduct(body);
+    }
+
+    // Immediately purge Next.js route caches so edits reflect across the storefront
+    try {
+      revalidatePath('/', 'layout');
+      revalidatePath('/shop');
+      if (product.slug) {
+        revalidatePath(`/products/${product.slug}`);
+      }
+      if (product.categorySlug) {
+        revalidatePath(`/categories/${product.categorySlug}`);
+      }
+    } catch (revalErr) {
+      console.warn('[API /api/admin/products] Revalidation warning:', revalErr);
     }
 
     return NextResponse.json({

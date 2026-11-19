@@ -63,7 +63,7 @@
       }
     ],
     "hasVariants": true,
-    "isPublished": false,
+    "isPublished": true,
     "isFeatured": true,
     "isArchived": false,
     "tags": [
@@ -74,79 +74,6 @@
     ],
     "createdAt": "2026-11-19T09:48:45.530448+00:00",
     "updatedAt": "2026-11-19T11:54:20.029Z"
-  },
-  {
-    "name": "fgdfhdf",
-    "slug": "fgdfhdf",
-    "tagline": "dfhdhfdfhdh",
-    "description": "sastshfsh rttsatewte",
-    "categorySlug": "clothing",
-    "subCategorySlug": "dresses",
-    "collectionSlugs": [
-      "new-arrivals"
-    ],
-    "fabricAndCare": [
-      "Premium breathable crepe",
-      "Hand wash cold or dry clean",
-      "Do not bleach"
-    ],
-    "images": [
-      {
-        "id": "img_1795081594087_0",
-        "url": "/uploads/image--5--1795081591957-781.png",
-        "altText": "Product photo",
-        "isPrimary": true,
-        "sortOrder": 0
-      }
-    ],
-    "variants": [
-      {
-        "id": "var_1795081689815_3sh5",
-        "sku": "ARU-CLO-F-RED-UK10",
-        "colorName": "red",
-        "size": "UK 10",
-        "priceKobo": 450000,
-        "stockQuantity": 4,
-        "lowStockThreshold": 2,
-        "productId": "",
-        "isActive": true
-      },
-      {
-        "id": "var_1795081689815_0efh",
-        "sku": "ARU-CLO-F-RED-UK12",
-        "colorName": "red",
-        "size": "UK 12",
-        "priceKobo": 450000,
-        "stockQuantity": 4,
-        "lowStockThreshold": 2,
-        "productId": "",
-        "isActive": true
-      },
-      {
-        "id": "var_1795081689815_pvue",
-        "sku": "ARU-CLO-F-RED-UK14",
-        "colorName": "red",
-        "size": "UK 14",
-        "priceKobo": 450000,
-        "stockQuantity": 4,
-        "lowStockThreshold": 2,
-        "productId": "",
-        "isActive": true
-      }
-    ],
-    "hasVariants": true,
-    "isPublished": true,
-    "isArchived": false,
-    "isFeatured": true,
-    "tags": [
-      "clothing",
-      "dresses",
-      "new-arrival",
-      "nigerian-fashion"
-    ],
-    "id": "prod_1795081722821_bw9io",
-    "createdAt": "2026-11-19T09:48:42.821Z",
-    "updatedAt": "2026-11-19T09:48:42.821Z"
   },
   {
     "name": "TEST PRODUCT",
