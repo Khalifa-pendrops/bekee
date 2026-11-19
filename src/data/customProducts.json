@@ -1,5 +1,81 @@
 [
   {
+    "id": "e40a7d71-9ab5-4e6c-8baf-06ab67da2ff4",
+    "slug": "fgdfhdf",
+    "name": "tester",
+    "tagline": "dfhdhfdfhdh",
+    "description": "sastshfsh rttsatewte",
+    "categorySlug": "clothing",
+    "subCategorySlug": "dresses",
+    "collectionSlugs": [
+      "new-arrivals"
+    ],
+    "fabricAndCare": [
+      "Premium breathable crepe",
+      "Hand wash cold or dry clean",
+      "Do not bleach"
+    ],
+    "images": [
+      {
+        "id": "52aef29f-59ec-4862-b809-428767c8d42d",
+        "url": "/uploads/image--5--1795081591957-781.png",
+        "altText": "Product photo",
+        "isPrimary": true,
+        "sortOrder": 0
+      }
+    ],
+    "variants": [
+      {
+        "id": "3ac00610-288a-4650-a05f-40a58f21275e",
+        "productId": "e40a7d71-9ab5-4e6c-8baf-06ab67da2ff4",
+        "sku": "ARU-CLO-F-RED-UK10",
+        "colorName": "red",
+        "colorHex": "#54121B",
+        "size": "UK 10",
+        "priceKobo": 450000,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "d4a17a8c-0678-4847-a9e8-514198d6711b",
+        "productId": "e40a7d71-9ab5-4e6c-8baf-06ab67da2ff4",
+        "sku": "ARU-CLO-F-RED-UK12",
+        "colorName": "red",
+        "colorHex": "#54121B",
+        "size": "UK 12",
+        "priceKobo": 450000,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      },
+      {
+        "id": "97a963a0-55cc-42a0-8d06-3557faa9e3c6",
+        "productId": "e40a7d71-9ab5-4e6c-8baf-06ab67da2ff4",
+        "sku": "ARU-CLO-F-RED-UK14",
+        "colorName": "red",
+        "colorHex": "#54121B",
+        "size": "UK 14",
+        "priceKobo": 450000,
+        "stockQuantity": 4,
+        "lowStockThreshold": 2,
+        "isActive": true
+      }
+    ],
+    "hasVariants": true,
+    "isPublished": true,
+    "isFeatured": true,
+    "isArchived": false,
+    "tags": [
+      "clothing",
+      "dresses",
+      "new-arrival",
+      "nigerian-fashion"
+    ],
+    "createdAt": "2026-11-19T11:44:55.132Z",
+    "updatedAt": "2026-11-19T11:44:55.132Z"
+  },
+  {
     "name": "fgdfhdf",
     "slug": "fgdfhdf",
     "tagline": "dfhdhfdfhdh",
