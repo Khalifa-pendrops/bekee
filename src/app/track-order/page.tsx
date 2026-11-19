@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Order } from "@/types";
 import { formatKoboToNaira } from "@/lib/utils";
@@ -21,7 +21,9 @@ import {
   Check,
   MessageCircle,
   ShieldCheck,
-  X
+  X,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { 
   getSavedOrders, 
@@ -47,6 +49,72 @@ function TrackOrderContent() {
   const [copiedAccount, setCopiedAccount] = useState(false);
   const [isConfirmingDelivery, setIsConfirmingDelivery] = useState(false);
   const [deliveryConfirmedMessage, setDeliveryConfirmedMessage] = useState("");
+
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
+  const hasDraggedRef = useRef(false);
+
+  const checkScrollButtons = () => {
+    if (carouselRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+      setCanScrollLeft(scrollLeft > 4);
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 4);
+    }
+  };
+
+  useEffect(() => {
+    const t = setTimeout(checkScrollButtons, 120);
+    const el = carouselRef.current;
+    if (el) {
+      el.addEventListener('scroll', checkScrollButtons, { passive: true });
+      window.addEventListener('resize', checkScrollButtons);
+      return () => {
+        clearTimeout(t);
+        el.removeEventListener('scroll', checkScrollButtons);
+        window.removeEventListener('resize', checkScrollButtons);
+      };
+    }
+    return () => clearTimeout(t);
+  }, [savedOrders]);
+
+  const scrollCarousel = (direction: 'left' | 'right') => {
+    if (carouselRef.current) {
+      const offset = direction === 'left' ? -220 : 220;
+      carouselRef.current.scrollBy({ left: offset, behavior: 'smooth' });
+      setTimeout(checkScrollButtons, 350);
+    }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!carouselRef.current) return;
+    isDraggingRef.current = true;
+    hasDraggedRef.current = false;
+    startXRef.current = e.pageX - carouselRef.current.offsetLeft;
+    scrollLeftRef.current = carouselRef.current.scrollLeft;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDraggingRef.current || !carouselRef.current) return;
+    const x = e.pageX - carouselRef.current.offsetLeft;
+    const walk = x - startXRef.current;
+    if (Math.abs(walk) > 5) {
+      hasDraggedRef.current = true;
+    }
+    carouselRef.current.scrollLeft = scrollLeftRef.current - walk;
+    checkScrollButtons();
+  };
+
+  const handleMouseUpOrLeave = () => {
+    isDraggingRef.current = false;
+    setTimeout(() => {
+      hasDraggedRef.current = false;
+    }, 60);
+  };
 
   // Load saved order history or auto-discover customer's active orders from server
   useEffect(() => {
@@ -324,49 +392,120 @@ function TrackOrderContent() {
       <div className="bg-ivory border border-stone-line p-6 sm:p-8 shadow-card max-w-xl mx-auto relative">
         {/* Multi-Order History Switcher */}
         {savedOrders.length > 0 && (
-          <div className="mb-5 pb-4 border-b border-stone-line space-y-2">
+          <div className="mb-5 pb-4 border-b border-stone-line space-y-2.5">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-obsidian uppercase tracking-wider text-[10px] flex items-center gap-1.5">
                 <Package className="w-3.5 h-3.5 text-oxblood" />
-                <span>Your Saved Orders ({savedOrders.length})</span>
+                <span>Your Active Orders ({savedOrders.length})</span>
               </span>
-              <button
-                type="button"
-                onClick={handleClearAllSaved}
-                className="text-[10px] text-stone-400 hover:text-stone-700 underline"
-              >
-                Clear History
-              </button>
+
+              <div className="flex items-center gap-2">
+                {(canScrollLeft || canScrollRight || savedOrders.length >= 2) && (
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => scrollCarousel('left')}
+                      disabled={!canScrollLeft}
+                      className={`p-1 rounded-full border transition-all ${
+                        canScrollLeft
+                          ? 'bg-white border-stone-300 text-stone-800 hover:bg-stone-100 hover:border-stone-900 shadow-xs active:scale-95'
+                          : 'bg-stone-50 border-stone-200 text-stone-300 cursor-not-allowed opacity-40'
+                      }`}
+                      title="Scroll backward"
+                      aria-label="Scroll backward"
+                    >
+                      <ChevronLeft className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => scrollCarousel('right')}
+                      disabled={!canScrollRight}
+                      className={`p-1 rounded-full border transition-all ${
+                        canScrollRight
+                          ? 'bg-white border-stone-300 text-stone-800 hover:bg-stone-100 hover:border-stone-900 shadow-xs active:scale-95'
+                          : 'bg-stone-50 border-stone-200 text-stone-300 cursor-not-allowed opacity-40'
+                      }`}
+                      title="Scroll forward"
+                      aria-label="Scroll forward"
+                    >
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+
+                <button
+                  type="button"
+                  onClick={handleClearAllSaved}
+                  className="text-[10px] text-stone-400 hover:text-stone-700 underline ml-1"
+                >
+                  Clear History
+                </button>
+              </div>
             </div>
 
-            <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-              {savedOrders.map((item, index) => {
-                const isSelected = orderNumber.toUpperCase() === item.orderNumber.toUpperCase();
-                return (
-                  <button
-                    key={item.orderNumber}
-                    type="button"
-                    onClick={() => handleSelectSavedOrder(item)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium border flex items-center gap-1.5 transition-all shrink-0 ${
-                      isSelected
-                        ? 'bg-oxblood text-white border-oxblood shadow-xs font-semibold'
-                        : 'bg-white border-stone-300 text-stone-700 hover:border-stone-900 hover:bg-stone-50'
-                    }`}
-                  >
-                    <span>{item.orderNumber}</span>
-                    <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-stone-100 text-stone-500'}`}>
-                      {index === 0 ? 'Latest' : item.date}
-                    </span>
-                    <span
-                      onClick={(e) => handleRemoveOrder(item.orderNumber, e)}
-                      className={`ml-0.5 rounded-full p-0.5 transition-colors ${isSelected ? 'text-white/70 hover:text-white' : 'text-stone-400 hover:text-red-600'}`}
-                      title="Remove from history"
+            {/* Scrollable Track */}
+            <div className="relative group">
+              {canScrollLeft && (
+                <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-ivory via-ivory/80 to-transparent z-10 pointer-events-none" />
+              )}
+
+              <div
+                ref={carouselRef}
+                onScroll={checkScrollButtons}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUpOrLeave}
+                onMouseLeave={handleMouseUpOrLeave}
+                className="flex gap-2 overflow-x-auto pb-1.5 pt-0.5 scroll-smooth no-scrollbar snap-x touch-pan-x cursor-grab active:cursor-grabbing select-none"
+                style={{
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none',
+                  WebkitOverflowScrolling: 'touch',
+                }}
+              >
+                {savedOrders.map((item, index) => {
+                  const isSelected = orderNumber.toUpperCase() === item.orderNumber.toUpperCase();
+                  return (
+                    <button
+                      key={item.orderNumber}
+                      type="button"
+                      onClick={() => {
+                        if (hasDraggedRef.current) return;
+                        handleSelectSavedOrder(item);
+                      }}
+                      className={`px-3.5 py-1.5 rounded-full text-xs font-medium border flex items-center gap-2 transition-all shrink-0 snap-start select-none ${
+                        isSelected
+                          ? 'bg-oxblood text-white border-oxblood shadow-xs font-semibold ring-2 ring-oxblood/20'
+                          : 'bg-white border-stone-300 text-stone-700 hover:border-stone-900 hover:bg-stone-50 shadow-2xs'
+                      }`}
                     >
-                      <X className="w-3 h-3" />
-                    </span>
-                  </button>
-                );
-              })}
+                      <span className="font-mono">{item.orderNumber}</span>
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-sans ${
+                        isSelected ? 'bg-white/20 text-white' : 'bg-stone-100 text-stone-600'
+                      }`}>
+                        {index === 0 ? 'Latest' : (item.fulfillmentStatus ? item.fulfillmentStatus.replace(/_/g, ' ') : item.date)}
+                      </span>
+                      <span
+                        onMouseDown={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemoveOrder(item.orderNumber, e);
+                        }}
+                        className={`ml-0.5 rounded-full p-0.5 transition-colors ${
+                          isSelected ? 'text-white/70 hover:text-white hover:bg-white/20' : 'text-stone-400 hover:text-red-600 hover:bg-red-50'
+                        }`}
+                        title="Remove from history"
+                      >
+                        <X className="w-3 h-3" />
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {canScrollRight && (
+                <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-ivory via-ivory/80 to-transparent z-10 pointer-events-none" />
+              )}
             </div>
           </div>
         )}

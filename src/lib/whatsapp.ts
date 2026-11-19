@@ -34,10 +34,10 @@ export function generateOrderWhatsAppMessage(order: Order, options?: { origin?: 
     const courier = order.carrierName || 'Courier';
     const waybill = order.trackingNumber ? ` (Waybill: *${order.trackingNumber}*)` : '';
     fulfillmentLabel = `Dispatched & In Transit with ${courier}${waybill}`;
-    deliveryCallToAction = `\n👉 *Once your parcel arrives, please tap the tracking link above to confirm delivery with 1 click so our atelier knows you have received your items safely!*`;
+    deliveryCallToAction = `\n➤ *Once your parcel arrives, please tap the tracking link above to confirm delivery with 1 click so our atelier knows you have received your items safely!*`;
   } else if (order.fulfillmentStatus === 'ready_for_pickup') {
     fulfillmentLabel = 'Ready for Pickup at Aba Boutique Showroom';
-    deliveryCallToAction = `\n👉 *When you collect your parcel from our showroom, please tap the tracking link above to confirm collection.*`;
+    deliveryCallToAction = `\n➤ *When you collect your parcel from our showroom, please tap the tracking link above to confirm collection.*`;
   } else if (order.fulfillmentStatus === 'cancelled') {
     fulfillmentLabel = 'Order Cancelled';
   }

@@ -17,7 +17,7 @@
     ],
     "images": [
       {
-        "id": "52aef29f-59ec-4862-b809-428767c8d42d",
+        "id": "01413670-7deb-41c1-91f7-bae22f65522f",
         "url": "/uploads/image--5--1795081591957-781.png",
         "altText": "Product photo",
         "isPrimary": true,
@@ -26,7 +26,7 @@
     ],
     "variants": [
       {
-        "id": "3ac00610-288a-4650-a05f-40a58f21275e",
+        "id": "1eaf2eee-576a-499b-b9bd-2c248ef4570a",
         "productId": "e40a7d71-9ab5-4e6c-8baf-06ab67da2ff4",
         "sku": "ARU-CLO-F-RED-UK10",
         "colorName": "red",
@@ -38,7 +38,7 @@
         "isActive": true
       },
       {
-        "id": "d4a17a8c-0678-4847-a9e8-514198d6711b",
+        "id": "e93893e0-c75b-4076-aeef-69befdf74e5d",
         "productId": "e40a7d71-9ab5-4e6c-8baf-06ab67da2ff4",
         "sku": "ARU-CLO-F-RED-UK12",
         "colorName": "red",
@@ -50,7 +50,7 @@
         "isActive": true
       },
       {
-        "id": "97a963a0-55cc-42a0-8d06-3557faa9e3c6",
+        "id": "7b6a922f-24f1-4394-9f4f-f770243fa1da",
         "productId": "e40a7d71-9ab5-4e6c-8baf-06ab67da2ff4",
         "sku": "ARU-CLO-F-RED-UK14",
         "colorName": "red",
@@ -63,7 +63,7 @@
       }
     ],
     "hasVariants": true,
-    "isPublished": true,
+    "isPublished": false,
     "isFeatured": true,
     "isArchived": false,
     "tags": [
@@ -72,8 +72,8 @@
       "new-arrival",
       "nigerian-fashion"
     ],
-    "createdAt": "2026-11-19T11:44:55.132Z",
-    "updatedAt": "2026-11-19T11:44:55.132Z"
+    "createdAt": "2026-11-19T09:48:45.530448+00:00",
+    "updatedAt": "2026-11-19T11:54:20.029Z"
   },
   {
     "name": "fgdfhdf",
