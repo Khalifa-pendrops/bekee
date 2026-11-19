@@ -24,7 +24,33 @@ import {
   mockStoreSettings,
   mockDiscountCodes
 } from '@/data/mockData';
+import seededOrdersData from '@/data/orders.json';
 import { isSupabaseConfigured, supabaseAdmin } from './supabase';
+
+// Multi-path resolver to ensure JSON data files are always located regardless of working directory
+function resolveDataFilePath(filename: string): string {
+  if (typeof window !== 'undefined') return '';
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const candidates = [
+      path.join(process.cwd(), 'src', 'data', filename),
+      path.join(process.cwd(), 'collection', 'src', 'data', filename),
+      path.join(__dirname, '..', 'data', filename),
+      path.join(__dirname, '..', '..', 'src', 'data', filename),
+    ];
+    for (const c of candidates) {
+      if (fs.existsSync(c)) return c;
+    }
+    // If running from repo root, default to collection/src/data/...
+    if (fs.existsSync(path.join(process.cwd(), 'collection'))) {
+      return path.join(process.cwd(), 'collection', 'src', 'data', filename);
+    }
+    return candidates[0];
+  } catch {
+    return '';
+  }
+}
 
 // Persistent Local Disk Storage Helpers for Custom / Admin Products (Server-Safe)
 function getCustomProducts(): Product[] {
@@ -33,9 +59,8 @@ function getCustomProducts(): Product[] {
   }
   try {
     const fs = require('fs');
-    const path = require('path');
-    const filePath = path.join(process.cwd(), 'src', 'data', 'customProducts.json');
-    if (fs.existsSync(filePath)) {
+    const filePath = resolveDataFilePath('customProducts.json');
+    if (filePath && fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf-8');
       const parsed = JSON.parse(content);
       if (Array.isArray(parsed)) return parsed as Product[];
@@ -53,7 +78,10 @@ function saveCustomProducts(products: Product[]): void {
   try {
     const fs = require('fs');
     const path = require('path');
-    const filePath = path.join(process.cwd(), 'src', 'data', 'customProducts.json');
+    const filePath = resolveDataFilePath('customProducts.json');
+    if (!filePath) return;
+    const dir = path.dirname(filePath);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(filePath, JSON.stringify(products, null, 2), 'utf-8');
   } catch (err) {
     console.error('Failed to save custom products to disk:', err);
@@ -67,17 +95,17 @@ function getCustomOrders(): Order[] {
   }
   try {
     const fs = require('fs');
-    const path = require('path');
-    const filePath = path.join(process.cwd(), 'src', 'data', 'orders.json');
-    if (fs.existsSync(filePath)) {
+    const filePath = resolveDataFilePath('orders.json');
+    if (filePath && fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf-8');
       const parsed = JSON.parse(content);
-      if (Array.isArray(parsed)) return parsed as Order[];
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed as Order[];
     }
   } catch (err) {
     // Ignore read errors
   }
-  return [];
+  // Robust fallback to statically bundled seeded orders
+  return Array.isArray(seededOrdersData) ? (seededOrdersData as Order[]) : [];
 }
 
 function saveCustomOrders(orders: Order[]): void {
@@ -87,7 +115,10 @@ function saveCustomOrders(orders: Order[]): void {
   try {
     const fs = require('fs');
     const path = require('path');
-    const filePath = path.join(process.cwd(), 'src', 'data', 'orders.json');
+    const filePath = resolveDataFilePath('orders.json');
+    if (!filePath) return;
+    const dir = path.dirname(filePath);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(filePath, JSON.stringify(orders, null, 2), 'utf-8');
   } catch (err) {
     console.error('Failed to save orders to disk:', err);
@@ -1242,6 +1273,11 @@ export const db = {
     }
     for (const o of inMemoryOrders) {
       if (o.orderNumber) orderMap.set(o.orderNumber, o);
+    }
+    if (orderMap.size === 0 && Array.isArray(seededOrdersData)) {
+      for (const o of (seededOrdersData as Order[])) {
+        if (o.orderNumber) orderMap.set(o.orderNumber, o);
+      }
     }
 
     // 2. Fetch from Supabase if configured and merge

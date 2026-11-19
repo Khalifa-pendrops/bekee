@@ -249,7 +249,7 @@ export default async function AdminHomePage() {
             ) : (
               <div className="divide-y divide-stone-100">
                 {allOrders.slice(0, 5).map((order) => {
-                  const customerWhatsApp = order.customerPhone.replace(/\D/g, '');
+                  const customerWhatsApp = (order.customerPhone || '').replace(/\D/g, '');
                   const waUrl = `https://wa.me/${customerWhatsApp}?text=${encodeURIComponent(
                     `Hello ${order.customerName}, regarding your ARUBEKEE COLLECTION order ${order.orderNumber}...`
                   )}`;
@@ -286,7 +286,7 @@ export default async function AdminHomePage() {
                         </div>
 
                         <div className="text-[11px] text-stone-500 mt-0.5">
-                          {order.items.length} item(s) • Total: <strong className="text-stone-900">{formatKoboToNaira(order.totalKobo)}</strong> • {order.deliveryType === 'aba_pickup' ? 'Aba Boutique Pickup' : `Waybill to ${order.shippingAddress?.state || 'Nigeria'}`}
+                          {(order.items || []).length} item(s) • Total: <strong className="text-stone-900">{formatKoboToNaira(order.totalKobo)}</strong> • {order.deliveryType === 'aba_pickup' ? 'Aba Boutique Pickup' : `Waybill to ${order.shippingAddress?.state || 'Nigeria'}`}
                         </div>
                       </div>
 

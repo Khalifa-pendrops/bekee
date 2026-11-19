@@ -1,5 +1,145 @@
 [
   {
+    "id": "ord_1794911200000_amak",
+    "orderNumber": "ARUBEKEE-2611-8921",
+    "orderSource": "storefront",
+    "customerName": "Amaka Obi",
+    "customerEmail": "amaka.obi@gmail.com",
+    "customerPhone": "+2348035552391",
+    "deliveryType": "dispatch_delivery",
+    "shippingAddress": {
+      "fullName": "Amaka Obi",
+      "email": "amaka.obi@gmail.com",
+      "phone": "+2348035552391",
+      "state": "Lagos",
+      "city": "Lekki Phase 1",
+      "streetAddress": "Plot 12 Admiralty Way, Lekki",
+      "landmark": "Near Ebeano Supermarket",
+      "deliveryInstructions": "Call security upon arrival"
+    },
+    "items": [
+      {
+        "id": "item_1794911200000_1",
+        "productId": "prod_chioma_pencil",
+        "variantId": "var_chioma_12",
+        "sku": "ARU-CLO-DRS-OXB-12",
+        "productName": "Chioma Two-Tone Executive Pencil Dress",
+        "colorName": "Imperial Oxblood",
+        "size": "UK 12",
+        "unitPriceKobo": 4500000,
+        "quantity": 1,
+        "totalKobo": 4500000,
+        "imageUrl": "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        "id": "item_1794911200000_2",
+        "productId": "prod_zikora_boubou",
+        "variantId": "var_zikora_gld",
+        "sku": "ARU-CLO-ZIK-GLD-FS",
+        "productName": "Zikora Royal Neckline Embroidered Boubou",
+        "colorName": "Royal Gold",
+        "size": "Free Size",
+        "unitPriceKobo": 5800000,
+        "quantity": 1,
+        "totalKobo": 5800000,
+        "imageUrl": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=900&q=80"
+      }
+    ],
+    "subtotalKobo": 10300000,
+    "deliveryFeeKobo": 0,
+    "discountKobo": 0,
+    "totalKobo": 10300000,
+    "paymentStatus": "paid",
+    "paymentMethod": "paystack",
+    "paymentReference": "ARUBEKEE_PAY_ARUBEKEE-2611-8921_1794911200000",
+    "fulfillmentStatus": "unfulfilled",
+    "internalNotes": "Express Air Corridor to Lagos. Waybill fee to be settled with courier on collection.",
+    "timeline": [
+      {
+        "id": "tl_1794911200000_init",
+        "orderId": "ord_1794911200000_amak",
+        "title": "Checkout Initiated",
+        "description": "Order initiated for ₦103,000. Customer selected Doorstep Waybill to Lagos.",
+        "actor": "Customer",
+        "createdAt": "2026-11-18T14:20:00.000Z"
+      },
+      {
+        "id": "tl_1794911260000_pay",
+        "orderId": "ord_1794911200000_amak",
+        "title": "Payment Confirmed",
+        "description": "Payment of ₦103,000 confirmed via Paystack. Awaiting garment packing in Aba workshop.",
+        "actor": "Paystack Gateway",
+        "createdAt": "2026-11-18T14:22:30.000Z"
+      }
+    ],
+    "createdAt": "2026-11-18T14:20:00.000Z",
+    "updatedAt": "2026-11-18T14:22:30.000Z",
+    "paidAt": "2026-11-18T14:22:30.000Z"
+  },
+  {
+    "id": "ord_1794912000000_ngoz",
+    "orderNumber": "ARUBEKEE-2611-3140",
+    "orderSource": "storefront",
+    "customerName": "Ngozi Eze",
+    "customerEmail": "ngozi.eze@outlook.com",
+    "customerPhone": "+2348028884920",
+    "deliveryType": "aba_pickup",
+    "shippingAddress": {
+      "fullName": "Ngozi Eze",
+      "email": "ngozi.eze@outlook.com",
+      "phone": "+2348028884920",
+      "state": "Abia",
+      "city": "Aba",
+      "streetAddress": "Aba Boutique Showroom Pickup",
+      "deliveryInstructions": "Picking up on Saturday morning"
+    },
+    "items": [
+      {
+        "id": "item_1794912000000_1",
+        "productId": "2786171e-b5cd-4a3a-b03f-e259e5ee675a",
+        "variantId": "67fc3e44-24c9-43ac-8fa3-cdd9427a175f",
+        "sku": "ARU-SHO-ADA-TAN-40",
+        "productName": "The Adanna Sculpted Block Mule",
+        "colorName": "Warm Tan Leather",
+        "size": "EU 40",
+        "unitPriceKobo": 3600000,
+        "quantity": 1,
+        "totalKobo": 3600000,
+        "imageUrl": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=900&q=80"
+      }
+    ],
+    "subtotalKobo": 3600000,
+    "deliveryFeeKobo": 0,
+    "discountKobo": 0,
+    "totalKobo": 3600000,
+    "paymentStatus": "paid",
+    "paymentMethod": "paystack",
+    "paymentReference": "ARUBEKEE_PAY_ARUBEKEE-2611-3140_1794912000000",
+    "fulfillmentStatus": "ready_for_pickup",
+    "internalNotes": "Showroom Pickup: Ehi Road Fashion District, Aba.",
+    "timeline": [
+      {
+        "id": "tl_1794912000000_init",
+        "orderId": "ord_1794912000000_ngoz",
+        "title": "Payment Confirmed",
+        "description": "Payment of ₦36,000 confirmed via Paystack. Customer selected Aba boutique showroom collection.",
+        "actor": "Paystack Gateway",
+        "createdAt": "2026-11-18T16:00:00.000Z"
+      },
+      {
+        "id": "tl_1794912600000_ready",
+        "orderId": "ord_1794912000000_ngoz",
+        "title": "Ready for Boutique Pickup",
+        "description": "Item inspected, tagged, and placed in customer collection shelf at Aba showroom.",
+        "actor": "Store Manager",
+        "createdAt": "2026-11-18T16:30:00.000Z"
+      }
+    ],
+    "createdAt": "2026-11-18T16:00:00.000Z",
+    "updatedAt": "2026-11-18T16:30:00.000Z",
+    "paidAt": "2026-11-18T16:00:00.000Z"
+  },
+  {
     "id": "ord_1794843379522_iito",
     "orderNumber": "ARUBEKEE-2611-4063",
     "orderSource": "storefront",
