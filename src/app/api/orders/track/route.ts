@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { Order } from '@/types';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 // Rate limiting map for order lookup attempts
 const trackRateLimitMap = new Map<string, { count: number; resetAt: number }>();
 

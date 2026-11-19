@@ -25,14 +25,35 @@ import {
   mockDiscountCodes
 } from '@/data/mockData';
 import seededOrdersData from '@/data/orders.json';
-import { isSupabaseConfigured, supabaseAdmin } from './supabase';
+import { isSupabaseConfigured, supabaseAdmin, getSupabaseAdmin } from './supabase';
+
+// Server-safe dynamic Node module loaders (eval('require') keeps webpack client compiler from attempting bundling)
+function getNodeFs(): any {
+  if (typeof window !== 'undefined') return null;
+  try {
+    return eval('require')('fs');
+  } catch {
+    return null;
+  }
+}
+
+function getNodePath(): any {
+  if (typeof window !== 'undefined') return null;
+  try {
+    return eval('require')('path');
+  } catch {
+    return null;
+  }
+}
 
 // Multi-path resolver to ensure JSON data files are always located regardless of working directory
 function resolveDataFilePath(filename: string): string {
   if (typeof window !== 'undefined') return '';
   try {
-    const fs = require('fs');
-    const path = require('path');
+    const fs = getNodeFs();
+    const path = getNodePath();
+    if (!fs || !path) return '';
+
     const candidates = [
       path.join(process.cwd(), 'src', 'data', filename),
       path.join(process.cwd(), 'collection', 'src', 'data', filename),
@@ -58,7 +79,8 @@ function getCustomProducts(): Product[] {
     return [];
   }
   try {
-    const fs = require('fs');
+    const fs = getNodeFs();
+    if (!fs) return [];
     const filePath = resolveDataFilePath('customProducts.json');
     if (filePath && fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf-8');
@@ -76,8 +98,9 @@ function saveCustomProducts(products: Product[]): void {
     return;
   }
   try {
-    const fs = require('fs');
-    const path = require('path');
+    const fs = getNodeFs();
+    const path = getNodePath();
+    if (!fs || !path) return;
     const filePath = resolveDataFilePath('customProducts.json');
     if (!filePath) return;
     const dir = path.dirname(filePath);
@@ -94,7 +117,8 @@ function getCustomOrders(): Order[] {
     return [];
   }
   try {
-    const fs = require('fs');
+    const fs = getNodeFs();
+    if (!fs) return [];
     const filePath = resolveDataFilePath('orders.json');
     if (filePath && fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf-8');
@@ -113,8 +137,9 @@ function saveCustomOrders(orders: Order[]): void {
     return;
   }
   try {
-    const fs = require('fs');
-    const path = require('path');
+    const fs = getNodeFs();
+    const path = getNodePath();
+    if (!fs || !path) return;
     const filePath = resolveDataFilePath('orders.json');
     if (!filePath) return;
     const dir = path.dirname(filePath);
@@ -1281,9 +1306,10 @@ export const db = {
     }
 
     // 2. Fetch from Supabase if configured and merge
-    if (isSupabaseConfigured && supabaseAdmin) {
+    const client = getSupabaseAdmin() || supabaseAdmin;
+    if (client) {
       try {
-        let query = supabaseAdmin
+        let query = client
           .from('orders')
           .select(`
             *,
@@ -1296,7 +1322,22 @@ export const db = {
         if (filter?.fulfillmentStatus) query = query.eq('fulfillment_status', filter.fulfillmentStatus);
 
         const { data, error } = await query;
-        if (!error && data && data.length > 0) {
+        if (error) {
+          console.error('[db.getOrders] Supabase relational query error:', error.message);
+          // Resilient fallback: Query base orders table directly if child relation has issues
+          const { data: baseData, error: baseError } = await client
+            .from('orders')
+            .select('*')
+            .order('created_at', { ascending: false });
+          if (baseData && baseData.length > 0) {
+            for (const row of baseData) {
+              const mapped = mapSupabaseOrder(row);
+              orderMap.set(mapped.orderNumber, mapped);
+            }
+          } else if (baseError) {
+            console.error('[db.getOrders] Supabase base orders query error:', baseError.message);
+          }
+        } else if (data && data.length > 0) {
           for (const row of data) {
             const mapped = mapSupabaseOrder(row);
             const existing = orderMap.get(mapped.orderNumber);
@@ -1309,9 +1350,11 @@ export const db = {
             orderMap.set(mapped.orderNumber, mapped);
           }
         }
-      } catch (err) {
-        // Fallback gracefully to local disk and memory
+      } catch (err: any) {
+        console.error('[db.getOrders] Supabase fetch exception:', err?.message || err);
       }
+    } else {
+      console.warn('[db.getOrders] Supabase admin client not initialized. Check SUPABASE_SERVICE_ROLE_KEY.');
     }
 
     let list = Array.from(orderMap.values()).sort(
@@ -1339,9 +1382,10 @@ export const db = {
   },
 
   async getOrderByNumber(orderNumber: string): Promise<Order | null> {
-    if (isSupabaseConfigured && supabaseAdmin) {
+    const client = getSupabaseAdmin() || supabaseAdmin;
+    if (client) {
       try {
-        const { data, error } = await supabaseAdmin
+        const { data, error } = await client
           .from('orders')
           .select(`*, order_items(*), order_timeline(*)`)
           .eq('order_number', orderNumber)
@@ -1367,9 +1411,10 @@ export const db = {
   async getOrderById(id: string): Promise<Order | null> {
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
 
-    if (isSupabaseConfigured && supabaseAdmin) {
+    const client = getSupabaseAdmin() || supabaseAdmin;
+    if (client) {
       try {
-        let query = supabaseAdmin.from('orders').select(`*, order_items(*), order_timeline(*)`);
+        let query = client.from('orders').select(`*, order_items(*), order_timeline(*)`);
         if (isUuid) {
           query = query.eq('id', id);
         } else {
@@ -1395,9 +1440,10 @@ export const db = {
   },
 
   async getOrderByPaymentReference(paymentReference: string): Promise<Order | null> {
-    if (isSupabaseConfigured && supabaseAdmin) {
+    const client = getSupabaseAdmin() || supabaseAdmin;
+    if (client) {
       try {
-        const { data, error } = await supabaseAdmin
+        const { data, error } = await client
           .from('orders')
           .select(`*, order_items(*), order_timeline(*)`)
           .eq('payment_reference', paymentReference)
@@ -1445,7 +1491,8 @@ export const db = {
     }
 
     // 2. Sync to Supabase cloud database
-    if (isSupabaseConfigured && supabaseAdmin) {
+    const client = getSupabaseAdmin() || supabaseAdmin;
+    if (client) {
       try {
         const payload: any = {
           order_number: order.orderNumber,
@@ -1477,7 +1524,7 @@ export const db = {
           updated_at: new Date().toISOString(),
         };
 
-        const { data: upsertedOrder, error: upsertError } = await supabaseAdmin
+        const { data: upsertedOrder, error: upsertError } = await client
           .from('orders')
           .upsert(payload, { onConflict: 'order_number' })
           .select('id')
@@ -1488,7 +1535,7 @@ export const db = {
         } else if (upsertedOrder?.id && order.items && order.items.length > 0) {
           // Sync items to order_items child table
           try {
-            await supabaseAdmin.from('order_items').delete().eq('order_id', upsertedOrder.id);
+            await client.from('order_items').delete().eq('order_id', upsertedOrder.id);
             const itemRows = order.items.map((i) => ({
               order_id: upsertedOrder.id,
               product_id: i.productId,
@@ -1502,7 +1549,7 @@ export const db = {
               total_kobo: i.totalKobo,
               image_url: i.imageUrl || '',
             }));
-            await supabaseAdmin.from('order_items').insert(itemRows);
+            await client.from('order_items').insert(itemRows);
           } catch (itemErr: any) {
             console.warn('[db.saveOrder] Order items sync notice:', itemErr.message);
           }

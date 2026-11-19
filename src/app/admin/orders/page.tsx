@@ -18,6 +18,7 @@ import { Order } from '@/types';
 import { AdminPagination } from '@/components/admin/AdminPagination';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 interface AdminOrdersPageProps {
   searchParams?: {
