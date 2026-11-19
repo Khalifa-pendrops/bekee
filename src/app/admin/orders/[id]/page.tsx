@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { formatKoboToNaira } from '@/lib/utils';
 import { Order } from '@/types';
+import { generateOrderWhatsAppMessage, generateOrderWhatsAppUrl } from '@/lib/whatsapp';
 
 const PRESET_COURIERS = [
   'GIG Logistics',
@@ -108,61 +109,35 @@ export default function AdminOrderDetailPage() {
     );
   }
 
-  const customerWhatsApp = order.customerPhone.replace(/\D/g, '');
-  const cleanPhone = customerWhatsApp.startsWith('0') ? '234' + customerWhatsApp.slice(1) : customerWhatsApp;
-  
-  const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(
-    `Hello ${order.customerName}, this is ARUBEKEE COLLECTION, Aba. Regarding your order ${order.orderNumber}...`
-  )}`;
+  const waUrl = generateOrderWhatsAppUrl(order);
 
-  // Generate Dispatch WhatsApp Notice
+  // Generate Dispatch WhatsApp Notice with current form values
   const getDispatchWhatsAppMessage = () => {
     const finalCarrier = selectedCourier === 'Other'
       ? (customCourier.trim() || 'Custom Courier')
       : selectedCourier;
 
-    const destination = order.shippingAddress
-      ? `${order.shippingAddress.streetAddress || ''}, ${order.shippingAddress.city || ''}, ${order.shippingAddress.state || ''}`.replace(/^,\s*|,\s*$/g, '')
-      : 'Aba Boutique Pickup';
+    const orderWithFormCarrier: Order = {
+      ...order,
+      carrierName: finalCarrier || order.carrierName,
+      trackingNumber: trackingNumber || order.trackingNumber,
+      trackingUrl: trackingUrl || order.trackingUrl,
+    };
 
-    const itemsSummary = order.items && order.items.length > 0
-      ? order.items.map(i => `• ${i.productName} (${i.colorName || 'Default'} • Size ${i.size}) - Qty: ${i.quantity}`).join('\n')
-      : '• Garments in packaging';
-
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://bekee.com';
-    const liveTrackingUrl = `${origin}/track-order?ref=${order.orderNumber}&phone=${order.customerPhone.replace(/\D/g, '')}`;
-
-    return `✨ *ARUBEKEE COLLECTION • PARCEL DISPATCHED* 📦✨
-
-Dear ${order.customerName},
-Your parcel of handpicked pieces from ARUBEKEE COLLECTION, Aba, has been carefully inspected, packaged, and dispatched!
-
-📋 *SHIPMENT DETAILS:*
-• *Order Ref:* ${order.orderNumber}
-• *Courier / Waybill:* ${finalCarrier}
-• *Waybill Tracking No:* ${trackingNumber || 'En-route to dispatch hub'}
-• *Destination:* ${destination}
-${trackingUrl ? `• *Carrier Online Portal:* ${trackingUrl}` : ''}
-
-📍 *LIVE DISPATCH TRACKING:*
-Track your delivery progress and carrier handoff live:
-${liveTrackingUrl}
-
-👗 *Items in this delivery:*
-${itemsSummary}
-
-Our Aba concierge is monitoring your parcel until it reaches you safely. If you have any urgent delivery instructions, simply reply directly to this message.
-
-With warm regards,
-*ARUBEKEE COLLECTION*
-Aba Boutique Showroom • Nationwide Express Dispatch • +234 916 416 1091`;
+    return generateOrderWhatsAppMessage(orderWithFormCarrier);
   };
 
   const handleSendDispatchWhatsApp = () => {
-    const text = getDispatchWhatsAppMessage();
-    const url = cleanPhone
-      ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`
-      : `https://wa.me/?text=${encodeURIComponent(text)}`;
+    const finalCarrier = selectedCourier === 'Other'
+      ? (customCourier.trim() || 'Custom Courier')
+      : selectedCourier;
+
+    const url = generateOrderWhatsAppUrl({
+      ...order,
+      carrierName: finalCarrier || order.carrierName,
+      trackingNumber: trackingNumber || order.trackingNumber,
+      trackingUrl: trackingUrl || order.trackingUrl,
+    });
     window.open(url, '_blank');
   };
 

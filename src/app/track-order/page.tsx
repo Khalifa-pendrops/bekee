@@ -45,6 +45,8 @@ function TrackOrderContent() {
   const [errorMessage, setErrorMessage] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
   const [copiedAccount, setCopiedAccount] = useState(false);
+  const [isConfirmingDelivery, setIsConfirmingDelivery] = useState(false);
+  const [deliveryConfirmedMessage, setDeliveryConfirmedMessage] = useState("");
 
   // Load saved order history or auto-discover customer's active orders from server
   useEffect(() => {
@@ -263,6 +265,46 @@ function TrackOrderContent() {
 
   const boutiqueWhatsApp = "2349164161091";
 
+  const handleConfirmDelivery = async () => {
+    if (!order) return;
+    const phoneToVerify = phoneNumber || order.customerPhone;
+    if (!phoneToVerify) {
+      setErrorMessage("Please enter your phone number to verify and confirm delivery.");
+      return;
+    }
+
+    setIsConfirmingDelivery(true);
+    setErrorMessage("");
+
+    try {
+      const res = await fetch('/api/orders/confirm-delivery', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderNumber: order.orderNumber,
+          phone: phoneToVerify,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to confirm delivery.');
+      }
+
+      if (data.order) {
+        setOrder(data.order);
+        setDeliveryConfirmedMessage(data.message || 'Delivery confirmed! Thank you for letting our Aba workshop know your parcel arrived safely.');
+        // Update browser saved history to mark as delivered
+        saveOrderToHistory(data.order.orderNumber, phoneToVerify, data.order.totalKobo, 'delivered');
+        setSavedOrders(getSavedOrders());
+      }
+    } catch (err: any) {
+      setErrorMessage(err.message || 'An error occurred while confirming delivery.');
+    } finally {
+      setIsConfirmingDelivery(false);
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 space-y-10">
       {/* Page Header */}
@@ -397,6 +439,55 @@ function TrackOrderContent() {
               </Badge>
             </div>
           </div>
+
+          {/* Live Delivery Confirmation Card (For Dispatched or Ready for Pickup orders) */}
+          {(order.fulfillmentStatus === 'dispatched' || order.fulfillmentStatus === 'ready_for_pickup') && (
+            <div className="bg-emerald-50/90 border-2 border-emerald-400 p-5 sm:p-6 space-y-3 rounded-sm shadow-xs animate-fade-in">
+              <div className="flex items-center gap-2 text-emerald-950 font-bold text-sm">
+                <Package className="w-5 h-5 text-emerald-700 shrink-0" />
+                <span>Have you received your package?</span>
+              </div>
+              <p className="text-xs text-emerald-800 leading-relaxed">
+                {order.deliveryType === 'aba_pickup'
+                  ? "If you have collected your pieces from our Aba showroom, tap below to confirm collection."
+                  : "If your courier has handed over your parcel, tap below to confirm delivery. This immediately updates your order and notifies our Aba atelier that your pieces arrived safely."}
+              </p>
+
+              {deliveryConfirmedMessage && (
+                <div className="p-3 bg-emerald-100 text-emerald-900 text-xs font-semibold rounded flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+                  <span>{deliveryConfirmedMessage}</span>
+                </div>
+              )}
+
+              <div className="pt-1">
+                <Button
+                  type="button"
+                  variant="primary"
+                  size="md"
+                  isLoading={isConfirmingDelivery}
+                  onClick={handleConfirmDelivery}
+                  className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs uppercase tracking-wider gap-2 shadow-xs"
+                >
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>{isConfirmingDelivery ? "Confirming Receipt..." : "Yes, I Have Received My Order"}</span>
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Delivered Celebration Card */}
+          {order.fulfillmentStatus === 'delivered' && (
+            <div className="bg-emerald-50/70 border border-emerald-300/80 p-4 sm:p-5 rounded-sm flex items-start sm:items-center gap-3 text-emerald-900 text-xs animate-fade-in">
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5 sm:mt-0" />
+              <div>
+                <span className="font-bold text-sm block text-emerald-950">Parcel Delivered &amp; Received</span>
+                <span className="text-emerald-800">
+                  {order.deliveredAt ? `Confirmed delivered on ${new Date(order.deliveredAt).toLocaleDateString('en-NG', { dateStyle: 'medium', timeStyle: 'short' })}` : 'Delivery confirmed'} • Thank you for shopping with ARUBEKEE COLLECTION! ✨
+                </span>
+              </div>
+            </div>
+          )}
 
           {/* Pending Payment Pro-Forma Invoice Banner (If Unpaid / WhatsApp Invoice) */}
           {order.paymentStatus === 'pending' && (

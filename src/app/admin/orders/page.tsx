@@ -16,6 +16,7 @@ import { db } from '@/lib/db';
 import { formatKoboToNaira } from '@/lib/utils';
 import { Order } from '@/types';
 import { AdminPagination } from '@/components/admin/AdminPagination';
+import { generateOrderWhatsAppUrl } from '@/lib/whatsapp';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -213,10 +214,7 @@ export default async function AdminOrdersPage({
         ) : (
           <div className="divide-y divide-stone-100">
             {paginatedOrders.map((order) => {
-              const customerWhatsApp = (order.customerPhone || '').replace(/\D/g, '');
-              const waUrl = `https://wa.me/${customerWhatsApp}?text=${encodeURIComponent(
-                `Hello ${order.customerName}, this is ARUBEKEE COLLECTION regarding your order ${order.orderNumber}...`
-              )}`;
+              const waUrl = generateOrderWhatsAppUrl(order);
 
               return (
                 <div

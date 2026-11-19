@@ -260,23 +260,28 @@ export const db = {
     minPriceKobo?: number;
     maxPriceKobo?: number;
     sort?: 'newest' | 'price-asc' | 'price-desc' | 'featured';
+    includeUnpublished?: boolean;
   }): Promise<Product[]> {
     let results: Product[];
     const now = Date.now();
+    const includeUnpublished = Boolean(params?.includeUnpublished);
 
-    // 1. Fast in-memory cache lookup
-    if (cachedBaseProducts && (now - lastProductsCacheTime < PRODUCTS_CACHE_TTL_MS)) {
+    // 1. Fast in-memory cache lookup (only for standard storefront query)
+    if (!includeUnpublished && cachedBaseProducts && (now - lastProductsCacheTime < PRODUCTS_CACHE_TTL_MS)) {
       results = [...cachedBaseProducts];
     } else {
       const customList = getCustomProducts();
       const customSlugs = new Set(customList.map(p => p.slug));
       const mergedBase = [...customList, ...mockProducts.filter(p => !customSlugs.has(p.slug))];
 
-      let baseResults = mergedBase.filter((p) => p.isPublished && !p.isArchived);
+      let baseResults = includeUnpublished
+        ? mergedBase.filter((p) => !p.isArchived)
+        : mergedBase.filter((p) => p.isPublished && !p.isArchived);
 
-      if (isSupabaseConfigured && supabaseAdmin) {
+      const client = getSupabaseAdmin() || supabaseAdmin;
+      if (client) {
         try {
-          let query = supabaseAdmin
+          let query = client
             .from('products')
             .select(`
               *,
@@ -285,8 +290,11 @@ export const db = {
               images:product_images(*),
               variants:product_variants(*)
             `)
-            .eq('is_published', true)
             .eq('is_archived', false);
+
+          if (!includeUnpublished) {
+            query = query.eq('is_published', true);
+          }
 
           const { data, error } = await query;
           if (!error && data && data.length > 0) {
@@ -337,17 +345,32 @@ export const db = {
               } as Product;
             });
 
-            // Supabase is authoritative; merge any unique local custom products
-            const sbSlugs = new Set(sbMapped.map(s => s.slug));
-            baseResults = [...sbMapped, ...customList.filter(s => !sbSlugs.has(s.slug))];
+            // Local customList provides instant override for draft/unpublished states
+            const localCustomMap = new Map(customList.map(p => [p.slug, p]));
+            const mergedSb = sbMapped.map(sb => {
+              const localOverride = localCustomMap.get(sb.slug);
+              if (localOverride && typeof localOverride.isPublished === 'boolean') {
+                return { ...sb, isPublished: localOverride.isPublished };
+              }
+              return sb;
+            });
+
+            const sbSlugs = new Set(mergedSb.map(s => s.slug));
+            const uniqueCustom = customList.filter(s => !sbSlugs.has(s.slug));
+            baseResults = [...mergedSb, ...uniqueCustom];
           }
         } catch (err) {
           // Fall back cleanly to disk/memory mergedBase
         }
       }
 
-      cachedBaseProducts = baseResults;
-      lastProductsCacheTime = now;
+      // Strictly apply publication check if this is a storefront query
+      if (!includeUnpublished) {
+        baseResults = baseResults.filter((p) => p.isPublished === true && !p.isArchived);
+        cachedBaseProducts = baseResults;
+        lastProductsCacheTime = now;
+      }
+
       results = [...baseResults];
     }
 
@@ -440,23 +463,31 @@ export const db = {
     return results;
   },
 
-  async getProductBySlug(slug: string): Promise<Product | null> {
+  async getProductBySlug(slug: string, options?: { allowUnpublished?: boolean }): Promise<Product | null> {
     // 1. Fetch full product list (queries Supabase with full relational data)
-    const list = await this.getProducts();
+    const list = await this.getProducts({ includeUnpublished: options?.allowUnpublished });
     const found = list.find((p) => p.slug === slug || p.id === slug);
     if (found) return found;
 
     // 2. Check local disk fallback if offline
     const customList = getCustomProducts();
     const foundCustom = customList.find((p) => p.slug === slug || p.id === slug);
-    if (foundCustom) return foundCustom;
+    if (foundCustom) {
+      if (!options?.allowUnpublished && !foundCustom.isPublished) return null;
+      return foundCustom;
+    }
 
     // 3. Check inMemory fallback
-    return inMemoryProducts.find((p) => p.slug === slug || p.id === slug) || null;
+    const memFound = inMemoryProducts.find((p) => p.slug === slug || p.id === slug);
+    if (memFound) {
+      if (!options?.allowUnpublished && !memFound.isPublished) return null;
+      return memFound;
+    }
+    return null;
   },
 
   async getAllProductsForAdmin(): Promise<Product[]> {
-    return this.getProducts();
+    return this.getProducts({ includeUnpublished: true });
   },
 
   async createProduct(newProduct: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>): Promise<Product> {
@@ -476,22 +507,23 @@ export const db = {
     inMemoryProducts = [created, ...inMemoryProducts.filter(p => p.slug !== created.slug)];
 
     // 3. Mirror to Supabase if credentials are active
-    if (isSupabaseConfigured && supabaseAdmin) {
+    const client = getSupabaseAdmin() || supabaseAdmin;
+    if (client) {
       try {
-        const { data: catData } = await supabaseAdmin
+        const { data: catData } = await client
           .from('categories')
           .select('id')
           .eq('slug', created.categorySlug)
           .maybeSingle();
 
-        const { data: subData } = await supabaseAdmin
+        const { data: subData } = await client
           .from('subcategories')
           .select('id')
           .eq('slug', created.subCategorySlug)
           .maybeSingle();
 
         if (catData?.id) {
-          const { data: existingProd } = await supabaseAdmin
+          const { data: existingProd } = await client
             .from('products')
             .select('id')
             .eq('slug', created.slug)
@@ -500,7 +532,7 @@ export const db = {
           let prodId = existingProd?.id;
 
           if (prodId) {
-            await supabaseAdmin.from('products').update({
+            await client.from('products').update({
               name: created.name,
               tagline: created.tagline,
               description: created.description,
@@ -513,7 +545,7 @@ export const db = {
               updated_at: new Date().toISOString(),
             }).eq('id', prodId);
           } else {
-            const { data: prodData } = await supabaseAdmin
+            const { data: prodData } = await client
               .from('products')
               .insert({
                 name: created.name,
@@ -533,7 +565,7 @@ export const db = {
           }
 
           if (prodId) {
-            await supabaseAdmin.from('product_variants').delete().eq('product_id', prodId);
+            await client.from('product_variants').delete().eq('product_id', prodId);
             if (created.variants && created.variants.length > 0) {
               const variantRows = created.variants.map((v) => ({
                 product_id: prodId,
@@ -545,12 +577,12 @@ export const db = {
                 sale_price_kobo: v.salePriceKobo || null,
                 stock_quantity: v.stockQuantity,
                 low_stock_threshold: v.lowStockThreshold || 2,
-                is_active: true,
+                is_active: v.isActive ?? true,
               }));
-              await supabaseAdmin.from('product_variants').insert(variantRows);
+              await client.from('product_variants').insert(variantRows);
             }
 
-            await supabaseAdmin.from('product_images').delete().eq('product_id', prodId);
+            await client.from('product_images').delete().eq('product_id', prodId);
             if (created.images && created.images.length > 0) {
               const imageRows = created.images.map((img, idx) => ({
                 product_id: prodId,
@@ -559,7 +591,7 @@ export const db = {
                 is_primary: img.isPrimary,
                 sort_order: idx,
               }));
-              await supabaseAdmin.from('product_images').insert(imageRows);
+              await client.from('product_images').insert(imageRows);
             }
           }
         }
@@ -595,27 +627,67 @@ export const db = {
         };
         customList.unshift(targetProduct);
         saveCustomProducts(customList);
+      } else {
+        const inMemFound = inMemoryProducts.find(p => p.id === id || p.slug === id);
+        if (inMemFound) {
+          targetProduct = {
+            ...inMemFound,
+            ...updates,
+            updatedAt: new Date().toISOString(),
+          };
+          customList.unshift(targetProduct);
+          saveCustomProducts(customList);
+        } else if (updates.name && updates.slug) {
+          targetProduct = {
+            id,
+            slug: updates.slug,
+            name: updates.name,
+            tagline: updates.tagline || '',
+            description: updates.description || '',
+            categorySlug: updates.categorySlug || 'clothing',
+            subCategorySlug: updates.subCategorySlug || 'dresses',
+            collectionSlugs: updates.collectionSlugs || ['new-arrivals'],
+            fabricAndCare: updates.fabricAndCare || [],
+            images: updates.images || [],
+            variants: updates.variants || [],
+            hasVariants: (updates.variants || []).length > 1,
+            isPublished: updates.isPublished ?? true,
+            isFeatured: updates.isFeatured ?? false,
+            isArchived: updates.isArchived ?? false,
+            tags: updates.tags || [],
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+          customList.unshift(targetProduct);
+          saveCustomProducts(customList);
+        }
       }
     }
 
-    const memIndex = inMemoryProducts.findIndex((p) => p.id === id || p.slug === id);
-    if (memIndex > -1 && targetProduct) {
-      inMemoryProducts[memIndex] = targetProduct;
-    } else if (targetProduct) {
-      inMemoryProducts.unshift(targetProduct);
+    if (targetProduct) {
+      const memIndex = inMemoryProducts.findIndex((p) => p.id === id || p.slug === id);
+      if (memIndex > -1) {
+        inMemoryProducts[memIndex] = targetProduct;
+      } else {
+        inMemoryProducts.unshift(targetProduct);
+      }
     }
 
     // Mirror updates to Supabase
-    if (isSupabaseConfigured && supabaseAdmin && targetProduct) {
+    const client = getSupabaseAdmin() || supabaseAdmin;
+    if (client && targetProduct) {
       try {
-        const { data: existingProd } = await supabaseAdmin
-          .from('products')
-          .select('id')
-          .or(`id.eq.${id},slug.eq.${targetProduct.slug}`)
-          .maybeSingle();
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+        let query = client.from('products').select('id');
+        if (isUuid) {
+          query = query.eq('id', id);
+        } else {
+          query = query.eq('slug', targetProduct.slug || id);
+        }
+        const { data: existingProd, error: fetchErr } = await query.maybeSingle();
 
         if (existingProd?.id) {
-          await supabaseAdmin.from('products').update({
+          await client.from('products').update({
             name: targetProduct.name,
             tagline: targetProduct.tagline,
             description: targetProduct.description,
@@ -628,7 +700,7 @@ export const db = {
           }).eq('id', existingProd.id);
 
           if (updates.variants) {
-            await supabaseAdmin.from('product_variants').delete().eq('product_id', existingProd.id);
+            await client.from('product_variants').delete().eq('product_id', existingProd.id);
             const variantRows = updates.variants.map((v) => ({
               product_id: existingProd.id,
               sku: v.sku,
@@ -641,11 +713,11 @@ export const db = {
               low_stock_threshold: v.lowStockThreshold || 2,
               is_active: v.isActive ?? true,
             }));
-            await supabaseAdmin.from('product_variants').insert(variantRows);
+            await client.from('product_variants').insert(variantRows);
           }
 
           if (updates.images) {
-            await supabaseAdmin.from('product_images').delete().eq('product_id', existingProd.id);
+            await client.from('product_images').delete().eq('product_id', existingProd.id);
             const imageRows = updates.images.map((img, idx) => ({
               product_id: existingProd.id,
               url: img.url,
@@ -653,11 +725,11 @@ export const db = {
               is_primary: img.isPrimary,
               sort_order: idx,
             }));
-            await supabaseAdmin.from('product_images').insert(imageRows);
+            await client.from('product_images').insert(imageRows);
           }
         }
-      } catch (err) {
-        // Fall back cleanly
+      } catch (err: any) {
+        console.error('[db.updateProduct] Supabase sync exception:', err?.message || err);
       }
     }
 
@@ -845,8 +917,9 @@ export const db = {
   },
 
   async releaseExpiredReservations(): Promise<{ releasedCount: number }> {
-    if (isSupabaseConfigured && supabaseAdmin) {
-      const { data, error } = await supabaseAdmin.rpc('release_expired_reservations');
+    const client = getSupabaseAdmin() || supabaseAdmin;
+    if (client) {
+      const { data, error } = await client.rpc('release_expired_reservations');
       if (!error && data !== null) {
         return { releasedCount: Number(data) || 0 };
       }
