@@ -103,7 +103,7 @@ export default function DeliveryPage() {
           Delivery & Boutique Pickup
         </h1>
         <p className="text-xs sm:text-sm text-obsidian-muted max-w-2xl leading-relaxed">
-          We dispatch parcels from our Aba showroom every afternoon (Monday – Saturday). Because transport fees depend directly on courier logistics, parcel weight, and destination, <strong>all delivery and waybill fees are determined by the transporter and paid directly upon delivery or collection.</strong>
+          We dispatch parcels from our Aba showroom (Monday – Saturday). Because transport fees depend directly on courier logistics, parcel weight, and destination, <strong>all delivery and waybill fees are determined by the transporter and paid directly upon delivery or collection.</strong>
         </p>
       </div>
 
