@@ -1,3 +1,11 @@
+import { notFound } from "next/navigation";
+
+// Returns page currently commented out / deactivated as requested
+export default function ReturnsPage() {
+  notFound();
+}
+
+/*
 import React from "react";
 import Link from "next/link";
 import { RefreshCw, ShieldCheck, AlertCircle, MessageSquare } from "lucide-react";
@@ -8,7 +16,7 @@ export const metadata = {
   description: "Learn about the 48-hour exchange policy and guidelines for garments, footwear, and accessories from Arubekee Collection.",
 };
 
-export default function ReturnsPage() {
+export default function ReturnsPageContent() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 space-y-12 text-left">
       <div className="border-b border-stone-line pb-6 space-y-2">
@@ -73,4 +81,4 @@ export default function ReturnsPage() {
     </div>
   );
 }
-
+*/

@@ -86,17 +86,20 @@ export default function TermsPage() {
           <section className="bg-white p-6 md:p-8 rounded-lg border border-sand-200 shadow-sm">
             <h2 className="font-serif text-xl md:text-2xl text-stone-900 mb-4 flex items-center gap-2">
               <span className="text-oxblood-700 font-sans text-sm font-semibold">03.</span>
-              Fulfilment, Delivery Zones & Boutique Pickup
+              Fulfilment, Logistics & Boutique Pickup
             </h2>
             <div className="space-y-3 text-stone-600">
               <p>
-                <strong>Delivery Fees:</strong> Delivery charges are computed transparently during checkout based on your state and designated delivery zone. For remote or interstate destinations outside standardized routes, customers may submit a <Link href="/checkout" className="text-oxblood-700 underline font-medium">Delivery Quote Request</Link> before committing payment.
+                <strong>Logistics Charges & Delivery Fees:</strong> ARUBEKEE COLLECTION does not take charge of, mark up, or collect delivery fees online. At checkout, your payment covers 100% of your ordered garments only. All transport and waybill charges are determined independently by the logistics transporter (based on destination, parcel weight, and cargo type) and are paid directly by the customer to the courier upon delivery or waybill collection. For full details on coverage and timelines, see our <Link href="/delivery" className="text-oxblood-700 underline font-medium">Delivery & Pickup Guide</Link>.
               </p>
               <p>
-                <strong>Aba Boutique Pickup:</strong> Customers selecting showroom pickup in Aba must present their official Order Confirmation SMS or Email alongside valid identification before merchandise will be handed over.
+                <strong>Aba Boutique Showroom Pickup:</strong> Showroom collection at our Aba boutique (Ehi Road Fashion District, Aba, Abia State) is completely free of charge (₦0). Customers selecting showroom pickup must present their official Order Confirmation reference (e.g. <code>ARUBEKEE-2611-XXXX</code>) via SMS or WhatsApp before merchandise will be handed over.
               </p>
               <p>
-                <strong>Waybill & Courier Logistics:</strong> For interstate shipments (Lagos, Abuja, Port Harcourt, Enugu, Owerri, etc.), packages are consigned with reputable logistics partners (GIG Logistics, DHL, park waybill services). A trackable waybill number will be issued. Transit times are estimates and may vary slightly due to interstate transit checks or severe weather.
+                <strong>Courier Transit & Waybill Notification:</strong> For all dispatched orders (Aba metropolis doorstep, South-East regional transit, Lagos/PH/Abuja corridor, and nationwide), packages are consigned with reputable logistics carriers (such as GIG Logistics, Peace Mass Transit, dedicated dispatch riders, and priority air cargo). A trackable waybill code and carrier details will be sent via WhatsApp and SMS upon dispatch. Transit times are estimates provided by transporters and may vary slightly due to road conditions, terminal logistics, or public holidays.
+              </p>
+              <p>
+                <strong>Delivery Confirmation:</strong> Upon receiving your parcel from the courier, please inspect your items and use your 1-click live tracking link to confirm safe arrival with our boutique.
               </p>
             </div>
           </section>
@@ -105,11 +108,11 @@ export default function TermsPage() {
           <section className="bg-white p-6 md:p-8 rounded-lg border border-sand-200 shadow-sm">
             <h2 className="font-serif text-xl md:text-2xl text-stone-900 mb-4 flex items-center gap-2">
               <span className="text-oxblood-700 font-sans text-sm font-semibold">04.</span>
-              Return, Exchange & Defect Guidelines
+              Quality Assurance, Defect & Exchange Guidelines
             </h2>
             <div className="space-y-3 text-stone-600">
               <p>
-                We inspect every garment, pair of shoes, and handbag prior to dispatch. If you receive an item with a manufacturing defect or an incorrect size/colour, you must notify us within <strong>48 hours of receipt</strong>.
+                We inspect every garment, pair of shoes, and handbag prior to dispatch. If you receive an item with a manufacturing defect or an incorrect size/colour, you must notify our customer care team within <strong>48 hours of parcel delivery confirmation</strong>.
               </p>
               <p>
                 To qualify for an exchange or store credit:
@@ -120,7 +123,7 @@ export default function TermsPage() {
                 <li>Intimate wear, pierced jewellery, and items bought on final sale clearance are non-returnable for hygiene reasons.</li>
               </ul>
               <p className="pt-2">
-                For detailed instructions on packaging and dispatching an authorized return, consult our dedicated <Link href="/returns" className="text-oxblood-700 underline font-medium">Returns Policy</Link>.
+                To report a defect or request an exchange, contact our customer support team directly via WhatsApp or verify your order status on our <Link href="/track-order" className="text-oxblood-700 underline font-medium">Track Order</Link> page.
               </p>
             </div>
           </section>

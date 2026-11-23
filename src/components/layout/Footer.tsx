@@ -173,21 +173,21 @@ export function Footer() {
                   Delivery & Pickup Info
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/returns" className="hover:text-oxblood transition-colors">
                   Exchange Policy
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link href="/about" className="hover:text-oxblood transition-colors">
                   About Our Boutique
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/admin" className="text-obsidian-subtle hover:text-obsidian text-[11px]">
                   Owner Portal
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>
