@@ -20,41 +20,42 @@ export default async function HomePage() {
   return (
     <div className="space-y-16 sm:space-y-24 pb-16">
       {/* 1. EDITORIAL HERO SECTION */}
-      <section className="relative bg-ivory-warm border-b border-stone-line overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Content */}
-            <ScrollReveal animation="slide-up" duration={800} className="lg:col-span-7 space-y-6 text-left">
+      <section className="relative bg-ivory-warm border-b border-stone-line overflow-hidden w-full">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-16 lg:py-24">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-center">
+            {/* Left Content (Order 2 on mobile, Order 1 on desktop) */}
+            <ScrollReveal animation="slide-up" duration={800} className="order-2 lg:order-1 lg:col-span-7 space-y-5 sm:space-y-6 text-left w-full">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-ivory border border-stone-line text-oxblood text-xs uppercase tracking-widest font-semibold">
                 <Sparkles className="w-3.5 h-3.5 text-gold" />
                 <span>Crafted in Aba, Abia State</span>
               </div>
 
-              <h1 className="editorial-heading text-4xl sm:text-5xl lg:text-6xl text-obsidian leading-[1.1]">
+              <h1 className="editorial-heading text-3xl sm:text-5xl lg:text-6xl text-obsidian leading-[1.15] sm:leading-[1.1]">
                 Contemporary African luxury, tailored for every milestone.
               </h1>
 
-              <p className="text-base sm:text-lg text-obsidian-muted font-normal leading-relaxed max-w-xl">
+              <p className="text-sm sm:text-lg text-obsidian-muted font-normal leading-relaxed max-w-2xl">
                 Ready-to-wear dresses, architectural leather mules, structured bags, and polished co-ords. Designed for the discerning Nigerian woman who values flawless seams, breathable luxury fabrics, and understated poise.
               </p>
 
-              <div className="flex flex-wrap gap-4 pt-2">
-                <Link href="/collections/new-arrivals">
-                  <Button variant="primary" size="lg" className="gap-2 bg-oxblood hover:bg-oxblood-hover shadow-sm rounded-lg">
+              {/* CTAs stretch full width on mobile for visual balance, normal inline on desktop */}
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 w-full sm:w-auto">
+                <Link href="/collections/new-arrivals" className="w-full sm:w-auto">
+                  <Button variant="primary" size="lg" className="w-full sm:w-auto justify-center gap-2 bg-oxblood hover:bg-oxblood-hover shadow-sm rounded-lg">
                     <span>Explore New Drops</span>
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
 
-                <Link href="/collections/occasion-wear">
-                  <Button variant="outline" size="lg" className="border-oxblood/30 text-oxblood hover:bg-oxblood/5 rounded-lg">
+                <Link href="/collections/occasion-wear" className="w-full sm:w-auto">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto justify-center border-oxblood/30 text-oxblood hover:bg-oxblood/5 rounded-lg">
                     <span>Occasion &amp; Weekend Wear</span>
                   </Button>
                 </Link>
               </div>
 
               {/* Trust Indicators */}
-              <div className="pt-6 border-t border-stone-line/80 grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs text-obsidian-soft">
+              <div className="pt-5 border-t border-stone-line/80 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 text-xs text-obsidian-soft">
                 <div className="flex items-center gap-2">
                   <Truck className="w-4 h-4 text-oxblood shrink-0" />
                   <span>Nationwide Express Transit</span>
@@ -70,11 +71,11 @@ export default async function HomePage() {
               </div>
             </ScrollReveal>
 
-            {/* Right Hero Visual Collage */}
-            <ScrollReveal animation="slide-left" delay={150} duration={850} className="lg:col-span-5 relative">
-              <div className="relative mx-auto max-w-md lg:max-w-none">
+            {/* Right Hero Visual Collage (Order 1 on mobile, Order 2 on desktop) */}
+            <ScrollReveal animation="slide-left" delay={150} duration={850} className="order-1 lg:order-2 lg:col-span-5 relative w-full">
+              <div className="relative w-full max-w-full sm:max-w-xl lg:max-w-none mx-auto">
                 {/* Main Portrait */}
-                <div className="aspect-[3/4] overflow-hidden rounded-2xl border-2 border-[#EADDCF] shadow-card bg-stone-subtle">
+                <div className="aspect-[4/5] sm:aspect-[3/4] overflow-hidden rounded-2xl border-2 border-[#EADDCF] shadow-card bg-stone-subtle w-full">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/asset/80772648-ba30-4794-a044-2de173b5fc1f.jpg"
@@ -83,12 +84,12 @@ export default async function HomePage() {
                   />
                 </div>
 
-                {/* Overlaid Editorial Plaque */}
-                <div className="absolute -bottom-6 -left-6 bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-[#EADDCF] shadow-floating max-w-[250px] hidden sm:block animate-float">
-                  <span className="text-[10px] tracking-widest uppercase font-bold text-oxblood block">
+                {/* Overlaid Editorial Plaque (Visible on both mobile & desktop) */}
+                <div className="absolute -bottom-4 left-3 sm:-bottom-6 sm:-left-6 sm:left-auto bg-white/95 backdrop-blur-md p-3 sm:p-5 rounded-xl sm:rounded-2xl border border-[#EADDCF] shadow-floating max-w-[calc(100%-24px)] sm:max-w-[250px] animate-float z-10">
+                  <span className="text-[9px] sm:text-[10px] tracking-widest uppercase font-bold text-oxblood block">
                     Signature Curated Edit
                   </span>
-                  <p className="font-serif text-sm text-obsidian mt-1 leading-snug">
+                  <p className="font-serif text-xs sm:text-sm text-obsidian mt-1 leading-snug">
                     Handpicked two-tone structured pencil dress in deep oxblood &amp; blush.
                   </p>
                 </div>
@@ -99,7 +100,7 @@ export default async function HomePage() {
       </section>
 
       {/* 2. CATEGORY DISCOVERY (SHEIN-agility with luxury aesthetics) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <ScrollReveal animation="slide-up">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-4 border-b border-stone-line">
             <div>
@@ -165,7 +166,7 @@ export default async function HomePage() {
       </section>
 
       {/* 3. NEW ARRIVALS CAROUSEL / GRID */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <ScrollReveal animation="slide-up">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-4 border-b border-stone-line">
             <div>
@@ -195,7 +196,7 @@ export default async function HomePage() {
 
       {/* 4. CURATED COLLECTIONS BANNER */}
       <section className="bg-ivory-warm border-y border-stone-line py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <ScrollReveal animation="slide-up" className="text-center max-w-2xl mx-auto mb-12 space-y-2">
             <span className="text-xs font-semibold tracking-widest uppercase text-oxblood">
               Editorial Curation
@@ -243,7 +244,7 @@ export default async function HomePage() {
 
       {/* 5. SALE SPOTLIGHT (GENUINE MARKDOWNS) */}
       {saleProducts.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <ScrollReveal animation="slide-up">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-4 border-b border-stone-line">
               <div>
@@ -273,7 +274,7 @@ export default async function HomePage() {
       )}
 
       {/* 6. ABA ATELIER HERITAGE & BOUTIQUE PICKUP */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <ScrollReveal animation="slide-up" duration={800}>
           <div className="bg-obsidian text-ivory-light p-8 sm:p-12 lg:p-16 border border-obsidian-soft relative overflow-hidden rounded-2xl">
             <div className="max-w-2xl space-y-6 relative z-10">

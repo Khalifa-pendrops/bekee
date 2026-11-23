@@ -48,24 +48,24 @@ export function Header() {
     <>
       <header className="sticky top-0 z-40 bg-ivory/95 backdrop-blur-md border-b border-stone-line shadow-sm transition-all">
         {/* Main Navbar */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 sm:h-20 gap-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-4">
             
             {/* Left: Mobile Menu & Brand Identity */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="lg:hidden p-2 text-obsidian hover:text-oxblood transition-colors -ml-2"
+                className="lg:hidden p-1.5 sm:p-2 text-obsidian hover:text-oxblood transition-colors -ml-1 sm:-ml-2"
                 aria-label="Open mobile menu"
               >
-                <Menu className="w-6 h-6 stroke-1.5" />
+                <Menu className="w-5 h-5 sm:w-6 sm:h-6 stroke-1.5" />
               </button>
 
               <Link href="/" className="group flex flex-col">
-                <span className="font-serif text-2xl sm:text-3xl font-normal tracking-[0.22em] text-obsidian group-hover:text-oxblood transition-colors uppercase">
+                <span className="font-serif text-xl sm:text-3xl font-normal tracking-[0.16em] sm:tracking-[0.22em] text-obsidian group-hover:text-oxblood transition-colors uppercase whitespace-nowrap">
                   ARUBEKEE
                 </span>
-                <span className="text-[9px] sm:text-[10px] tracking-[0.35em] text-oxblood uppercase font-sans font-semibold -mt-1">
+                <span className="text-[8px] sm:text-[10px] tracking-[0.28em] sm:tracking-[0.35em] text-oxblood uppercase font-sans font-semibold -mt-1">
                   Collection
                 </span>
               </Link>
@@ -77,11 +77,11 @@ export function Header() {
             </div>
 
             {/* Right: Actions (Mobile Search, Wishlist, Bag) */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-1 sm:gap-3 shrink-0">
               {/* Mobile Search Button */}
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className="lg:hidden p-2 text-obsidian hover:text-oxblood transition-colors flex items-center justify-center rounded-full border border-[#D8B4A6]/60 bg-white shadow-xs"
+                className="lg:hidden p-1.5 sm:p-2 text-obsidian hover:text-oxblood transition-colors flex items-center justify-center rounded-full border border-[#D8B4A6]/60 bg-white shadow-xs"
                 aria-label="Search store"
               >
                 <Search className="w-4 h-4 text-oxblood" />
@@ -90,12 +90,12 @@ export function Header() {
               {/* Wishlist */}
               <Link
                 href="/wishlist"
-                className="relative p-2.5 text-obsidian hover:text-oxblood transition-colors rounded-full hover:bg-sand-100"
+                className="relative p-1.5 sm:p-2.5 text-obsidian hover:text-oxblood transition-colors rounded-full hover:bg-sand-100"
                 aria-label="Wishlist"
               >
-                <Heart className="w-5 h-5 stroke-1.5" />
+                <Heart className="w-4 h-4 sm:w-5 sm:h-5 stroke-1.5" />
                 {totalWishlistCount > 0 && (
-                  <span className="absolute top-1 right-1 bg-oxblood text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-fade-in shadow-xs">
+                  <span className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 bg-oxblood text-white text-[9px] sm:text-[10px] font-bold w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center animate-fade-in shadow-xs">
                     {totalWishlistCount}
                   </span>
                 )}
@@ -104,12 +104,12 @@ export function Header() {
               {/* Shopping Bag */}
               <button
                 onClick={openCart}
-                className="relative p-2.5 text-obsidian hover:text-oxblood transition-colors rounded-full hover:bg-sand-100"
+                className="relative p-1.5 sm:p-2.5 text-obsidian hover:text-oxblood transition-colors rounded-full hover:bg-sand-100"
                 aria-label="Shopping Bag"
               >
-                <ShoppingBag className="w-5 h-5 stroke-1.5" />
+                <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 stroke-1.5" />
                 {totalQuantity > 0 && (
-                  <span className="absolute top-1 right-1 bg-oxblood text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-fade-in shadow-xs">
+                  <span className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 bg-oxblood text-white text-[9px] sm:text-[10px] font-bold w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center animate-fade-in shadow-xs">
                     {totalQuantity}
                   </span>
                 )}

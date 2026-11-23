@@ -18,9 +18,9 @@ export function AnnouncementBar({
   if (!isVisible) return null;
 
   return (
-    <div className="bg-oxblood text-ivory-light text-[11px] font-medium tracking-widest uppercase py-2 px-4 relative flex items-center justify-center transition-all select-none border-b border-oxblood-hover w-full max-w-full overflow-hidden">
-      <div className="flex items-center justify-center gap-2 text-center min-w-0 max-w-[calc(100%-48px)] truncate">
-        <Sparkles className="w-3.5 h-3.5 text-gold shrink-0 animate-pulse" />
+    <div className="bg-oxblood text-ivory-light text-[10px] sm:text-[11px] font-medium tracking-widest uppercase py-2 px-2 sm:px-4 relative flex items-center justify-center transition-all select-none border-b border-oxblood-hover w-full max-w-full overflow-hidden">
+      <div className="flex items-center justify-center gap-1.5 sm:gap-2 text-center min-w-0 max-w-[calc(100%-36px)] truncate">
+        <Sparkles className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-gold shrink-0 animate-pulse" />
         <Link href={link} className="hover:underline truncate text-ellipsis overflow-hidden">
           {message}
         </Link>
@@ -28,7 +28,7 @@ export function AnnouncementBar({
 
       <button
         onClick={() => setIsVisible(false)}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-ivory-light/70 hover:text-ivory-light p-1 transition-colors"
+        className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-ivory-light/70 hover:text-ivory-light p-1 transition-colors"
         aria-label="Dismiss announcement"
       >
         <X className="w-3.5 h-3.5" />

@@ -4,8 +4,8 @@ import { MapPin, Phone, Clock, MessageSquare, ShieldCheck, Truck, RefreshCw } fr
 
 export function Footer() {
   return (
-    <footer className="bg-ivory-warm border-t border-stone-line text-obsidian pt-16 pb-24 lg:pb-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="bg-ivory-warm border-t border-stone-line text-obsidian pt-16 pb-24 lg:pb-12 w-full">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         {/* Core Brand Value Pillars */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-12 border-b border-stone-line">
           <div className="flex items-start gap-4">
