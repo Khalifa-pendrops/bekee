@@ -148,7 +148,6 @@ export const mockDeliveryZones: DeliveryZone[] = [
     estimatedDays: "Same day / 24 hours",
     statesIncluded: ["Abia"],
     feeKobo: 0, // Billed directly by courier on delivery
-    freeShippingAboveKobo: 0,
     isActive: true,
     priorityOrder: 2,
   },
@@ -159,7 +158,6 @@ export const mockDeliveryZones: DeliveryZone[] = [
     estimatedDays: "1 - 2 business days",
     statesIncluded: ["Abia", "Imo", "Enugu", "Anambra", "Ebonyi"],
     feeKobo: 0, // Billed directly by courier on delivery
-    freeShippingAboveKobo: 0,
     isActive: true,
     priorityOrder: 3,
   },
@@ -170,7 +168,6 @@ export const mockDeliveryZones: DeliveryZone[] = [
     estimatedDays: "2 - 3 business days",
     statesIncluded: ["Lagos", "Rivers", "Federal Capital Territory"],
     feeKobo: 0, // Billed directly by courier on delivery
-    freeShippingAboveKobo: 0,
     isActive: true,
     priorityOrder: 4,
   },

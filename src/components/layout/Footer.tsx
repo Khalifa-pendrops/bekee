@@ -170,7 +170,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/delivery" className="hover:text-oxblood transition-colors">
-                  Delivery Rates & Pickup
+                  Delivery & Pickup Info
                 </Link>
               </li>
               <li>
