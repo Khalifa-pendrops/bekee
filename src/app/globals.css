@@ -19,7 +19,7 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     scroll-behavior: smooth;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   body {
@@ -29,7 +29,6 @@
     background-color: #FAF6F0;
     color: #181514;
     position: relative;
-    overflow-x: hidden;
     touch-action: pan-y; /* Prevents horizontal drag/wobble on mobile touch */
   }
 
