@@ -403,7 +403,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
             <div className="mt-2.5 sm:hidden">
               <button
                 onClick={handleQuickAddClick}
-                className="w-full py-2 bg-stone-900 hover:bg-oxblood text-white text-[11px] uppercase tracking-wider font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-colors shadow-xs"
+                className="w-full py-2.5 min-h-[38px] bg-stone-900 hover:bg-oxblood text-white text-[11px] uppercase tracking-wider font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-colors shadow-xs"
               >
                 <ShoppingBag className="w-3 h-3" />
                 <span>{mobileActionLabel}</span>
@@ -517,7 +517,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
               type="button"
               disabled={!selectedVariant || selectedVariant.stockQuantity <= 0}
               onClick={handleConfirmModalAdd}
-              className="w-full sm:w-auto px-6 py-3 sm:py-2.5 bg-stone-900 hover:bg-oxblood text-white text-xs font-bold uppercase tracking-wider rounded-xl sm:rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shadow-sm whitespace-nowrap"
+              className="w-full sm:w-auto px-6 py-3.5 min-h-[48px] bg-stone-900 hover:bg-oxblood text-white text-xs font-bold uppercase tracking-wider rounded-xl sm:rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shadow-sm whitespace-nowrap"
             >
               <ShoppingBag className="w-3.5 h-3.5 shrink-0" />
               <span>Add to Shopping Bag</span>

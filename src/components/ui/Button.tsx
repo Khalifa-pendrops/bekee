@@ -24,10 +24,10 @@ export const buttonVariants = cva(
           "bg-[#25D366] text-white hover:bg-[#20BD5A] shadow-subtle",
       },
       size: {
-        sm: "h-9 px-4 text-xs tracking-wider uppercase font-semibold rounded-lg",
-        md: "h-11 px-6 text-sm tracking-wide rounded-lg font-medium",
-        lg: "h-13 px-8 text-base tracking-wide rounded-xl font-medium",
-        icon: "h-10 w-10 p-0 rounded-full",
+        sm: "min-h-[42px] px-4 text-xs tracking-wider uppercase font-semibold rounded-lg",
+        md: "min-h-[50px] px-6 text-sm tracking-wide rounded-lg font-medium",
+        lg: "min-h-[56px] px-8 text-base tracking-wide rounded-xl font-medium",
+        icon: "h-11 w-11 p-0 rounded-full",
       },
     },
     defaultVariants: {

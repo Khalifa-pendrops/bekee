@@ -752,7 +752,7 @@ export default function CheckoutPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3.5 px-4 bg-stone-900 text-white text-xs font-semibold tracking-widest uppercase rounded hover:bg-oxblood-700 transition-colors shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full min-h-[54px] py-4 px-4 bg-stone-900 text-white text-xs font-semibold tracking-widest uppercase rounded-lg hover:bg-oxblood-700 transition-colors shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {isSubmitting ? (
                   <>
