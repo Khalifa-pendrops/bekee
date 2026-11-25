@@ -163,11 +163,11 @@ export function Footer() {
                   Track Your Order
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/size-guide" className="hover:text-oxblood transition-colors">
                   Size Guide (UK & EU)
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link href="/delivery" className="hover:text-oxblood transition-colors">
                   Delivery & Pickup Info

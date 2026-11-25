@@ -9,7 +9,7 @@ const checkoutSchema = z.object({
   items: z.array(
     z.object({
       productId: z.string(),
-      variantId: z.string(),
+      variantId: z.string().nullish().or(z.literal('')),
       quantity: z.number().int().positive(),
     })
   ).min(1, 'Cart cannot be empty'),
@@ -55,16 +55,28 @@ export async function POST(req: NextRequest) {
       let matchedVariant = null;
 
       for (const p of allProducts) {
-        const v = p.variants.find(
-          (variant) =>
-            variant.id === reqItem.variantId ||
-            variant.sku === reqItem.variantId ||
-            (variant.sku && reqItem.variantId && variant.sku.toLowerCase() === reqItem.variantId.toLowerCase())
-        );
-        if (v) {
+        // 1. Try matching by variantId (if provided)
+        if (reqItem.variantId) {
+          const v = (p.variants || []).find(
+            (variant) =>
+              variant.id === reqItem.variantId ||
+              variant.sku === reqItem.variantId ||
+              (variant.sku && reqItem.variantId && variant.sku.toLowerCase() === reqItem.variantId.toLowerCase())
+          );
+          if (v) {
+            matchedProduct = p;
+            matchedVariant = v;
+            break;
+          }
+        }
+
+        // 2. Fallback: match by productId or slug if variantId was omitted or not matched
+        if (p.id === reqItem.productId || p.slug === reqItem.productId) {
           matchedProduct = p;
-          matchedVariant = v;
-          break;
+          if (!matchedVariant && p.variants && p.variants.length > 0) {
+            matchedVariant = p.variants.find((v) => v.stockQuantity > 0) || p.variants[0];
+          }
+          if (matchedVariant) break;
         }
       }
 

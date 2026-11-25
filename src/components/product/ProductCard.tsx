@@ -3,10 +3,10 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Product, ProductVariant } from "@/types";
-import { formatKoboToNaira } from "@/lib/utils";
+import { formatKoboToNaira, buildWhatsAppReserveInAbaUrl } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
-import { Heart, ShoppingBag, Check, Sparkles, AlertCircle } from "lucide-react";
+import { Heart, ShoppingBag, Check, Sparkles, AlertCircle, MessageCircle } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 
 interface ProductCardProps {
@@ -102,20 +102,10 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
   const hasMultipleColors = uniqueColors.length > 1;
 
   // Desktop Hover Action Label
-  let desktopActionLabel = "Quick Add";
-  if (hasRealSizes) {
-    desktopActionLabel = "Choose Size";
-  } else if (hasMultipleColors) {
-    desktopActionLabel = "Choose Colour";
-  }
+  const desktopActionLabel = hasMultipleColors ? "Choose Colour" : "Quick Add";
 
   // Mobile Action Label
-  let mobileActionLabel = "Add to Bag";
-  if (hasRealSizes) {
-    mobileActionLabel = "Select Size";
-  } else if (hasMultipleColors) {
-    mobileActionLabel = "Select Colour";
-  }
+  const mobileActionLabel = hasMultipleColors ? "Select Colour" : "Add to Bag";
 
   const inWishlist = isInWishlist(product.id);
 
@@ -206,6 +196,17 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
     setIsQuickAddModalOpen(false);
   };
 
+  const storePhone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '2349164161091';
+  const effectivePriceKobo = hasSale ? salePriceKobo! : startingPriceKobo;
+  const reserveInAbaUrl = buildWhatsAppReserveInAbaUrl(
+    storePhone,
+    product.name,
+    selectedVariant?.colorName || activeColor || uniqueColors[0],
+    formatKoboToNaira(effectivePriceKobo),
+    product.slug,
+    primaryImage?.url
+  );
+
   return (
     <>
       <div
@@ -226,6 +227,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
                 isSoldOut ? "grayscale opacity-85" : ""
               }`}
               loading={priority ? "eager" : "lazy"}
+              decoding="async"
             />
           </Link>
 
@@ -251,18 +253,32 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
             ) : null}
           </div>
 
-          {/* Floating Wishlist Heart */}
-          <button
-            onClick={handleWishlistClick}
-            aria-label={inWishlist ? "Remove from wishlist" : "Add to wishlist"}
-            className="absolute top-2.5 right-2.5 w-8 h-8 bg-white/90 hover:bg-white text-stone-900 rounded-full shadow-sm flex items-center justify-center transition-all duration-200 z-10"
-          >
-            <Heart
-              className={`w-4 h-4 transition-colors ${
-                inWishlist ? "fill-oxblood text-oxblood" : "text-stone-700 hover:text-oxblood"
-              }`}
-            />
-          </button>
+          {/* Top-Right Floating Actions: Wishlist + 1-Tap WhatsApp Reserve */}
+          <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-10">
+            <button
+              onClick={handleWishlistClick}
+              aria-label={inWishlist ? "Remove from wishlist" : "Add to wishlist"}
+              className="w-8 h-8 bg-white/90 hover:bg-white text-stone-900 rounded-full shadow-sm flex items-center justify-center transition-all duration-200"
+            >
+              <Heart
+                className={`w-4 h-4 transition-colors ${
+                  inWishlist ? "fill-oxblood text-oxblood" : "text-stone-700 hover:text-oxblood"
+                }`}
+              />
+            </button>
+
+            <a
+              href={reserveInAbaUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              title="Reserve at the store via WhatsApp"
+              aria-label="Reserve at the store via WhatsApp"
+              className="w-8 h-8 bg-white/90 hover:bg-emerald-600 hover:text-white text-emerald-700 rounded-full shadow-sm flex items-center justify-center transition-all duration-200"
+            >
+              <MessageCircle className="w-4 h-4" />
+            </a>
+          </div>
 
           {/* Size Pills Hover Overlay on Desktop - Only for products with wearable sizes (omitted for bags) */}
           {hasRealSizes && (
@@ -286,16 +302,27 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
             </div>
           )}
 
-          {/* Quick Add Action Bar - Slides up on desktop */}
+          {/* Quick Add Action Bar - Slides up on desktop with 1-Tap Reserve at the Store */}
           {!isSoldOut && (
-            <div className="absolute inset-x-2 bottom-2 hidden sm:block opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 z-10">
+            <div className="absolute inset-x-2 bottom-2 hidden sm:flex items-center gap-1.5 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 z-10">
               <button
                 onClick={handleQuickAddClick}
-                className="w-full py-2 bg-stone-900/95 hover:bg-oxblood text-white text-xs font-semibold uppercase tracking-wider rounded-lg flex items-center justify-center gap-1.5 shadow-md active:scale-98 transition-all"
+                className="flex-1 py-2 bg-stone-900/95 hover:bg-oxblood text-white text-xs font-semibold uppercase tracking-wider rounded-lg flex items-center justify-center gap-1.5 shadow-md active:scale-98 transition-all"
               >
                 <ShoppingBag className="w-3.5 h-3.5" />
                 <span>{desktopActionLabel}</span>
               </button>
+              <a
+                href={reserveInAbaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                title="Reserve at the store via WhatsApp"
+                aria-label="Reserve at the store via WhatsApp"
+                className="px-2.5 py-2 bg-emerald-700/95 hover:bg-emerald-800 text-white rounded-lg flex items-center justify-center shadow-md active:scale-98 transition-all"
+              >
+                <MessageCircle className="w-3.5 h-3.5" />
+              </a>
             </div>
           )}
         </div>
@@ -398,16 +425,28 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
             </span>
           </div>
 
-          {/* Mobile Quick Add Button */}
+          {/* Mobile Actions: Add to Bag + 1-Tap WhatsApp Reserve */}
           {!isSoldOut && (
-            <div className="mt-2.5 sm:hidden">
+            <div className="mt-2.5 sm:hidden grid grid-cols-2 gap-1.5">
               <button
                 onClick={handleQuickAddClick}
-                className="w-full py-2.5 min-h-[38px] bg-stone-900 hover:bg-oxblood text-white text-[11px] uppercase tracking-wider font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-colors shadow-xs"
+                className="py-2.5 min-h-[38px] bg-stone-900 hover:bg-oxblood text-white text-[11px] uppercase tracking-wider font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-colors shadow-xs"
               >
                 <ShoppingBag className="w-3 h-3" />
                 <span>{mobileActionLabel}</span>
               </button>
+              <a
+                href={reserveInAbaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                title="Reserve at the store via WhatsApp"
+                aria-label="Reserve at the store via WhatsApp"
+                className="py-2.5 min-h-[38px] bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] uppercase tracking-wider font-bold rounded-lg flex items-center justify-center gap-1 transition-colors shadow-xs text-center"
+              >
+                <MessageCircle className="w-3 h-3 text-emerald-600 shrink-0" />
+                <span>Reserve</span>
+              </a>
             </div>
           )}
         </div>

@@ -11,30 +11,116 @@ import {
   ArrowRight, 
   ShieldCheck,
   Calendar,
-  Truck
+  Truck,
+  ShoppingBag
 } from 'lucide-react';
 import { saveOrderToHistory } from '@/lib/orderStorage';
+import { buildCustomerOrderWhatsAppUrl } from '@/lib/whatsapp';
+import { formatKoboToNaira } from '@/lib/utils';
 
 function SuccessContent() {
   const searchParams = useSearchParams();
   const orderNumber = searchParams.get('orderNumber') || 'ARUBEKEE-ORDER';
   const paramPhone = searchParams.get('phone') || '';
 
+  // Start as null so initial SSR HTML and initial client hydration match exactly (preventing hydration error)
+  const [orderData, setOrderData] = React.useState<any>(null);
+
   React.useEffect(() => {
+    // 1. Immediately hydrate order data from client localStorage post-mount
+    if (typeof window !== 'undefined') {
+      try {
+        const byId = localStorage.getItem(`arubekee_order_${orderNumber}`);
+        if (byId) {
+          setOrderData(JSON.parse(byId));
+        } else {
+          const last = localStorage.getItem('arubekee_last_order_snapshot');
+          if (last) {
+            const parsed = JSON.parse(last);
+            if (!orderNumber || parsed.orderNumber === orderNumber || orderNumber.includes('ORDER')) {
+              setOrderData(parsed);
+            }
+          }
+        }
+      } catch {}
+    }
+
+    // 2. Fetch fresh server-confirmed summary
     if (orderNumber && !orderNumber.includes('ORDER')) {
       const existingPhone = paramPhone || (typeof window !== 'undefined' ? localStorage.getItem('arubekee_last_customer_phone') || '' : '');
       saveOrderToHistory(orderNumber, existingPhone);
       if (paramPhone && typeof window !== 'undefined') {
         localStorage.setItem('arubekee_last_customer_phone', paramPhone);
       }
+
+      fetch(`/api/checkout/order-summary?orderNumber=${encodeURIComponent(orderNumber)}`)
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.success && json.order) {
+            setOrderData(json.order);
+            try {
+              localStorage.setItem(`arubekee_order_${orderNumber}`, JSON.stringify(json.order));
+            } catch {}
+          }
+        })
+        .catch((e) => console.warn('Could not load order summary for WhatsApp message:', e));
     }
   }, [orderNumber, paramPhone]);
 
   const storePhone = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '2349164161091').replace(/[^0-9]/g, '');
-  const whatsappMessage = encodeURIComponent(
-    `Hello ARUBEKEE COLLECTION, I just completed order ${orderNumber}. Please confirm my receipt and dispatch schedule.`
-  );
-  const whatsappUrl = `https://wa.me/${storePhone}?text=${whatsappMessage}`;
+  const destination = orderData?.shippingAddress
+    ? `${orderData.shippingAddress.city}, ${orderData.shippingAddress.state}`
+    : orderData?.deliveryDestination || undefined;
+
+  const whatsappUrl = buildCustomerOrderWhatsAppUrl({
+    storePhone,
+    orderNumber,
+    customerName: orderData?.customerName,
+    customerPhone: orderData?.customerPhone || paramPhone,
+    deliveryType: orderData?.deliveryType,
+    deliveryDestination: destination,
+    items: orderData?.items,
+    totalKobo: orderData?.totalKobo,
+  });
+
+  const handleWhatsAppClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    let currentData = orderData;
+    if (!currentData?.items || currentData.items.length === 0) {
+      if (typeof window !== 'undefined') {
+        try {
+          const raw = localStorage.getItem(`arubekee_order_${orderNumber}`) || localStorage.getItem('arubekee_last_order_snapshot');
+          if (raw) currentData = JSON.parse(raw);
+        } catch {}
+      }
+    }
+
+    if (!currentData?.items || currentData.items.length === 0) {
+      e.preventDefault();
+      try {
+        const res = await fetch(`/api/checkout/order-summary?orderNumber=${encodeURIComponent(orderNumber)}`);
+        const json = await res.json();
+        if (json.success && json.order) {
+          setOrderData(json.order);
+          const dest = json.order.shippingAddress
+            ? `${json.order.shippingAddress.city}, ${json.order.shippingAddress.state}`
+            : undefined;
+          const freshUrl = buildCustomerOrderWhatsAppUrl({
+            storePhone,
+            orderNumber,
+            customerName: json.order.customerName,
+            customerPhone: json.order.customerPhone || paramPhone,
+            deliveryType: json.order.deliveryType,
+            deliveryDestination: dest,
+            items: json.order.items,
+            totalKobo: json.order.totalKobo,
+          });
+          window.open(freshUrl, '_blank');
+          return;
+        }
+      } catch {}
+      window.open(whatsappUrl, '_blank');
+    }
+  };
 
   return (
     <div className="bg-sand-50 min-h-screen py-16 md:py-24">
@@ -78,6 +164,29 @@ function SuccessContent() {
               <span className="text-stone-500 uppercase tracking-wider font-semibold">Inspection & Packaging:</span>
               <span className="text-stone-700 font-medium">Underway in Aba, Nigeria</span>
             </div>
+
+            {orderData?.items && orderData.items.length > 0 && (
+              <div className="pt-3 border-t border-sand-200 space-y-2">
+                <span className="text-stone-500 uppercase tracking-wider font-semibold text-[11px] block">Items in this Order:</span>
+                <div className="divide-y divide-sand-200/60">
+                  {orderData.items.map((it: any, idx: number) => (
+                    <div key={idx} className="py-1.5 flex justify-between items-center text-xs">
+                      <div>
+                        <span className="font-medium text-stone-900">{it.productName}</span>
+                        {it.colorName && <span className="text-stone-500 block text-[10px]">{it.colorName}</span>}
+                      </div>
+                      <span className="text-stone-700 font-mono">x{it.quantity} • {formatKoboToNaira(it.totalKobo)}</span>
+                    </div>
+                  ))}
+                </div>
+                {orderData.totalKobo && (
+                  <div className="pt-2 border-t border-sand-200 flex justify-between items-center text-xs font-bold text-stone-900">
+                    <span>Total Paid:</span>
+                    <span className="text-oxblood font-serif text-sm">{formatKoboToNaira(orderData.totalKobo)}</span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Logistics Guidance */}
@@ -113,6 +222,7 @@ function SuccessContent() {
 
             <a
               href={whatsappUrl}
+              onClick={handleWhatsAppClick}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto px-6 py-3.5 bg-emerald-700 text-white text-xs font-semibold tracking-widest uppercase rounded hover:bg-emerald-800 transition-colors flex items-center justify-center gap-2"

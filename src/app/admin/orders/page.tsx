@@ -254,7 +254,7 @@ export default async function AdminOrdersPage({
                     </div>
 
                     <div className="text-xs text-stone-600">
-                      {(order.items || []).length} item(s): {(order.items || []).map((i) => `${i.productName} (${i.size})`).join(', ')}
+                      {(order.items || []).length} item(s): {(order.items || []).map((i) => `${i.productName} (${i.colorName || 'Default'})`).join(', ')}
                     </div>
 
                     <div className="text-[11px] text-stone-500">

@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { mockCategories, mockCollections, mockStoreSettings } from "@/data/mockData";
 import { db } from "@/lib/db";
 import { ProductCard } from "@/components/product/ProductCard";
@@ -75,12 +76,14 @@ export default async function HomePage() {
             <ScrollReveal animation="slide-left" delay={150} duration={850} className="order-1 lg:order-2 lg:col-span-5 relative w-full">
               <div className="relative w-full max-w-full sm:max-w-xl lg:max-w-none mx-auto">
                 {/* Main Portrait */}
-                <div className="aspect-[4/5] sm:aspect-[3/4] overflow-hidden rounded-2xl border-2 border-[#EADDCF] shadow-card bg-stone-subtle w-full">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                <div className="aspect-[4/5] sm:aspect-[3/4] overflow-hidden rounded-2xl border-2 border-[#EADDCF] shadow-card bg-stone-subtle w-full relative">
+                  <Image
                     src="/asset/80772648-ba30-4794-a044-2de173b5fc1f.jpg"
                     alt="Arubekee Collection Tailored Executive Fashion"
-                    className="w-full h-full object-cover object-top hover:scale-102 transition-transform duration-700"
+                    fill
+                    priority
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 500px"
+                    className="object-cover object-top hover:scale-102 transition-transform duration-700"
                   />
                 </div>
 

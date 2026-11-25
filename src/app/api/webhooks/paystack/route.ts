@@ -10,9 +10,9 @@ export async function POST(req: NextRequest) {
     // 1. Verify HMAC SHA-512 webhook signature
     const isValid = PaystackService.verifyWebhookSignature(signature, rawBody);
     
-    // In strict production, reject invalid signatures:
-    if (!isValid && process.env.NODE_ENV === 'production') {
-      console.warn('[Paystack Webhook] Invalid HMAC signature received.');
+    // Strict signature enforcement on all environments
+    if (!isValid) {
+      console.warn('[Paystack Webhook] Invalid HMAC signature received. Request rejected.');
       return NextResponse.json({ error: 'Invalid webhook signature' }, { status: 401 });
     }
 

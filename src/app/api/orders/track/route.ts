@@ -16,9 +16,16 @@ function getClientIp(req: NextRequest): string {
   return 'unknown-ip';
 }
 
+function maskPhoneNumber(phone?: string): string {
+  if (!phone) return '';
+  const digits = phone.replace(/[^0-9+]/g, '');
+  if (digits.length <= 4) return '••••';
+  return digits.slice(0, 4) + ' ••• ' + digits.slice(-3);
+}
+
 /**
  * GET: Automatically discovers the customer's active undelivered orders on page mount.
- * Checks cookies and query params, with safe dev-mode fallback so the screen is never blank.
+ * Checks verified cookies and explicit query params, with safe rate limiting and masked PII.
  */
 export async function GET(req: NextRequest) {
   try {
@@ -28,6 +35,11 @@ export async function GET(req: NextRequest) {
     const queryPhone = searchParams.get('phone') || cookiePhone;
     const queryRef = searchParams.get('ref') || cookieRef;
 
+    // Do not expose orders if neither a valid phone nor order ref was provided
+    if (!queryPhone && !queryRef) {
+      return NextResponse.json({ success: true, latestOrder: null, activeOrders: [] });
+    }
+
     const allOrders = await db.getOrders();
 
     // 1. If we have a verified phone or cookie, find all orders for that customer
@@ -35,7 +47,7 @@ export async function GET(req: NextRequest) {
     if (queryPhone && queryPhone.trim()) {
       const cleanDigits = queryPhone.replace(/[^0-9]/g, '');
       const last9 = cleanDigits.slice(-9);
-      if (last9) {
+      if (last9 && last9.length >= 7) {
         matchedOrders = allOrders.filter((o) => {
           const oDigits = (o.customerPhone || '').replace(/[^0-9]/g, '');
           const oLast9 = oDigits.slice(-9);
@@ -64,26 +76,6 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // 3. Testing / initial browser load fallback: pick the latest undelivered order from database
-    if (matchedOrders.length === 0 && allOrders.length > 0) {
-      const activeSeed = allOrders.find((o) => o.fulfillmentStatus !== 'delivered') || allOrders[0];
-      if (activeSeed) {
-        if (activeSeed.customerPhone) {
-          const cleanDigits = activeSeed.customerPhone.replace(/[^0-9]/g, '');
-          const last9 = cleanDigits.slice(-9);
-          if (last9) {
-            matchedOrders = allOrders.filter((o) => {
-              const oDigits = (o.customerPhone || '').replace(/[^0-9]/g, '');
-              return oDigits.slice(-9) === last9;
-            });
-          }
-        }
-        if (matchedOrders.length === 0) {
-          matchedOrders = [activeSeed];
-        }
-      }
-    }
-
     if (matchedOrders.length === 0) {
       return NextResponse.json({ success: true, latestOrder: null, activeOrders: [] });
     }
@@ -92,12 +84,12 @@ export async function GET(req: NextRequest) {
     const undeliveredOrders = matchedOrders.filter((o) => o.fulfillmentStatus !== 'delivered');
     const latestOrder = undeliveredOrders[0] || matchedOrders[0];
 
-    // Other older undelivered orders for the active carousel
+    // Other older undelivered orders for the active carousel (with masked PII)
     const carouselOrders = undeliveredOrders
       .filter((o) => o.orderNumber !== latestOrder.orderNumber)
       .map((o) => ({
         orderNumber: o.orderNumber,
-        phone: o.customerPhone,
+        phone: maskPhoneNumber(o.customerPhone),
         date: new Date(o.createdAt).toLocaleDateString('en-NG', { day: 'numeric', month: 'short' }),
         fulfillmentStatus: o.fulfillmentStatus,
         totalKobo: o.totalKobo,
@@ -107,7 +99,7 @@ export async function GET(req: NextRequest) {
       success: true,
       latestOrder: {
         orderNumber: latestOrder.orderNumber,
-        phone: latestOrder.customerPhone,
+        phone: maskPhoneNumber(latestOrder.customerPhone),
         fulfillmentStatus: latestOrder.fulfillmentStatus,
       },
       activeOrders: carouselOrders,

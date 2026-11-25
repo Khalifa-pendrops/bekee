@@ -40,6 +40,8 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     ? `${siteUrl}${primaryImage.url.startsWith('/') ? '' : '/'}${primaryImage.url}`
     : `${siteUrl}/og-image.jpg`;
 
+  const dynamicOgUrl = `${siteUrl}/api/og/product?slug=${product.slug}`;
+
   return {
     title: `${product.name} | ARUBEKEE COLLECTION`,
     description: product.description,
@@ -51,10 +53,16 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
       description: product.description,
       images: [
         {
+          url: dynamicOgUrl,
+          width: 1200,
+          height: 630,
+          alt: `${product.name} | ARUBEKEE COLLECTION`,
+        },
+        {
           url: imageUrl,
           width: 800,
           height: 1000,
-          alt: primaryImage?.altText || product.name,
+          alt: `${product.name} | ARUBEKEE COLLECTION`,
         },
       ],
     },
@@ -62,7 +70,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
       card: 'summary_large_image',
       title: `${product.name} (₦${nairaPrice}) | ARUBEKEE COLLECTION`,
       description: product.description,
-      images: [imageUrl],
+      images: [dynamicOgUrl],
     },
   };
 }

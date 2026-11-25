@@ -158,6 +158,9 @@ export default function RecordOfflineSalePage() {
       if (!res.ok) throw new Error(data.error || 'Failed to record sale / invoice.');
 
       setSuccessOrder(data.order);
+      if (typeof window !== 'undefined' && data.order) {
+        window.dispatchEvent(new CustomEvent('arubekee:new-order', { detail: data.order }));
+      }
     } catch (err: any) {
       console.error('[Offline Sale] Error:', err);
       setErrorMessage(err.message || 'Could not record sale.');
@@ -187,49 +190,49 @@ export default function RecordOfflineSalePage() {
     const trackLink = `${origin}/track-order?ref=${successOrder.orderNumber}&phone=${cleanPhone}`;
 
     if (isPending) {
-      return `✨ *ARUBEKEE COLLECTION • OFFICIAL INVOICE* ✨
+      return `*ARUBEKEE COLLECTION • OFFICIAL INVOICE*
 
 Dear ${successOrder.customerName || 'Valued Client'},
 Thank you for your order with ARUBEKEE COLLECTION, Aba. Here is your official order invoice:
 
-📄 *Invoice Ref:* ${successOrder.orderNumber}
-👗 *Garment:* ${item?.productName}
-🎨 *Color & Size:* ${item?.colorName} • Size ${item?.size}
-🔢 *Quantity:* ${item?.quantity} unit(s)
-💵 *Garment Subtotal:* ${formatKoboToNaira(successOrder.subtotalKobo)}
-${successOrder.deliveryFeeKobo > 0 ? `🚚 *Express Delivery:* ${formatKoboToNaira(successOrder.deliveryFeeKobo)} (${successOrder.shippingAddress?.city || 'Nationwide'}, ${successOrder.shippingAddress?.state || ''})` : `🛍️ *Collection:* Free Aba Boutique Pickup`}
-🏷️ *Total Due:* ${formatKoboToNaira(successOrder.totalKobo)}
-${successOrder.shippingAddress?.streetAddress ? `📍 *Destination:* ${successOrder.shippingAddress.streetAddress}, ${successOrder.shippingAddress.city}, ${successOrder.shippingAddress.state}` : ''}
+- *Invoice Ref:* ${successOrder.orderNumber}
+- *Garment:* ${item?.productName}
+- *Color:* ${item?.colorName}
+- *Quantity:* ${item?.quantity} unit(s)
+- *Garment Subtotal:* ${formatKoboToNaira(successOrder.subtotalKobo)}
+${successOrder.deliveryFeeKobo > 0 ? `- *Express Delivery:* ${formatKoboToNaira(successOrder.deliveryFeeKobo)} (${successOrder.shippingAddress?.city || 'Nationwide'}, ${successOrder.shippingAddress?.state || ''})` : `- *Collection:* Free Aba Boutique Pickup`}
+- *Total Due:* ${formatKoboToNaira(successOrder.totalKobo)}
+${successOrder.shippingAddress?.streetAddress ? `- *Destination:* ${successOrder.shippingAddress.streetAddress}, ${successOrder.shippingAddress.city}, ${successOrder.shippingAddress.state}` : ''}
 
-💳 *PAYMENT OPTIONS:*
-1️⃣ *Instant Online Card / Transfer Checkout:*
+*PAYMENT OPTIONS:*
+1. *Instant Online Card / Transfer Checkout:*
 ${trackLink}
 
-2️⃣ *Direct Boutique Bank Transfer:*
+2. *Direct Boutique Bank Transfer:*
 Bank: Zenith Bank PLC
 Account Name: ARUBEKEE COLLECTION ATELIER
 Account Number: 1018938472
 
 _Kindly reply here with your transfer slip or payment confirmation once completed. We box and dispatch your items immediately once settlement is confirmed._
 
-📞 *Concierge:* +234 916 416 1091
-📍 *Aba Boutique Showroom • Nationwide Express Dispatch*`;
+- *Concierge:* +234 916 416 1091
+- *Aba Boutique Showroom • Nationwide Express Dispatch*`;
     }
 
     // Receipt message for completed sale
-    return `✨ *ARUBEKEE COLLECTION • PAYMENT RECEIPT* ✨
+    return `*ARUBEKEE COLLECTION • PAYMENT RECEIPT*
 
 Dear ${successOrder.customerName || 'Valued Client'},
 Thank you for your purchase with ARUBEKEE COLLECTION, Aba! Your payment has been received and confirmed.
 
-🧾 *Receipt Ref:* ${successOrder.orderNumber}
-👗 *Item:* ${item?.productName} (${item?.colorName} • Size ${item?.size})
-🔢 *Quantity:* ${item?.quantity} unit(s)
-💰 *Amount Paid:* ${formatKoboToNaira(successOrder.totalKobo)}
-💳 *Payment Channel:* ${successOrder.paymentMethod?.replace(/_/g, ' ').toUpperCase()}
-${successOrder.deliveryFeeKobo > 0 ? `🚚 *Delivery Status:* In queue for courier dispatch to ${successOrder.shippingAddress?.city || 'your address'}` : `🛍️ *Fulfillment:* Handed over at Aba Boutique showroom`}
+- *Receipt Ref:* ${successOrder.orderNumber}
+- *Item:* ${item?.productName} (${item?.colorName})
+- *Quantity:* ${item?.quantity} unit(s)
+- *Amount Paid:* ${formatKoboToNaira(successOrder.totalKobo)}
+- *Payment Channel:* ${successOrder.paymentMethod?.replace(/_/g, ' ').toUpperCase()}
+${successOrder.deliveryFeeKobo > 0 ? `- *Delivery Status:* In queue for courier dispatch to ${successOrder.shippingAddress?.city || 'your address'}` : `- *Fulfillment:* Handed over at Aba Boutique showroom`}
 
-📍 *Track Live Dispatch:*
+*TRACK LIVE DISPATCH:*
 ${trackLink}
 
 Thank you for shopping our curated fashion collection!
@@ -358,7 +361,7 @@ Aba, Abia State • +234 916 416 1091`;
             </div>
             <div className="flex justify-between items-center">
               <span className="text-stone-500">Variant:</span>
-              <span className="text-stone-900">{successOrder.items[0]?.colorName} • Size {successOrder.items[0]?.size}</span>
+              <span className="text-stone-900">{successOrder.items[0]?.colorName}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-stone-500">Quantity:</span>
@@ -487,7 +490,7 @@ Aba, Abia State • +234 916 416 1091`;
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1.5">
-                    Colour & Size Variant:
+                    Colour Variant:
                   </label>
                   <select
                     value={selectedVariantId}
@@ -496,7 +499,7 @@ Aba, Abia State • +234 916 416 1091`;
                   >
                     {currentProduct.variants.map((v) => (
                       <option key={v.id} value={v.id}>
-                        {v.colorName} • Size {v.size} ({v.stockQuantity} available in Aba)
+                        {v.colorName} ({v.stockQuantity} available in Aba)
                       </option>
                     ))}
                   </select>

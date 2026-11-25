@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
 import { 
   getAdminCredentials, 
   signSessionToken, 
@@ -7,6 +8,13 @@ import {
 } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
+
+function safeCompare(a: string, b: string): boolean {
+  if (!a || !b) return false;
+  const hashA = crypto.createHash('sha256').update(a).digest();
+  const hashB = crypto.createHash('sha256').update(b).digest();
+  return crypto.timingSafeEqual(hashA, hashB);
+}
 
 // In-memory rate limiting map for admin authentication attempts
 interface RateLimitRecord {
@@ -55,7 +63,7 @@ export async function POST(req: NextRequest) {
       // 6-Digit Quick PIN verification
       authMethod = 'pin';
       const cleanPin = String(pin || '').trim();
-      if (cleanPin && cleanPin === credentials.pin) {
+      if (cleanPin && safeCompare(cleanPin, credentials.pin)) {
         isAuthorized = true;
       }
     } else {
@@ -65,8 +73,8 @@ export async function POST(req: NextRequest) {
       const cleanEmail = String(email || '').trim().toLowerCase();
 
       // We allow matching password directly or checking both email + password
-      if (cleanPassword === credentials.password) {
-        if (!cleanEmail || cleanEmail === credentials.email || cleanEmail === 'admin@arubekee.com' || cleanEmail === 'admin') {
+      if (cleanPassword && safeCompare(cleanPassword, credentials.password)) {
+        if (!cleanEmail || safeCompare(cleanEmail, credentials.email) || cleanEmail === 'admin@arubekee.com' || cleanEmail === 'admin') {
           isAuthorized = true;
         }
       }

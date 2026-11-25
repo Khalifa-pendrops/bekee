@@ -7,6 +7,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { MobileBottomNav } from '@/components/layout/MobileBottomNav';
 import { CartDrawer } from '@/components/cart/CartDrawer';
+import { CartToast } from '@/components/cart/CartToast';
 
 interface StorefrontShellProps {
   children: React.ReactNode;
@@ -29,6 +30,7 @@ export function StorefrontShell({ children }: StorefrontShellProps) {
       <main className="flex-1 w-full max-w-full overflow-x-clip min-w-0">{children}</main>
       <Footer />
       <CartDrawer />
+      <CartToast />
       <MobileBottomNav />
     </div>
   );

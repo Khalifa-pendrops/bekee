@@ -99,18 +99,64 @@ export function buildWhatsAppProductUrl(
 ): string {
   const cleanNumber = waNumber.replace(/[^0-9]/g, '');
   
-  let message = `Hello ARUBEKEE COLLECTION! 🌸\n\nI would like to enquire about / order:\n👗 *${productName}*\n🎨 Option: ${variantSummary}`;
+  let message = `Hello ARUBEKEE COLLECTION!\n\nI would like to enquire about / order:\n- Item: *${productName}*\n- Option: ${variantSummary}`;
   
   if (priceFormatted) {
-    message += `\n💵 Price: ${priceFormatted}`;
+    message += `\n- Price: ${priceFormatted}`;
   }
   
   if (imageUrl) {
-    message += `\n\n📸 Item Photo: ${imageUrl}`;
+    const fullImg = imageUrl.startsWith('http')
+      ? imageUrl
+      : `https://arubekee.com${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+    message += `\n- Item Photo: ${fullImg}`;
   }
   
-  message += `\n🔗 Product Link: ${productUrl}\n\nPlease confirm availability and dispatch schedule. Thank you!`;
+  message += `\n- Product Link: ${productUrl}\n\nPlease confirm availability and dispatch schedule. Thank you!`;
   
+  return `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
+}
+
+/**
+ * Generate a 1-tap WhatsApp concierge inquiry URL for quick in-store boutique reservations
+ * with complete item metadata (name, color, price, product link, and photo URL).
+ */
+export function buildWhatsAppReserveInAbaUrl(
+  waNumber: string,
+  productName: string,
+  colorName?: string,
+  priceFormatted?: string,
+  productSlug?: string,
+  imageUrl?: string
+): string {
+  const cleanNumber = (waNumber || '2349164161091').replace(/[^0-9]/g, '');
+  const colorPart = colorName ? ` in ${colorName}` : '';
+
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL && !process.env.NEXT_PUBLIC_SITE_URL.includes('localhost'))
+    ? process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '')
+    : typeof window !== 'undefined' && window.location.origin && !window.location.origin.includes('localhost')
+    ? window.location.origin
+    : 'https://arubekee.com';
+
+  let message = `Hello Arubekee, I am interested in acquiring the *${productName}*${colorPart}. Is in-store reservation available today?\n\n`;
+  message += `*PRODUCT DETAILS:*\n`;
+  message += `- Item: *${productName}*\n`;
+  if (colorName) {
+    message += `- Colour: ${colorName}\n`;
+  }
+  if (priceFormatted) {
+    message += `- Price: ${priceFormatted}\n`;
+  }
+  if (productSlug) {
+    message += `- Store Link: ${siteUrl}/products/${productSlug}\n`;
+  }
+  if (imageUrl) {
+    const fullImg = imageUrl.startsWith('http')
+      ? imageUrl
+      : `${siteUrl}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+    message += `- Photo: ${fullImg}\n`;
+  }
+
   return `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
 }
 

@@ -295,11 +295,6 @@ export default function EditProductPage() {
       return;
     }
 
-    if (newColorSelectedSizes.length === 0) {
-      showAlert("Sizes Selection Needed", "Please select at least one size to stock for this new color.");
-      return;
-    }
-
     const baseKobo = parseNairaToKobo(priceNaira);
     const saleKobo = salePriceNaira ? parseNairaToKobo(salePriceNaira) : undefined;
     const initialQty = Math.max(0, parseInt(newColorDefaultStock) || 0);
@@ -308,28 +303,26 @@ export default function EditProductPage() {
     const colorCode = finalColorName.replace(/[^A-Za-z]/g, '').substring(0, 3).toUpperCase() || 'COL';
     const prodId = product?.id || productId;
 
-    const newVariants: ProductVariant[] = newColorSelectedSizes.map((size) => {
-      const sizeCode = size.replace(/\s+/g, '').toUpperCase();
-      return {
-        id: `var_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-        productId: prodId,
-        sku: `${prefix}-${colorCode}-${sizeCode}`,
-        colorName: finalColorName,
-        colorHex: COLOR_SWATCH_MAP[finalColorName.toLowerCase()] || '#6B1724',
-        size,
-        stockQuantity: initialQty,
-        lowStockThreshold: 2,
-        isActive: true,
-        priceKobo: baseKobo,
-        salePriceKobo: saleKobo,
-      };
-    });
+    // Single-variant per color (sizes omitted across board)
+    const newVariants: ProductVariant[] = [{
+      id: `var_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      productId: prodId,
+      sku: `${prefix}-${colorCode}-STD`,
+      colorName: finalColorName,
+      colorHex: COLOR_SWATCH_MAP[finalColorName.toLowerCase()] || '#6B1724',
+      size: 'Standard',
+      stockQuantity: initialQty,
+      lowStockThreshold: 2,
+      isActive: true,
+      priceKobo: baseKobo,
+      salePriceKobo: saleKobo,
+    }];
 
     setVariants((prev) => [...prev, ...newVariants]);
     setIsAddingNewColor(false);
     setNewColorSelection('Imperial Oxblood');
     setCustomColorInput('');
-    setFeedback(`Added "${finalColorName}" with ${newVariants.length} sizes! Remember to save changes.`);
+    setFeedback(`Added "${finalColorName}"! Remember to save changes.`);
   };
 
   // 5. Add a single size to an existing color
@@ -812,7 +805,7 @@ export default function EditProductPage() {
                 )}
               </div>
 
-              {/* Sizes Selection for this Color */}
+              {/* Sizes Selection for this Color - Commented out per no-size standard
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-stone-700 mb-2">
                   Select Sizes to Stock for this Color:
@@ -843,12 +836,13 @@ export default function EditProductPage() {
                   })}
                 </div>
               </div>
+              */}
 
-              {/* Initial stock per size */}
+              {/* Initial stock */}
               <div className="flex items-center gap-3">
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-stone-700 mb-1">
-                    Initial Stock per Size:
+                    Initial Stock Units:
                   </label>
                   <input
                     type="number"
@@ -897,7 +891,7 @@ export default function EditProductPage() {
                           {colorName}
                         </h4>
                         <div className="text-[11px] text-stone-500">
-                          {colorVariants.length} {colorVariants.length === 1 ? 'size' : 'sizes'} •{' '}
+                          {/* Sizing removed across board: {colorVariants.length} sizes • */}
                           <strong className={colorStock > 0 ? 'text-emerald-700' : 'text-red-700'}>
                             {colorStock} total units
                           </strong>
@@ -912,13 +906,13 @@ export default function EditProductPage() {
                           type="button"
                           onClick={() => handleMarkColorOutOfStock(colorName)}
                           className="px-2.5 py-1 text-[11px] font-semibold text-stone-600 hover:text-stone-900 bg-white border border-stone-200 hover:border-stone-300 rounded-lg transition-colors"
-                          title="Set stock of all sizes to 0"
+                          title="Set stock to 0"
                         >
                           Mark Sold Out
                         </button>
                       )}
 
-                      {/* Add Size to this Color */}
+                      {/* Add Size to this Color - Commented out per no-size standard
                       <button
                         type="button"
                         onClick={() => {
@@ -929,6 +923,7 @@ export default function EditProductPage() {
                         <Plus className="w-3 h-3" />
                         <span>Add Size</span>
                       </button>
+                      */}
 
                       {/* Remove Color Completely */}
                       <button
@@ -943,7 +938,7 @@ export default function EditProductPage() {
                     </div>
                   </div>
 
-                  {/* Inline Add Size Form for this Color */}
+                  {/* Inline Add Size Form for this Color - Commented out per no-size standard
                   {addingSizeForColor === colorName && (
                     <div className="p-3 bg-stone-50 border-b border-stone-200 flex flex-wrap items-center gap-3 animate-fade-in">
                       <span className="text-[11px] font-bold uppercase text-stone-700">
@@ -987,8 +982,9 @@ export default function EditProductPage() {
                       </button>
                     </div>
                   )}
+                  */}
 
-                  {/* Sizes Rows */}
+                  {/* Variants Inventory Rows */}
                   <div className="divide-y divide-stone-100">
                     {colorVariants.map((v) => (
                       <div
@@ -996,10 +992,7 @@ export default function EditProductPage() {
                         className="p-3.5 flex items-center justify-between hover:bg-sand-50 transition-colors"
                       >
                         <div className="flex items-center gap-3">
-                          <span className="px-2.5 py-1 bg-stone-100 border border-stone-200 rounded font-bold text-xs text-stone-900">
-                            {v.size}
-                          </span>
-                          <span className="font-mono text-[11px] text-stone-400 hidden sm:inline">
+                          <span className="font-mono text-xs text-stone-600 font-semibold">
                             {v.sku}
                           </span>
                         </div>
@@ -1035,7 +1028,7 @@ export default function EditProductPage() {
                             type="button"
                             onClick={() => handlePromptRemoveVariant(v)}
                             className="p-1.5 text-stone-400 hover:text-red-600 rounded transition-colors"
-                            title="Remove this size"
+                            title="Remove this unit"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -1078,27 +1071,27 @@ export default function EditProductPage() {
           }
         }}
         title={`Remove "${colorPendingDeletion}"?`}
-        description={`Are you sure you want to remove the color "${colorPendingDeletion}" and all of its size units from this product?\n\nOnce saved, customers on the storefront will only see the remaining active colors.`}
+        description={`Are you sure you want to remove the color "${colorPendingDeletion}" and all of its inventory units from this product?\n\nOnce saved, customers on the storefront will only see the remaining active colors.`}
         confirmLabel="Yes, Remove Color"
         cancelLabel="Keep Color"
         variant="danger"
       />
 
-      {/* 2. Remove Single Variant Size Confirmation Dialog */}
+      {/* 2. Remove Single Variant Unit Confirmation Dialog */}
       <ConfirmDialog
         isOpen={!!variantPendingDeletion}
         onClose={() => setVariantPendingDeletion(null)}
         onConfirm={() => {
           if (variantPendingDeletion) {
             setVariants((prev) => prev.filter((v) => v.id !== variantPendingDeletion.id));
-            setFeedback(`Removed size unit "${variantPendingDeletion.label}".`);
+            setFeedback(`Removed inventory unit "${variantPendingDeletion.label}".`);
             setVariantPendingDeletion(null);
           }
         }}
-        title="Remove Size Unit?"
-        description={`Are you sure you want to remove ${variantPendingDeletion?.label || 'this size unit'} from inventory?`}
-        confirmLabel="Remove Size"
-        cancelLabel="Keep Size"
+        title="Remove Inventory Unit?"
+        description={`Are you sure you want to remove ${variantPendingDeletion?.label || 'this inventory unit'} from inventory?`}
+        confirmLabel="Remove Unit"
+        cancelLabel="Keep Unit"
         variant="danger"
       />
 

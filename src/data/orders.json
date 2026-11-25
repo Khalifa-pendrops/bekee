@@ -1,5 +1,277 @@
 [
   {
+    "id": "fb368313-ab50-48be-b0dc-6e78440b2cc3",
+    "orderNumber": "ARUBEKEE-2611-4836",
+    "orderSource": "storefront",
+    "customerName": "Checker",
+    "customerEmail": "dikee5200@gmail.com",
+    "customerPhone": "+2348139308197",
+    "deliveryType": "dispatch_delivery",
+    "shippingAddress": {
+      "city": "Enugu",
+      "email": "dikee5200@gmail.com",
+      "phone": "+2348139308197",
+      "state": "Enugu",
+      "fullName": "Checker",
+      "landmark": "Volts Arena",
+      "streetAddress": "Okenye",
+      "deliveryInstructions": "Call Me"
+    },
+    "items": [
+      {
+        "id": "e4af09b5-0024-4ff2-8b02-d1475d6448ad",
+        "productId": "2786171e-b5cd-4a3a-b03f-e259e5ee675a",
+        "variantId": null,
+        "sku": "ARU-SHO-ADA-TAN-37",
+        "productName": "The Adanna Sculpted Block Mule",
+        "colorName": "Warm Tan Leather",
+        "size": "EU 37",
+        "unitPriceKobo": 3600000,
+        "quantity": 1,
+        "totalKobo": 3600000,
+        "imageUrl": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=900&q=80"
+      }
+    ],
+    "subtotalKobo": 3600000,
+    "deliveryFeeKobo": 0,
+    "discountKobo": 0,
+    "totalKobo": 3600000,
+    "paymentStatus": "paid",
+    "paymentMethod": "paystack",
+    "paymentReference": "ARUBEKEE_PAY_ARUBEKEE-2611-4836_1795608865162",
+    "paidAt": "2026-11-25T12:16:33.294+00:00",
+    "fulfillmentStatus": "delivered",
+    "carrierName": "Go Slow",
+    "trackingNumber": "GS-ARUBEKE2026",
+    "dispatchedAt": "2026-11-25T12:17:19.489+00:00",
+    "deliveredAt": "2026-11-25T12:24:56.700Z",
+    "internalNotes": "Delivery Zone: Courier Transit (Fee Paid to Courier on Arrival). Reservation expires: 2026-11-25T12:29:25.162Z",
+    "timeline": [
+      {
+        "id": "tl_1795609496700",
+        "orderId": "fb368313-ab50-48be-b0dc-6e78440b2cc3",
+        "title": "Order Delivered (Confirmed by Customer)",
+        "description": "Customer confirmed parcel receipt via live tracking link.",
+        "actor": "Customer",
+        "createdAt": "2026-11-25T12:24:56.700Z"
+      }
+    ],
+    "createdAt": "2026-11-25T12:14:25.425402+00:00",
+    "updatedAt": "2026-11-25T12:24:56.700Z"
+  },
+  {
+    "id": "ord_1795607492878_h1m7",
+    "orderNumber": "ARUBEKEE-2611-1236",
+    "orderSource": "storefront",
+    "customerName": "Atu Egwu",
+    "customerEmail": "dikee5200@gmail.com",
+    "customerPhone": "+2348139308197",
+    "deliveryType": "dispatch_delivery",
+    "shippingAddress": {
+      "fullName": "Atu Egwu",
+      "email": "dikee5200@gmail.com",
+      "phone": "+2348139308197",
+      "state": "Enugu",
+      "city": "Enugu",
+      "streetAddress": "Ezillo",
+      "landmark": "Volts Arena",
+      "deliveryInstructions": "Call me"
+    },
+    "items": [
+      {
+        "id": "item_1795607492878_zguu",
+        "productId": "ef031841-6f43-49f6-8338-a036def318d7",
+        "variantId": "var_zikora_wine",
+        "sku": "ARU-CLO-BOU-WIN-FS",
+        "productName": "Zikora Royal Neckline Embroidered Boubou",
+        "colorName": "Imperial Wine",
+        "size": "Free Size",
+        "unitPriceKobo": 6200000,
+        "quantity": 1,
+        "totalKobo": 6200000,
+        "imageUrl": "/asset/e0fed1d5-a8e8-4885-8107-9691b7d276f1.jpg"
+      }
+    ],
+    "subtotalKobo": 6200000,
+    "deliveryFeeKobo": 0,
+    "discountKobo": 0,
+    "totalKobo": 6200000,
+    "paymentStatus": "paid",
+    "paymentMethod": "paystack",
+    "paymentReference": "ARUBEKEE_PAY_ARUBEKEE-2611-1236_1795607492878",
+    "fulfillmentStatus": "unfulfilled",
+    "internalNotes": "Delivery Zone: Courier Transit (Fee Paid to Courier on Arrival). Reservation expires: 2026-11-25T12:06:32.879Z",
+    "timeline": [
+      {
+        "id": "tl_1795607492879_init",
+        "orderId": "ord_1795607492878_h1m7",
+        "title": "Checkout Initiated",
+        "description": "Order initiated for ₦62,000. 15-minute stock lock placed.",
+        "actor": "Customer",
+        "createdAt": "2026-11-25T11:51:32.879Z"
+      },
+      {
+        "id": "tl_1795607577197",
+        "orderId": "ord_1795607492878_h1m7",
+        "title": "Payment Confirmed",
+        "description": "Payment of ₦62,000 confirmed via Paystack (6798871481). Ready for fulfillment.",
+        "actor": "Paystack Gateway",
+        "createdAt": "2026-11-25T11:52:57.197Z"
+      }
+    ],
+    "createdAt": "2026-11-25T11:51:32.879Z",
+    "updatedAt": "2026-11-25T11:51:32.879Z",
+    "paidAt": "2026-11-25T11:52:57.197Z"
+  },
+  {
+    "id": "ord_1795607476007_j4tg",
+    "orderNumber": "ARUBEKEE-2611-2884",
+    "orderSource": "storefront",
+    "customerName": "Atu Egwu",
+    "customerEmail": "dikee5200@gmail.com",
+    "customerPhone": "+2348139308197",
+    "deliveryType": "dispatch_delivery",
+    "shippingAddress": {
+      "fullName": "Atu Egwu",
+      "email": "dikee5200@gmail.com",
+      "phone": "+2348139308197",
+      "state": "Enugu",
+      "city": "Enugu",
+      "streetAddress": "Ezillo",
+      "landmark": "Volts Arena",
+      "deliveryInstructions": "Call me"
+    },
+    "items": [
+      {
+        "id": "item_1795607476007_6vkv",
+        "productId": "ef031841-6f43-49f6-8338-a036def318d7",
+        "variantId": "var_zikora_wine",
+        "sku": "ARU-CLO-BOU-WIN-FS",
+        "productName": "Zikora Royal Neckline Embroidered Boubou",
+        "colorName": "Imperial Wine",
+        "size": "Free Size",
+        "unitPriceKobo": 6200000,
+        "quantity": 1,
+        "totalKobo": 6200000,
+        "imageUrl": "/asset/e0fed1d5-a8e8-4885-8107-9691b7d276f1.jpg"
+      }
+    ],
+    "subtotalKobo": 6200000,
+    "deliveryFeeKobo": 0,
+    "discountKobo": 0,
+    "totalKobo": 6200000,
+    "paymentStatus": "pending",
+    "paymentMethod": "paystack",
+    "paymentReference": "ARUBEKEE_PAY_ARUBEKEE-2611-2884_1795607476007",
+    "fulfillmentStatus": "unfulfilled",
+    "internalNotes": "Delivery Zone: Courier Transit (Fee Paid to Courier on Arrival). Reservation expires: 2026-11-25T12:06:16.008Z",
+    "timeline": [
+      {
+        "id": "tl_1795607476008_init",
+        "orderId": "ord_1795607476007_j4tg",
+        "title": "Checkout Initiated",
+        "description": "Order initiated for ₦62,000. 15-minute stock lock placed.",
+        "actor": "Customer",
+        "createdAt": "2026-11-25T11:51:16.014Z"
+      }
+    ],
+    "createdAt": "2026-11-25T11:51:16.014Z",
+    "updatedAt": "2026-11-25T11:51:16.014Z"
+  },
+  {
+    "id": "ord_1795601692316_sy10",
+    "orderNumber": "ARUBEKEE-2611-6194",
+    "orderSource": "storefront",
+    "customerName": "Keep This One",
+    "customerEmail": "dikee5200@gmail.com",
+    "customerPhone": "+2348139308197",
+    "deliveryType": "dispatch_delivery",
+    "shippingAddress": {
+      "fullName": "Keep This One",
+      "email": "dikee5200@gmail.com",
+      "phone": "+2348139308197",
+      "state": "Enugu",
+      "city": "Enugu",
+      "streetAddress": "enugwu-abor",
+      "landmark": "Mayor BS",
+      "deliveryInstructions": "Call me"
+    },
+    "items": [
+      {
+        "id": "item_1795601692316_1owb",
+        "productId": "ef031841-6f43-49f6-8338-a036def318d7",
+        "variantId": "var_zikora_wine",
+        "sku": "ARU-CLO-BOU-WIN-FS",
+        "productName": "Zikora Royal Neckline Embroidered Boubou",
+        "colorName": "Imperial Wine",
+        "size": "Free Size",
+        "unitPriceKobo": 6200000,
+        "quantity": 1,
+        "totalKobo": 6200000,
+        "imageUrl": "/asset/e0fed1d5-a8e8-4885-8107-9691b7d276f1.jpg"
+      },
+      {
+        "id": "item_1795601692316_96kj",
+        "productId": "1e32a6ae-655f-4b43-a929-640be937613c",
+        "variantId": "var_chioma_10",
+        "sku": "ARU-CLO-DRS-OXB-10",
+        "productName": "Chioma Two-Tone Executive Pencil Dress",
+        "colorName": "Oxblood & Blush",
+        "size": "UK 10",
+        "unitPriceKobo": 4500000,
+        "quantity": 1,
+        "totalKobo": 4500000,
+        "imageUrl": "/asset/80772648-ba30-4794-a044-2de173b5fc1f.jpg"
+      }
+    ],
+    "subtotalKobo": 10700000,
+    "deliveryFeeKobo": 0,
+    "discountKobo": 0,
+    "totalKobo": 10700000,
+    "paymentStatus": "paid",
+    "paymentMethod": "paystack",
+    "paymentReference": "ARUBEKEE_PAY_ARUBEKEE-2611-6194_1795601692316",
+    "fulfillmentStatus": "unfulfilled",
+    "internalNotes": "Delivery Zone: Courier Transit (Fee Paid to Courier on Arrival). Reservation expires: 2026-11-25T10:29:52.316Z",
+    "timeline": [
+      {
+        "id": "tl_1795601692317_init",
+        "orderId": "ord_1795601692316_sy10",
+        "title": "Checkout Initiated",
+        "description": "Order initiated for ₦107,000. 15-minute stock lock placed.",
+        "actor": "Customer",
+        "createdAt": "2026-11-25T10:14:52.317Z"
+      },
+      {
+        "id": "tl_1795601807450",
+        "orderId": "ord_1795601692316_sy10",
+        "title": "Payment Confirmed",
+        "description": "Payment of ₦107,000 confirmed via Paystack (6798571605). Ready for fulfillment.",
+        "actor": "Paystack Gateway",
+        "createdAt": "2026-11-25T10:16:47.450Z"
+      },
+      {
+        "id": "tl_1795601807463",
+        "orderId": "ord_1795601692316_sy10",
+        "title": "Payment Confirmed",
+        "description": "Payment of ₦107,000 confirmed via Paystack (6798571605). Ready for fulfillment.",
+        "actor": "Paystack Gateway",
+        "createdAt": "2026-11-25T10:16:47.463Z"
+      },
+      {
+        "id": "tl_1795601807494",
+        "orderId": "ord_1795601692316_sy10",
+        "title": "Payment Confirmed",
+        "description": "Payment of ₦107,000 confirmed via Paystack (6798571605). Ready for fulfillment.",
+        "actor": "Paystack Gateway",
+        "createdAt": "2026-11-25T10:16:47.494Z"
+      }
+    ],
+    "createdAt": "2026-11-25T10:14:52.317Z",
+    "updatedAt": "2026-11-25T10:14:52.317Z",
+    "paidAt": "2026-11-25T10:16:47.494Z"
+  },
+  {
     "id": "3f5e2116-50ec-4e87-afd0-4075e156eef7",
     "orderNumber": "ARUBEKEE-2611-9718",
     "orderSource": "storefront",
@@ -38,11 +310,22 @@
     "paymentMethod": "paystack",
     "paymentReference": "ARUBEKEE_PAY_ARUBEKEE-2611-9718_1795079375694",
     "paidAt": "2026-11-19T09:10:49.344+00:00",
-    "fulfillmentStatus": "unfulfilled",
+    "fulfillmentStatus": "dispatched",
+    "carrierName": "GIG Logistics",
+    "dispatchedAt": "2026-11-25T12:20:24.465Z",
     "internalNotes": "Delivery Zone: Courier Transit (Fee Paid to Courier on Arrival). [Auto-recovered & reconciled via Paystack gateway 6778776829]",
-    "timeline": [],
+    "timeline": [
+      {
+        "id": "tl_1795609224465",
+        "orderId": "3f5e2116-50ec-4e87-afd0-4075e156eef7",
+        "title": "Order Dispatched",
+        "description": "Parcel consigned with GIG Logistics. Waybill: N/A.",
+        "actor": "Store Manager",
+        "createdAt": "2026-11-25T12:20:24.465Z"
+      }
+    ],
     "createdAt": "2026-11-19T09:09:36.026297+00:00",
-    "updatedAt": "2026-11-19T09:10:49.346+00:00"
+    "updatedAt": "2026-11-25T12:20:24.465Z"
   },
   {
     "id": "9e6133bd-3130-48ad-8d95-b5266c525f6a",

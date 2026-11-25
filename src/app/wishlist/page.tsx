@@ -104,7 +104,7 @@ export default function WishlistPage() {
                     size="sm"
                     className="w-full text-xs uppercase tracking-wider gap-1.5"
                   >
-                    <span>View & Select Size</span>
+                    <span>View Piece</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Button>
                 </Link>

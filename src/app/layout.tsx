@@ -87,6 +87,25 @@ export const viewport: Viewport = {
   maximumScale: 5,
 };
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ClothingStore",
+  "name": "ARUBEKEE COLLECTION",
+  "url": siteUrl,
+  "logo": `${siteUrl}/icon.svg`,
+  "image": `${siteUrl}/og-image.jpg`,
+  "description": "Curated contemporary women's clothing, footwear, bags, and statement accessories handpicked in Aba, Abia State, Nigeria.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Aba",
+    "addressRegion": "Abia State",
+    "addressCountry": "NG"
+  },
+  "priceRange": "₦₦",
+  "currenciesAccepted": "NGN",
+  "paymentAccepted": "Debit Card, Bank Transfer, USSD"
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -95,6 +114,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${serifFont.variable} ${sansFont.variable}`}>
       <body className="bg-ivory text-obsidian flex flex-col min-h-screen w-full max-w-full min-w-0 relative">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
         <Suspense fallback={null}>
           <NavigationProgress />
         </Suspense>

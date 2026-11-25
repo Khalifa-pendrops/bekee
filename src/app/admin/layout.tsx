@@ -23,6 +23,7 @@ import {
   LogOut,
   Search
 } from 'lucide-react';
+import { AdminOrderNotification } from '@/components/admin/AdminOrderNotification';
 
 interface NavItem {
   name: string;
@@ -548,6 +549,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <span>More</span>
         </button>
       </nav>
+
+      {/* Real-time Order Audio Chime, Mobile Haptics & Sweet Luxury Toast Banner */}
+      <AdminOrderNotification />
 
     </div>
   );

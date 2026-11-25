@@ -314,19 +314,35 @@ export const db = {
           const { data, error } = await query;
           if (!error && data && data.length > 0) {
             const sbMapped = (data as any[]).map((sb) => {
-              const mappedVariants = (sb.variants || []).map((v: any) => ({
-                id: v.id,
+              let mappedVariants = (sb.variants || []).map((v: any) => ({
+                id: v.id || `var_${sb.id}_std`,
                 productId: sb.id,
-                sku: v.sku,
+                sku: v.sku || `ARU-${sb.id.substring(0, 8).toUpperCase()}-STD`,
                 colorName: v.color_name || 'Standard',
                 colorHex: v.color_hex || '#54121B',
-                size: v.size,
+                size: v.size || 'One Size',
                 priceKobo: v.price_kobo,
                 salePriceKobo: v.sale_price_kobo || undefined,
                 stockQuantity: v.stock_quantity ?? 5,
                 lowStockThreshold: v.low_stock_threshold ?? 2,
                 isActive: v.is_active ?? true,
               }));
+
+              if (mappedVariants.length === 0) {
+                mappedVariants = [{
+                  id: `var_${sb.id}_std`,
+                  productId: sb.id,
+                  sku: `ARU-${sb.id.substring(0, 8).toUpperCase()}-STD`,
+                  colorName: 'Standard',
+                  colorHex: '#54121B',
+                  size: 'One Size',
+                  priceKobo: sb.price_kobo || 4500000,
+                  salePriceKobo: undefined,
+                  stockQuantity: 10,
+                  lowStockThreshold: 2,
+                  isActive: true,
+                }];
+              }
 
               const mappedImages = (sb.images || [])
                 .sort((a: any, b: any) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
@@ -1457,6 +1473,18 @@ export const db = {
           if (baseData && baseData.length > 0) {
             for (const row of baseData) {
               const mapped = mapSupabaseOrder(row);
+              const existing = orderMap.get(mapped.orderNumber);
+              if (existing) {
+                if ((!mapped.items || mapped.items.length === 0) && existing.items && existing.items.length > 0) {
+                  mapped.items = existing.items;
+                }
+                if (!mapped.customerName && existing.customerName) {
+                  mapped.customerName = existing.customerName;
+                }
+                if (!mapped.customerPhone && existing.customerPhone) {
+                  mapped.customerPhone = existing.customerPhone;
+                }
+              }
               orderMap.set(mapped.orderNumber, mapped);
             }
           } else if (baseError) {

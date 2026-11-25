@@ -237,7 +237,7 @@ export default function CheckoutPage() {
             landmark,
             items: items.map((i) => ({
               productName: i.productName,
-              variantSummary: `${i.colorName} • ${i.size}`,
+              variantSummary: i.colorName || 'Default',
               quantity: i.quantity,
               subtotalKobo: i.unitPriceKobo * i.quantity,
             })),
@@ -255,15 +255,17 @@ export default function CheckoutPage() {
       }
 
       // 2. Direct Paystack Checkout Mode
+      const sanitizedItems = items.map((i) => ({
+        productId: i.productId,
+        variantId: i.variantId || (i.id && i.id.includes('-') ? i.id.split('-').slice(1).join('-') : i.productId),
+        quantity: i.quantity,
+      }));
+
       const initRes = await fetch('/api/checkout/initialize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          items: items.map((i) => ({
-            productId: i.productId,
-            variantId: i.variantId,
-            quantity: i.quantity,
-          })),
+          items: sanitizedItems,
           customer: {
             fullName,
             email,
@@ -284,9 +286,35 @@ export default function CheckoutPage() {
         throw new Error(initData.error || 'Unable to start payment checkout.');
       }
 
-      // Persist order in customer history for seamless 1-click tracking
+      // Persist order in customer history and local snapshot for instant WhatsApp & receipt loading
       if (initData.orderNumber) {
         saveOrderToHistory(initData.orderNumber, phone, totalKobo);
+        try {
+          const snapshot = {
+            orderNumber: initData.orderNumber,
+            customerName: fullName,
+            customerPhone: phone,
+            customerEmail: email,
+            deliveryType: deliveryMode === 'pickup' ? 'aba_pickup' : 'dispatch_delivery',
+            deliveryDestination: deliveryMode === 'pickup' ? 'Free Aba Boutique Pickup' : `${city}, ${state}`,
+            shippingAddress: {
+              city: deliveryMode === 'pickup' ? 'Aba' : city,
+              state: deliveryMode === 'pickup' ? 'Abia' : state,
+              streetAddress: deliveryMode === 'pickup' ? 'Aba Boutique Showroom Pickup' : streetAddress,
+              landmark,
+            },
+            items: items.map((i) => ({
+              productName: i.productName,
+              colorName: i.colorName,
+              quantity: i.quantity,
+              unitPriceKobo: i.unitPriceKobo,
+              totalKobo: (i.unitPriceKobo || 0) * i.quantity,
+            })),
+            totalKobo,
+          };
+          localStorage.setItem(`arubekee_order_${initData.orderNumber}`, JSON.stringify(snapshot));
+          localStorage.setItem('arubekee_last_order_snapshot', JSON.stringify(snapshot));
+        } catch {}
       }
 
       // Redirect customer to Paystack authorization URL
@@ -354,7 +382,7 @@ export default function CheckoutPage() {
           <Clock className="w-5 h-5 text-oxblood-700 shrink-0 mt-0.5" />
           <div className="text-xs text-stone-700 leading-relaxed">
             <strong className="text-stone-900 font-semibold">15-Minute Inventory Protection:</strong>{' '}
-            Upon clicking "Proceed to Payment", your chosen sizes and colours are temporarily locked in our Aba warehouse for 15 minutes to guarantee nobody else purchases them while you complete your card or bank transfer.
+            Upon clicking "Proceed to Payment", your chosen items and colours are temporarily locked in our Aba warehouse for 15 minutes to guarantee nobody else purchases them while you complete your card or bank transfer.
           </div>
         </div>
 

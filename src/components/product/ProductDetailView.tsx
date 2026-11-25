@@ -179,7 +179,7 @@ export function ProductDetailView({ product, relatedProducts, settings }: Produc
   const whatsAppUrl = buildWhatsAppProductUrl(
     settings.whatsappNumber,
     product.name,
-    hasRealSizes ? `${selectedVariant.colorName} • Size ${selectedVariant.size}` : `${selectedVariant.colorName || 'Default'}`,
+    selectedVariant.colorName || 'Standard',
     productUrl,
     currentImageUrl,
     currentPriceFormatted
@@ -427,9 +427,7 @@ export function ProductDetailView({ product, relatedProducts, settings }: Produc
             )}
             {isSoldOut && (
               <p className="text-xs font-semibold text-status-danger">
-                {hasRealSizes
-                  ? "This size is currently sold out. Enquire on WhatsApp for backorder availability."
-                  : "This item is currently sold out. Enquire on WhatsApp for backorder availability."}
+                This item is currently sold out. Enquire on WhatsApp for backorder availability.
               </p>
             )}
           </div>

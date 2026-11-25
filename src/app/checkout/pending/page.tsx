@@ -4,18 +4,44 @@ import React, { Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Clock, MessageCircle, AlertTriangle, ArrowRight } from 'lucide-react';
+import { buildCustomerOrderWhatsAppUrl } from '@/lib/whatsapp';
 
 function PendingContent() {
   const searchParams = useSearchParams();
   const orderNumber = searchParams.get('orderNumber') || 'Your Order';
   const reason = searchParams.get('reason');
+  const [orderData, setOrderData] = React.useState<any>(null);
 
   const isQuarantine = reason === 'inventory_conflict';
 
-  const whatsappMessage = encodeURIComponent(
-    `Hello ARUBEKEE COLLECTION, my payment for order ${orderNumber} is marked as pending/under review. Please help me confirm my reservation.`
-  );
-  const whatsappUrl = `https://wa.me/2349164161091?text=${whatsappMessage}`;
+  React.useEffect(() => {
+    if (orderNumber && !orderNumber.includes('Order')) {
+      fetch(`/api/checkout/order-summary?orderNumber=${encodeURIComponent(orderNumber)}`)
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.success && json.order) {
+            setOrderData(json.order);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [orderNumber]);
+
+  const storePhone = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '2349164161091').replace(/\D/g, '');
+  const destination = orderData?.shippingAddress
+    ? `${orderData.shippingAddress.city}, ${orderData.shippingAddress.state}`
+    : undefined;
+
+  const whatsappUrl = buildCustomerOrderWhatsAppUrl({
+    storePhone,
+    orderNumber,
+    customerName: orderData?.customerName,
+    customerPhone: orderData?.customerPhone,
+    deliveryType: orderData?.deliveryType,
+    deliveryDestination: destination,
+    items: orderData?.items,
+    totalKobo: orderData?.totalKobo,
+  });
 
   return (
     <div className="bg-sand-50 min-h-screen py-16 md:py-24">

@@ -19,6 +19,7 @@ import {
 import { db } from '@/lib/db';
 import { formatKoboToNaira } from '@/lib/utils';
 import { Order, Product } from '@/types';
+import { generateOrderWhatsAppUrl, generateDeliveryQuoteWhatsAppUrl } from '@/lib/whatsapp';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -51,7 +52,7 @@ export default async function AdminHomePage() {
       if (v.stockQuantity <= v.lowStockThreshold) {
         lowStockItems.push({
           product: p,
-          variantName: `${v.colorName} • ${v.size}`,
+          variantName: v.colorName || 'Default',
           stock: v.stockQuantity,
           sku: v.sku,
         });
@@ -250,10 +251,7 @@ export default async function AdminHomePage() {
             ) : (
               <div className="divide-y divide-stone-100">
                 {allOrders.slice(0, 5).map((order) => {
-                  const customerWhatsApp = (order.customerPhone || '').replace(/\D/g, '');
-                  const waUrl = `https://wa.me/${customerWhatsApp}?text=${encodeURIComponent(
-                    `Hello ${order.customerName}, regarding your ARUBEKEE COLLECTION order ${order.orderNumber}...`
-                  )}`;
+                  const waUrl = generateOrderWhatsAppUrl(order);
 
                   return (
                     <div key={order.id} className="p-4 hover:bg-stone-50/80 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -343,9 +341,7 @@ export default async function AdminHomePage() {
                     </div>
 
                     <a
-                      href={`https://wa.me/${q.phone.replace(/\D/g, '')}?text=${encodeURIComponent(
-                        `Hello ${q.customerName}, regarding your delivery quote request to ${q.city}, ${q.state}...`
-                      )}`}
+                      href={generateDeliveryQuoteWhatsAppUrl(q)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-xs font-semibold flex items-center gap-1"
@@ -416,7 +412,7 @@ export default async function AdminHomePage() {
             <div className="space-y-2.5 text-xs text-stone-700 leading-relaxed">
               <div className="flex items-start gap-2">
                 <span className="w-4 h-4 rounded-full bg-stone-900 text-white text-[10px] flex items-center justify-center shrink-0 mt-0.5">1</span>
-                <span><strong>Add New Dress or Shoe:</strong> Tap "+ Add Product" at top right. Upload photos, enter price, pick sizes, publish.</span>
+                <span><strong>Add New Dress or Shoe:</strong> Tap "+ Add Product" at top right. Upload photos, enter price, set stock, publish.</span>
               </div>
               <div className="flex items-start gap-2">
                 <span className="w-4 h-4 rounded-full bg-stone-900 text-white text-[10px] flex items-center justify-center shrink-0 mt-0.5">2</span>

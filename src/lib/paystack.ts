@@ -163,7 +163,8 @@ export class PaystackService {
    * Validates Paystack webhook HMAC SHA-512 signature.
    */
   public static verifyWebhookSignature(signature: string | null, rawBody: string): boolean {
-    if (this.isMockMode()) {
+    // Only permit signature bypass if EXPLICITLY in local development test harness
+    if (process.env.NODE_ENV !== 'production' && process.env.ENABLE_DEV_MOCK_CHECKOUT === 'true') {
       return true;
     }
 

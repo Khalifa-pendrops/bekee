@@ -95,18 +95,15 @@ export default function NewProductGuidedPage() {
 
   // Auto-update subcategories when category changes
   useEffect(() => {
+    setSelectedSizes(['Standard']);
     if (categorySlug === 'clothing') {
       setSubCategorySlug('dresses');
-      setSelectedSizes(['UK 10', 'UK 12', 'UK 14']);
     } else if (categorySlug === 'shoes') {
       setSubCategorySlug('heels');
-      setSelectedSizes(['EU 38', 'EU 39', 'EU 40']);
     } else if (categorySlug === 'bags') {
       setSubCategorySlug('handbags');
-      setSelectedSizes(['One Size']);
     } else if (categorySlug === 'accessories') {
       setSubCategorySlug('jewellery');
-      setSelectedSizes(['One Size']);
     }
   }, [categorySlug]);
 
@@ -265,7 +262,7 @@ export default function NewProductGuidedPage() {
     }
 
     if (variantMatrix.length === 0) {
-      setErrorNotice('Please select at least one colour and size combination in Step 3.');
+      setErrorNotice('Please select at least one colour in Step 3.');
       setCurrentStep(3);
       return;
     }
@@ -878,7 +875,7 @@ export default function NewProductGuidedPage() {
             </div>
           </div>
 
-          {/* 2. Sizes Selector (Category-Aware) */}
+          {/* 2. Sizes Selector (Category-Aware) - Commented out per no-size standard
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-2">
               Available Sizes ({categorySlug === 'shoes' ? 'EU Shoe Sizing' : categorySlug === 'clothing' ? 'UK Dress Sizing' : 'Dimensions / Standard'}):
@@ -916,11 +913,12 @@ export default function NewProductGuidedPage() {
               })}
             </div>
           </div>
+          */}
 
           {/* 3. Generated Stock Inventory Table */}
           <div className="border border-stone-200 rounded-lg overflow-hidden">
             <div className="p-3 bg-stone-100 border-b border-stone-200 text-xs font-semibold text-stone-700 flex items-center justify-between">
-              <span>Sellable Variant Combinations ({variantMatrix.length})</span>
+              <span>Sellable Color Variants ({variantMatrix.length})</span>
               <span className="text-[11px] text-stone-500 font-normal">Enter units in Aba warehouse:</span>
             </div>
 
@@ -928,7 +926,7 @@ export default function NewProductGuidedPage() {
               {variantMatrix.map((v) => (
                 <div key={v.sku} className="p-3 flex items-center justify-between text-xs hover:bg-sand-50 gap-2">
                   <div className="min-w-0 flex-1">
-                    <div className="font-semibold text-stone-900 truncate">{v.colorName} • {v.size}</div>
+                    <div className="font-semibold text-stone-900 truncate">{v.colorName}</div>
                     <div className="text-[11px] font-mono text-stone-400 truncate max-w-[160px] sm:max-w-none">{v.sku}</div>
                   </div>
 

@@ -622,7 +622,7 @@ function TrackOrderContent() {
               <div>
                 <span className="font-bold text-sm block text-emerald-950">Parcel Delivered &amp; Received</span>
                 <span className="text-emerald-800">
-                  {order.deliveredAt ? `Confirmed delivered on ${new Date(order.deliveredAt).toLocaleDateString('en-NG', { dateStyle: 'medium', timeStyle: 'short' })}` : 'Delivery confirmed'} • Thank you for shopping with ARUBEKEE COLLECTION! ✨
+                  {order.deliveredAt ? `Confirmed delivered on ${new Date(order.deliveredAt).toLocaleString('en-NG', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}` : 'Delivery confirmed'} • Thank you for shopping with ARUBEKEE COLLECTION!
                 </span>
               </div>
             </div>
@@ -675,7 +675,7 @@ function TrackOrderContent() {
 
                   <a
                     href={`https://wa.me/${boutiqueWhatsApp}?text=${encodeURIComponent(
-                      `Hello ARUBEKEE COLLECTION, I have transferred payment for invoice ${order.orderNumber} (${formatKoboToNaira(order.totalKobo)}). Here is my payment receipt / confirmation:`
+                      `Hello ARUBEKEE COLLECTION, I have transferred payment for invoice *${order.orderNumber}* (${formatKoboToNaira(order.totalKobo)}).\n\n- Order Ref: ${order.orderNumber}\n- Customer: ${order.customerName || 'Customer'}\n- Amount: ${formatKoboToNaira(order.totalKobo)}\n- Tracking: https://arubekee.com/track-order?ref=${encodeURIComponent(order.orderNumber)}\n\nHere is my payment receipt / proof of transfer:`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"

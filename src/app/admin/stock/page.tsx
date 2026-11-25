@@ -221,9 +221,11 @@ export default function AdminStockPage() {
                       <span className="px-2 py-0.5 bg-sand-100 rounded text-[11px] font-medium">
                         {variant.colorName}
                       </span>
+                      {/* Sizing pill commented out per no-size standard
                       <span className="px-2 py-0.5 bg-stone-200 rounded text-[11px] font-bold">
                         {variant.size}
                       </span>
+                      */}
                       <span className="text-stone-500">
                         {formatKoboToNaira(variant.salePriceKobo || variant.priceKobo)}
                       </span>
@@ -290,7 +292,7 @@ export default function AdminStockPage() {
               <div className="p-3 bg-sand-50 rounded-lg border border-sand-200">
                 <div className="font-mono text-[11px] text-stone-500">{selectedVariant.variant.sku}</div>
                 <div className="font-semibold text-stone-900 mt-0.5">
-                  {selectedVariant.variant.colorName} • {selectedVariant.variant.size}
+                  {selectedVariant.variant.colorName}
                 </div>
                 <div className="text-stone-600 mt-1">
                   Current Physical Stock: <strong className="text-stone-900 font-bold">{selectedVariant.variant.stockQuantity}</strong>
